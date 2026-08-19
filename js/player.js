@@ -1,8 +1,9 @@
 /* ==========================================================================
    IAN IACONO — SOUND PORTFOLIO
-   player.js — reproductor de video propio (solo lo usa la Version B, en /b)
+   player.js — reproductor de video propio
 
-   Que hace cada video del feed:
+   Lo usan el reel del inicio (en las dos versiones) y los videos del feed
+   de la Version B. Que hace cada uno:
      · No se descarga hasta que estas por llegar a el (asi la pagina abre rapido)
      · Arranca solo cuando entra en pantalla y se pausa cuando sale
      · Tiene dos controles y nada mas: silencio si/no, y la linea de tiempo
@@ -42,9 +43,17 @@
     return m + ":" + (s < 10 ? "0" : "") + s;
   }
 
+  /* Recorre los reproductores ya armados (players guarda elementos del DOM,
+     y cada uno lleva su objeto de control en la propiedad .player) */
+  function eachPlayer(fn) {
+    players.forEach(function (root) {
+      if (root.player) fn(root.player);
+    });
+  }
+
   /* Silencia todos los videos menos el que se pidio dejar con sonido */
   function soloAudio(keep) {
-    players.forEach(function (p) {
+    eachPlayer(function (p) {
       if (p.video !== keep && !p.video.muted) p.setMuted(true);
     });
   }
@@ -58,7 +67,7 @@
     ? new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
-          load(entry.target.player);
+          if (entry.target.player) load(entry.target.player);
           lazyObserver.unobserve(entry.target);
         });
       }, { rootMargin: "150% 0px" })
@@ -214,15 +223,15 @@
 
   document.addEventListener("page:change", function (event) {
     var activePage = event.detail.page;
-    players.forEach(function (p) {
+    eachPlayer(function (p) {
       p.pageHidden = !activePage.contains(p.root);
-      if (p.pageHidden && !p.video.paused) p.video.pause();
+      if (p.pageHidden) { if (!p.video.paused) p.video.pause(); }
       else sync(p);
     });
   });
 
   document.addEventListener("visibilitychange", function () {
-    players.forEach(function (p) {
+    eachPlayer(function (p) {
       if (document.hidden) { if (!p.video.paused) p.video.pause(); }
       else sync(p);
     });
