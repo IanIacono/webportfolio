@@ -1,0 +1,151 @@
+  LINK -> # :: Ian Iacono
+  LINK -> #projects :: Projects
+  LINK -> #contact :: Contact
+
+########## SECTION: #home-section
+     VIDEO-BG https://cdn.jsdelivr.net/gh/ianiacono/videos@main/reelfondo.mp4
+     IFRAME https://player.vimeo.com/video/1219171410?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&loop=1&contr
+  [h2 text04] Sound Portfolio
+  LINK -> #audiovisual :: Audiovisual Portfolio
+  LINK(img) -> #thecarboncase
+     IMG assets/images/image05.jpg
+  [h3 text35] The Carbon Case
+  LINK(img) -> #lumia
+     IMG assets/images/image09.jpg
+  [h2 text42] Lumia
+  LINK(img) -> #redbull
+     IMG assets/images/image10.jpg
+  [h2 text43] Red Bull Batallas
+  LINK(img) -> #lallamada
+     IMG assets/images/image11.jpg
+  [h2 text86] La Llamada Fatal
+  LINK(img) -> #koupe
+     IMG assets/images/image12.jpg
+  [h2 text87] Koupe
+
+########## SECTION: #audiovisual-section
+  LINK -> #home :: Sound Portfolio
+  [h2 text03] Audiovisual Portfolio
+  LINK(img) -> #faiketen
+     IMG assets/images/image06.jpg
+  LINK(img) -> #reports
+     IMG assets/images/image16.jpg
+  [h2 text09] Rèport Travel Media
+  LINK(img) -> #ddp
+     IMG assets/images/image17.jpg
+  [h2 text16] Detras del Puesto
+  LINK(img) -> #reports
+     IMG assets/images/image08.jpg
+  [h2 text10] Rèport Travel Media
+  LINK(img) -> #ddp
+     IMG assets/images/image03.jpg
+  [h2 text05] Detras del Puesto
+
+########## SECTION: #thecarboncase-section
+     YT-THUMB https://i.ytimg.com/vi_webp/2TYgE3qMO4k/maxresdefault.webp
+  [h1 text18] The Carbon Case
+  [h2 text20] Sound design, Re-recording Mix & Master
+  [h1 text13] .
+  [h1 text14] ESP
+  [p text15] Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.
+  [h1 text21] .
+  [h1 text22] ENG
+  [p text23] Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.
+  LINK -> #home :: Back
+  LINK -> # :: Back
+
+########## SECTION: #lumia-section
+     YT-THUMB https://i.ytimg.com/vi_webp/1Q3iFE-h9RM/maxresdefault.webp
+  [p text72] Motion graphics & visuals by @tomicalle.art
+  [h1 text65] Lumia
+  [h2 text66] Sound design, Music & Mix
+  [h1 text67] .
+  [h1 text68] ESP
+  [p text69] Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.
+  [h1 text70] .
+  [h1 text71] ENG
+  [p text79] Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.
+  LINK -> #home :: Back
+
+########## SECTION: #redbull-section
+     YT-THUMB https://i.ytimg.com/vi_webp/aUop2SCJn10/maxresdefault.webp
+     YT-THUMB https://i.ytimg.com/vi_webp/ZFDeO8fDAvI/maxresdefault.webp
+  [h1 text47] Red Bull Batallas
+  [h2 text55] Sound Editing, Mix
+  [h1 text73] .
+  [h1 text74] ESP
+  [p text75] Limpieza de audio y mezcla para batallas de rap oficiales de Red Bull, asegurando un equilibrio claro entre las voces de los participantes, el publico y la conductora.
+  [h1 text76] .
+  [h1 text77] ENG
+  [p text78] Audio cleaning and mixing for official Red Bull rap battles, ensuring a clear balance between the participants' vocals, the host, and the crowd.
+  LINK -> #home :: Back
+
+########## SECTION: #lallamada-section
+     IFRAME https://open.spotify.com/embed/episode/3gu56XUbJWXSjcrw7pOc3g?utm_source=generator&si=3c803a20d2844c6b
+     IFRAME https://open.spotify.com/embed/episode/5DJchpRlyf3DZMsiWbYLJX?utm_source=generator&si=a64a0228dada449b
+  [h1 text30] La Llamada Fatal
+  [h2 text31] Sound editing, Mix & Master
+  [h1 text59] .
+  [h1 text60] ESP
+  [p text32] Podcast sobre cine argentino conducido por Tomás Binder y Patricio Fontana. En cada episodio, los creadores conversan con diferentes invitados especiales sobre películas clave, directores y la historia del cine nacional.
+  [h1 text62] .
+  [h1 text63] ENG
+  [p text02] Podcast about Argentine cinema hosted by Tomás Binder and Patricio Fontana. In each episode, the creators talk with different special guests about key films, directors, and the history of national cinema.
+  LINK -> #home :: Back
+  [h1 text56] .
+  [h1 text48] .
+
+########## SECTION: #ddp-section
+  [h1 text36] Detras Del Puesto
+  [h2 text37] Music, logo animation & audio branding
+  [h1 text25] .
+  [h1 text26] ESP
+  [p text27] Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.
+  [h1 text28] .
+  [h1 text29] ENG
+  [p text45] Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.
+  LINK -> #home :: Back
+
+########## SECTION: #faiketen-section
+     YT-THUMB https://i.ytimg.com/vi_webp/2TYgE3qMO4k/maxresdefault.webp
+  [h1 text39] Te Lo Aseguro | Analipsis
+  [h2 text40] V
+  [p text41] Lorem ipsum dolor sit amet consectetur adipiscing elit magna integer, vitae proin aliquet tristique ridiculus suscipit sem mi aliquam, leo sed vel curabitur hendrerit auctor condimentum dui. Interdum nam tempor ultrices ac mattis mus id enim imperdiet erat ridiculus nec, vulputate vestibulum vitae senectus dis lobortis condimentum morbi risus purus tortor. Volutpat class semper sem cras et phasellus per bibendum aliquam metus, egestas lobortis vulputate suspendisse duis suscipit velit nam mattis, sagittis porta tellus curabitur in posuere condimentum torquent placerat.
+
+########## SECTION: #reports-section
+     YT-THUMB https://i.ytimg.com/vi_webp/2TYgE3qMO4k/maxresdefault.webp
+  [h1 text61] Rèport Travel Media
+  [h2 text64] Sound editing
+  [h1 text80] .
+  [h1 text81] ESP
+  [p text82] Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.
+  [h1 text83] .
+  [h1 text84] ENG
+  [p text85] Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.
+  LINK -> #home :: Back
+
+########## SECTION: #koupe-section
+     YT-THUMB https://i.ytimg.com/vi_webp/2TYgE3qMO4k/maxresdefault.webp
+  [h1 text01] Koupe
+  [h2 text06] Music, animation
+  [h1 text07] .
+  [h1 text08] ESP
+  [p text11] Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.
+  [h1 text12] .
+  [h1 text17] ENG
+  [p text19] Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.
+  LINK -> #home :: Back
+
+########## SECTION: #section12-section
+     YT-THUMB https://i.ytimg.com/vi_webp/XWi0vnR9PGU/maxresdefault.webp
+  [h1 text33] Polvora Podcast
+  [h2 text34] Video editing
+  [h1 text49] .
+  [h1 text50] ESP
+  [p text51] Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.
+  [h1 text52] .
+  [h1 text53] ENG
+  [p text54] Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.
+  LINK -> #home :: Back
+
+########## SECTION: #contact-section
