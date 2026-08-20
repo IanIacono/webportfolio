@@ -337,6 +337,12 @@ p { text-wrap: pretty; }
 }
 .nav__name:hover { color: var(--c-accent); }
 
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
 .nav__links {
   display: flex;
   align-items: center;
@@ -371,6 +377,104 @@ p { text-wrap: pretty; }
 }
 .nav__link:hover { color: var(--c-text); }
 .nav__link:hover::after { transform: scaleX(1); }
+
+/* --- Control global de sonido ---------------------------------------------
+   El unico control de audio de todo el sitio. El boton prende/apaga el
+   sonido; la barra de volumen solo se ve a partir de 640px (en el celular
+   el espacio de la barra de navegacion es demasiado justo). */
+.audio-control {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.audio-control__toggle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--r-full);
+  background: rgba(0,0,0,.3);
+  color: var(--c-text);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+}
+.audio-control__toggle:hover {
+  background: var(--c-text);
+  border-color: var(--c-text);
+  color: #0a0a0a;
+}
+.audio-control__toggle svg { width: 16px; height: 16px; pointer-events: none; }
+.audio-control__toggle .icon-on  { display: none; }
+.audio-control__toggle[aria-pressed="true"] .icon-on   { display: block; }
+.audio-control__toggle[aria-pressed="true"] .icon-off  { display: none; }
+/* Mientras el sonido esta activo, el boton queda remarcado en ambar */
+.audio-control__toggle[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--c-accent) 20%, transparent);
+  border-color: var(--c-accent);
+  color: var(--c-accent-soft);
+}
+
+.audio-control__level {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 84px;
+  height: var(--tap);
+  background: transparent;
+  cursor: pointer;
+}
+.audio-control__level::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: var(--r-full);
+  background: linear-gradient(
+    to right,
+    var(--c-accent) 0 var(--level, 80%),
+    rgba(255,255,255,.28) var(--level, 80%) 100%
+  );
+}
+.audio-control__level::-moz-range-track {
+  height: 3px;
+  border-radius: var(--r-full);
+  background: rgba(255,255,255,.28);
+}
+.audio-control__level::-moz-range-progress {
+  height: 3px;
+  border-radius: var(--r-full);
+  background: var(--c-accent);
+}
+.audio-control__level::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 13px; height: 13px;
+  margin-top: -5px;
+  border: 0;
+  border-radius: var(--r-full);
+  background: var(--c-text);
+  box-shadow: var(--sh-1);
+  transition: transform var(--dur) var(--ease);
+}
+.audio-control__level::-moz-range-thumb {
+  width: 13px; height: 13px;
+  border: 0;
+  border-radius: var(--r-full);
+  background: var(--c-text);
+  transition: transform var(--dur) var(--ease);
+}
+.audio-control__level:hover::-webkit-slider-thumb,
+.audio-control__level:focus-visible::-webkit-slider-thumb { transform: scale(1.2); }
+.audio-control__level:hover::-moz-range-thumb,
+.audio-control__level:focus-visible::-moz-range-thumb { transform: scale(1.2); }
+.audio-control__level:disabled { opacity: .35; cursor: not-allowed; }
+
+@media (min-width: 640px) {
+  .audio-control__level { display: block; }
+}
 
 
 /* ==========================================================================
@@ -830,36 +934,6 @@ p { text-wrap: pretty; }
   transform: translateY(0);
 }
 
-/* Boton de mute / unmute */
-.player__mute {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--tap);
-  height: var(--tap);
-  border: 1px solid var(--c-line-strong);
-  border-radius: var(--r-full);
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--c-text);
-  cursor: pointer;
-  transition: background var(--dur) var(--ease),
-              border-color var(--dur) var(--ease),
-              color var(--dur) var(--ease);
-}
-.player__mute:hover {
-  background: var(--c-text);
-  border-color: var(--c-text);
-  color: #0a0a0a;
-}
-.player__mute svg { width: 17px; height: 17px; pointer-events: none; }
-/* Se muestra un icono u otro segun este silenciado o no */
-.player__mute .icon-on  { display: none; }
-.player__mute[aria-pressed="false"] .icon-on  { display: block; }
-.player__mute[aria-pressed="false"] .icon-off { display: none; }
-
 /* Linea de tiempo: es un <input type="range"> real, asi anda con el teclado */
 .player__scrub {
   flex: 1 1 auto;
@@ -924,53 +998,73 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   13. FEED DE VIDEOS  (solo Version B)
-   Los proyectos aparecen como videos a pantalla completa, uno abajo del otro.
+   13. GRILLA CON VISTA PREVIA  (solo Version B)
+   Cada proyecto es una tarjeta con su propio video de fondo "reactivo": en
+   reposo se ve la portada (con el mismo tratamiento borroso y luminoso que
+   el fondo del reel), y al pasar el mouse o enfocarla con el teclado el
+   video real toma su lugar y arranca. El resplandor de cada tarjeta sale
+   del color de su propia portada (variable --glow, definida en el HTML).
    ========================================================================== */
 
-.feed { padding-block: var(--sp-8) var(--sp-9); }
-
-.feed__item + .feed__item { margin-top: var(--sp-11); }
-
-.feed__player {
-  position: relative;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  border: 1px solid var(--c-line);
-  box-shadow: var(--sh-3);
-  background: #000;
-}
-.feed__player .player { border-radius: 0; }
-
-/* Numero de orden gigante, detras del titulo */
-.feed__index {
-  font-size: var(--fs-2xs);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--ls-wide);
-  color: var(--c-text-faint);
-}
-
-.feed__meta {
+.hovergrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: var(--sp-5) var(--sp-7);
-  margin-top: var(--sp-5);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-8) var(--sp-6);
 }
 
-.feed__title {
-  font-size: var(--fs-2xl);
-  font-weight: 200;
-  letter-spacing: var(--ls-tight);
-  margin-top: var(--sp-3);
+.hovercard__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-line);
+  isolation: isolate;
+  transition: box-shadow 320ms var(--ease),
+              border-color 320ms var(--ease),
+              transform 320ms var(--ease);
 }
 
-.feed__role {
-  margin-top: var(--sp-2);
-  font-size: var(--fs-sm);
-  color: var(--c-accent);
-  letter-spacing: 0;
+.hovercard__poster,
+.hovercard__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+.hovercard__poster {
+  transition: opacity 280ms var(--ease);
+}
+
+.hovercard__video {
+  opacity: 0;
+  transition: opacity 280ms var(--ease);
+}
+
+/* El video queda oculto hasta que realmente arranca a reproducirse: asi
+   nunca se ve un cuadro negro mientras carga. */
+.hovercard__link.is-playing .hovercard__video { opacity: 1; }
+.hovercard__link.is-playing .hovercard__poster { opacity: 0; }
+
+.hovercard__link:hover .hovercard__media,
+.hovercard__link:focus-visible .hovercard__media {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--glow, var(--c-accent)) 50%, var(--c-line-strong));
+  box-shadow:
+    0 26px 60px -20px color-mix(in srgb, var(--glow, var(--c-accent)) 45%, transparent),
+    var(--sh-2);
+}
+
+.hovercard__role {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+  transition: color var(--dur) var(--ease);
+}
+.hovercard__link:hover .hovercard__role,
+.hovercard__link:focus-visible .hovercard__role { color: var(--c-accent); }
 
 
 /* ==========================================================================
@@ -1018,7 +1112,8 @@ p { text-wrap: pretty; }
 
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
+  .grid,
+  .hovergrid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
 
   .project {
     grid-template-columns: minmax(0, 1fr);
@@ -1031,13 +1126,11 @@ p { text-wrap: pretty; }
 @media (max-width: 640px) {
   :root { --nav-h: 4rem; }
 
-  .grid { grid-template-columns: minmax(0, 1fr); gap: var(--sp-7); }
+  .grid,
+  .hovergrid { grid-template-columns: minmax(0, 1fr); gap: var(--sp-7); }
 
   .hero__frame { width: 100%; border-radius: 0; }
   .hero { min-height: 100svh; }
-
-  .feed__meta { grid-template-columns: minmax(0, 1fr); align-items: start; }
-  .feed__player { border-radius: var(--r-md); }
 
   .player__controls { gap: var(--sp-3); padding: var(--sp-4) var(--sp-3) var(--sp-3); }
   .player__time { display: none; }   /* no entra: se prioriza la barra */
@@ -1051,6 +1144,7 @@ p { text-wrap: pretty; }
 /* --- Pantallas muy angostas (360px y menos) --- */
 @media (max-width: 380px) {
   :root { --gutter: 1rem; }
+  .nav__right { gap: var(--sp-2); }
   .nav__link { padding-inline: var(--sp-2); }
   .nav__links { gap: 0; }
 }

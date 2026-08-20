@@ -30,7 +30,7 @@ El sitio tiene **dos versiones distintas** para que compares y elijas:
 | Versión | Dirección | Cómo se ve la home |
 |---|---|---|
 | **A** | `tusitio.com` | El reel arriba, y abajo una **grilla de tarjetas** con la portada de cada proyecto. Clickeás una y entrás al proyecto. Es la estructura del Carrd original. |
-| **B** | `tusitio.com/b` | El reel arriba, y abajo **el video de cada proyecto uno tras otro**. Los videos arrancan solos cuando aparecen en pantalla y se pausan cuando salen. Cada uno tiene un botón "Ver proyecto". |
+| **B** | `tusitio.com/b` | El reel arriba, y abajo una **grilla de 3 columnas** con los videos de cada proyecto. Al pasar el mouse (o enfocar con el teclado) el video de esa tarjeta arranca solo, con su propio resplandor de color; al sacarlo, se detiene. Clickeando la tarjeta entrás al proyecto. |
 
 **Todo lo demás (las páginas de cada proyecto) es idéntico en las dos.**
 
@@ -183,30 +183,61 @@ Son de YouTube. Buscá esta línea en el HTML:
 del video: en `youtube.com/watch?v=ABC123`, el código es `ABC123`.
 Reemplazalo y listo.
 
-### Los videos del feed (Versión B)
+### Los videos de la grilla (Versión B)
 
 Ahora **todos usan tu reel como provisorio**. Cuando tengas el video de cada
 proyecto:
 
 1. Guardá el archivo `.mp4` en `assets/video/`, por ejemplo `lumia.mp4`.
-2. En `b/index.html`, buscá el bloque de ese proyecto y cambiá:
+2. En `b/index.html`, buscá la tarjeta de ese proyecto (el cartel dice
+   `SECCION 1 de 12 — HOME` o `AUDIOVISUAL PORTFOLIO`) y cambiá:
 
 ```html
-<video data-src="/assets/video/reel.mp4" ... poster="/assets/img/poster/lumia.webp"
+<video class="hovercard__video" data-src="/assets/video/reel.mp4" ...
 ```
 
 por:
 
 ```html
-<video data-src="/assets/video/lumia.mp4" ... poster="/assets/img/poster/lumia.webp"
+<video class="hovercard__video" data-src="/assets/video/lumia.mp4" ...
 ```
 
 **Recomendaciones para los videos:**
 - Formato **MP4** (códec H.264 + audio AAC). Es el que anda en todos lados.
 - Proporción **16:9** (apaisado).
 - Que no pesen más de 8–10 MB cada uno. Si pesan más, el sitio carga lento.
-- Como los videos arrancan solos y en silencio, conviene que los primeros
-  segundos se entiendan sin sonido.
+- Como el video arranca apenas pasás el mouse, conviene que los primeros
+  segundos ya muestren algo representativo del proyecto.
+
+### El resplandor de color de cada tarjeta
+
+En la grilla, cada tarjeta tiene un brillo de color propio detrás (se nota al
+pasar el mouse). Sale de esta parte del HTML, dentro de cada tarjeta:
+
+```html
+<div class="hovercard__media" style="--glow:#51b6d1">
+```
+
+Ese `#51b6d1` es un color en formato hexadecimal. Podés cambiarlo por
+cualquier otro (lo mismo que en la [sección 6](#6-cambiar-los-colores)) si
+querés que el resplandor de un proyecto sea de otro tono.
+
+### El control de sonido (Versión B)
+
+Ya no hay un botón de mute en cada video. Ahora hay **un solo control, en el
+header, arriba a la derecha**: un altavoz con una barra de volumen al lado.
+Prende o apaga el sonido de lo que se esté reproduciendo en cada momento — el
+reel del inicio, o el proyecto que estés mirando con el mouse en la grilla.
+
+Esto es así por como funcionan los navegadores: la primera vez que entrás al
+sitio, todo arranca en silencio a la fuerza (ningún sitio puede sonar solo,
+sin que vos lo pidas). Apenas tocás ese control una vez, el sitio queda
+habilitado a sonar por el resto de la visita.
+
+No hay nada para configurar acá: es un comportamiento del sitio, no un texto
+para editar. Los videos de YouTube y los podcasts de Spotify de las páginas
+de cada proyecto quedan afuera de este control — esos tienen sus propios
+botones, porque son de otra plataforma.
 
 ---
 
@@ -325,7 +356,8 @@ webportfolio/
 │
 ├── js/
 │   ├── main.js         ← cambia de página y hace aparecer los bloques al scrollear
-│   └── player.js       ← el reproductor de video (mute y línea de tiempo)
+│   ├── audio.js        ← el control global de sonido del header
+│   └── player.js       ← reproduce los videos (el reel, y la grilla de la Versión B)
 │
 ├── assets/
 │   ├── img/            ← todas las imágenes
@@ -350,8 +382,8 @@ Estas decisiones las tomé yo durante la migración. Todas se pueden revertir.
 
 **1. El reel del inicio ya no viene de Vimeo.**
 Ahora es el archivo `assets/video/reel.mp4`, guardado en tu propio sitio. Es el
-mismo video, pero así carga mucho más rápido, arranca solo y podés controlarlo
-con el botón de silencio y la línea de tiempo. Si querés volver a Vimeo,
+mismo video, pero así carga mucho más rápido, arranca solo y lo controlás con
+el volumen global del header y la línea de tiempo. Si querés volver a Vimeo,
 pedímelo y lo cambio.
 
 **2. Los puntos sueltos (`.`) desaparecieron.**
@@ -372,7 +404,12 @@ de marca: tus portadas y tus videos son oscuros y se ven mejor sobre negro.
 
 **6. El CSS y el JavaScript no están comprimidos.**
 Se podrían achicar un poco, pero quedarían ilegibles y vos no podrías editarlos.
-Preferí que puedas entenderlos. Igual el sitio saca 96/100 en velocidad.
+Preferí que puedas entenderlos. Igual el sitio saca 99/100 en velocidad.
+
+**7. En la Versión B, solo un video suena a la vez.**
+Si pasás el mouse de una tarjeta a otra sin sacarlo de la grilla, la anterior
+se silencia sola y empieza a sonar la nueva. Es a propósito: nunca vas a
+tener dos proyectos sonando al mismo tiempo.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 

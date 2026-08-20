@@ -62,10 +62,26 @@
   <header class="nav">
     <div class="nav__inner">
       <a class="nav__name" href="#home">Ian Iacono</a>
-      <nav class="nav__links" aria-label="Navegacion principal">
-        <a class="nav__link" href="#projects">Projects</a>
-        <a class="nav__link" href="#contact">Contact</a>
-      </nav>
+
+      <div class="nav__right">
+        <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
+             el sitio: prende o apaga el volumen de lo que se este
+             reproduciendo (el reel, o el proyecto que estes mirando en la
+             grilla). Los navegadores exigen un click real para permitir
+             sonido, por eso arranca siempre en silencio. -->
+        <div class="audio-control">
+          <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Activar sonido del sitio">
+            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
+          </button>
+          <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
+                 aria-label="Volumen del sitio">
+        </div>
+
+        <nav class="nav__links" aria-label="Navegacion principal">
+          <a class="nav__link" href="#projects">Projects</a>
+          <a class="nav__link" href="#contact">Contact</a>
+        </nav>
+      </div>
     </div>
   </header>
 
@@ -89,10 +105,9 @@
                    width="1280" height="720"
                    aria-label="Demo reel de sound design de Ian Iacono"></video>
 
+            <!-- El sonido de este video lo maneja el control del header:
+                 aca solo queda la linea de tiempo. -->
             <div class="player__controls">
-              <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-              </button>
               <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
                      aria-label="Linea de tiempo del video">
               <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
@@ -675,6 +690,7 @@
 
     <!-- Scripts al final para que la pagina se vea antes de cargarlos -->
   <script src="/js/main.js" defer></script>
+  <script src="/js/audio.js" defer></script>
   <script src="/js/player.js" defer></script>
 
 </body>

@@ -62,10 +62,26 @@
   <header class="nav">
     <div class="nav__inner">
       <a class="nav__name" href="#home">Ian Iacono</a>
-      <nav class="nav__links" aria-label="Navegacion principal">
-        <a class="nav__link" href="#projects">Projects</a>
-        <a class="nav__link" href="#contact">Contact</a>
-      </nav>
+
+      <div class="nav__right">
+        <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
+             el sitio: prende o apaga el volumen de lo que se este
+             reproduciendo (el reel, o el proyecto que estes mirando en la
+             grilla). Los navegadores exigen un click real para permitir
+             sonido, por eso arranca siempre en silencio. -->
+        <div class="audio-control">
+          <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Activar sonido del sitio">
+            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
+          </button>
+          <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
+                 aria-label="Volumen del sitio">
+        </div>
+
+        <nav class="nav__links" aria-label="Navegacion principal">
+          <a class="nav__link" href="#projects">Projects</a>
+          <a class="nav__link" href="#contact">Contact</a>
+        </nav>
+      </div>
     </div>
   </header>
 
@@ -89,10 +105,9 @@
                    width="1280" height="720"
                    aria-label="Demo reel de sound design de Ian Iacono"></video>
 
+            <!-- El sonido de este video lo maneja el control del header:
+                 aca solo queda la linea de tiempo. -->
             <div class="player__controls">
-              <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-              </button>
               <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
                      aria-label="Linea de tiempo del video">
               <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
@@ -116,142 +131,107 @@
       </div>
 
 
-        <!-- FEED DE VIDEOS. Cada <article> es un proyecto.
-             El video arranca solo cuando entra en pantalla.                  -->
-        <div class="feed">
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/the-carbon-case.webp" width="1280" height="720"
-                     aria-label="The Carbon Case — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de The Carbon Case">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <!-- GRILLA CON VISTA PREVIA. Cada <article> es un proyecto: al pasar
+             el mouse (o enfocarlo con el teclado) el video arranca solo.     -->
+        <div class="hovergrid">
+        <article class="hovercard reveal" data-delay="0">
+          <a class="hovercard__link card__link" href="#thecarboncase"
+             aria-label="Ver proyecto: The Carbon Case — Sound design, Re-recording Mix &amp; Master">
+            <div class="hovercard__media" style="--glow:#51b6d1">
+              <img class="hovercard__poster" src="/assets/img/poster/the-carbon-case.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">The Carbon Case</h2>
+                <p class="hovercard__role">Sound design, Re-recording Mix &amp; Master</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">01</p>
-              <h2 class="feed__title">The Carbon Case</h2>
-              <p class="feed__role">Sound design, Re-recording Mix &amp; Master</p>
-            </div>
-            <a class="btn btn--primary" href="#thecarboncase">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/lumia.webp" width="1280" height="720"
-                     aria-label="Lumia — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Lumia">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="1">
+          <a class="hovercard__link card__link" href="#lumia"
+             aria-label="Ver proyecto: Lumia — Sound design, Music &amp; Mix">
+            <div class="hovercard__media" style="--glow:#d9a15b">
+              <img class="hovercard__poster" src="/assets/img/poster/lumia.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Lumia</h2>
+                <p class="hovercard__role">Sound design, Music &amp; Mix</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">02</p>
-              <h2 class="feed__title">Lumia</h2>
-              <p class="feed__role">Sound design, Music &amp; Mix</p>
-            </div>
-            <a class="btn btn--primary" href="#lumia">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/red-bull-batallas.webp" width="1280" height="720"
-                     aria-label="Red Bull Batallas — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Red Bull Batallas">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="2">
+          <a class="hovercard__link card__link" href="#redbull"
+             aria-label="Ver proyecto: Red Bull Batallas — Sound Editing, Mix">
+            <div class="hovercard__media" style="--glow:#d12e5e">
+              <img class="hovercard__poster" src="/assets/img/poster/red-bull-batallas.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Red Bull Batallas</h2>
+                <p class="hovercard__role">Sound Editing, Mix</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">03</p>
-              <h2 class="feed__title">Red Bull Batallas</h2>
-              <p class="feed__role">Sound Editing, Mix</p>
-            </div>
-            <a class="btn btn--primary" href="#redbull">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/la-llamada-fatal.webp" width="1280" height="720"
-                     aria-label="La Llamada Fatal — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de La Llamada Fatal">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="0">
+          <a class="hovercard__link card__link" href="#lallamada"
+             aria-label="Ver proyecto: La Llamada Fatal — Sound editing, Mix &amp; Master">
+            <div class="hovercard__media" style="--glow:#d1791f">
+              <img class="hovercard__poster" src="/assets/img/poster/la-llamada-fatal.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">La Llamada Fatal</h2>
+                <p class="hovercard__role">Sound editing, Mix &amp; Master</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">04</p>
-              <h2 class="feed__title">La Llamada Fatal</h2>
-              <p class="feed__role">Sound editing, Mix &amp; Master</p>
-            </div>
-            <a class="btn btn--primary" href="#lallamada">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/koupe.webp" width="1280" height="720"
-                     aria-label="Koupe — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Koupe">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="1">
+          <a class="hovercard__link card__link" href="#koupe"
+             aria-label="Ver proyecto: Koupe — Music, animation">
+            <div class="hovercard__media" style="--glow:#1fc7d1">
+              <img class="hovercard__poster" src="/assets/img/poster/koupe.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Koupe</h2>
+                <p class="hovercard__role">Music, animation</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">05</p>
-              <h2 class="feed__title">Koupe</h2>
-              <p class="feed__role">Music, animation</p>
-            </div>
-            <a class="btn btn--primary" href="#koupe">Ver proyecto</a>
-          </div>
+          </a>
         </article>
         </div>
       </div>
@@ -271,140 +251,105 @@
       </div>
 
 
-        <div class="feed">
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/te-lo-aseguro.webp" width="1280" height="720"
-                     aria-label="Te Lo Aseguro | Analipsis — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Te Lo Aseguro | Analipsis">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <div class="hovergrid">
+        <article class="hovercard reveal" data-delay="0">
+          <a class="hovercard__link card__link" href="#faiketen"
+             aria-label="Ver proyecto: Te Lo Aseguro | Analipsis — V">
+            <div class="hovercard__media" style="--glow:#1f6cd1">
+              <img class="hovercard__poster" src="/assets/img/poster/te-lo-aseguro.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Te Lo Aseguro | Analipsis</h2>
+                <p class="hovercard__role">V</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">01</p>
-              <h2 class="feed__title">Te Lo Aseguro | Analipsis</h2>
-              <p class="feed__role">V</p>
-            </div>
-            <a class="btn btn--primary" href="#faiketen">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/report-travel-media.webp" width="1280" height="720"
-                     aria-label="Rèport Travel Media — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Rèport Travel Media">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="1">
+          <a class="hovercard__link card__link" href="#reports"
+             aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
+            <div class="hovercard__media" style="--glow:#d11f2d">
+              <img class="hovercard__poster" src="/assets/img/poster/report-travel-media.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Rèport Travel Media</h2>
+                <p class="hovercard__role">Sound editing</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">02</p>
-              <h2 class="feed__title">Rèport Travel Media</h2>
-              <p class="feed__role">Sound editing</p>
-            </div>
-            <a class="btn btn--primary" href="#reports">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/detras-del-puesto.webp" width="1280" height="720"
-                     aria-label="Detras del Puesto — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Detras del Puesto">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="2">
+          <a class="hovercard__link card__link" href="#ddp"
+             aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
+            <div class="hovercard__media" style="--glow:#d14f1f">
+              <img class="hovercard__poster" src="/assets/img/poster/detras-del-puesto.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Detras del Puesto</h2>
+                <p class="hovercard__role">Music, logo animation &amp; audio branding</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">03</p>
-              <h2 class="feed__title">Detras del Puesto</h2>
-              <p class="feed__role">Music, logo animation &amp; audio branding</p>
-            </div>
-            <a class="btn btn--primary" href="#ddp">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/report-travel-media-2.webp" width="1280" height="720"
-                     aria-label="Rèport Travel Media — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Rèport Travel Media">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="0">
+          <a class="hovercard__link card__link" href="#reports"
+             aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
+            <div class="hovercard__media" style="--glow:#d9a15b">
+              <img class="hovercard__poster" src="/assets/img/poster/report-travel-media-2.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Rèport Travel Media</h2>
+                <p class="hovercard__role">Sound editing</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">04</p>
-              <h2 class="feed__title">Rèport Travel Media</h2>
-              <p class="feed__role">Sound editing</p>
-            </div>
-            <a class="btn btn--primary" href="#reports">Ver proyecto</a>
-          </div>
+          </a>
         </article>
 
-        <article class="feed__item reveal">
-          <div class="feed__player">
-            <div class="player">
-              <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                     poster="/assets/img/poster/detras-del-puesto-2.webp" width="1280" height="720"
-                     aria-label="Detras del Puesto — video del proyecto"></video>
-              <div class="player__controls">
-                <button type="button" class="player__mute" aria-pressed="false" aria-label="Activar sonido">
-                  <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-                </button>
-                <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                       aria-label="Linea de tiempo del video de Detras del Puesto">
-                <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+        <article class="hovercard reveal" data-delay="1">
+          <a class="hovercard__link card__link" href="#ddp"
+             aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
+            <div class="hovercard__media" style="--glow:#d14f1f">
+              <img class="hovercard__poster" src="/assets/img/poster/detras-del-puesto-2.webp"
+                   width="1280" height="720" alt="" loading="lazy" decoding="async">
+              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
+                     muted loop playsinline preload="none" width="1280" height="720"
+                     aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="card__meta">
+              <div>
+                <h2 class="card__title">Detras del Puesto</h2>
+                <p class="hovercard__role">Music, logo animation &amp; audio branding</p>
               </div>
+              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
-          </div>
-
-          <div class="feed__meta">
-            <div>
-              <p class="feed__index">05</p>
-              <h2 class="feed__title">Detras del Puesto</h2>
-              <p class="feed__role">Music, logo animation &amp; audio branding</p>
-            </div>
-            <a class="btn btn--primary" href="#ddp">Ver proyecto</a>
-          </div>
+          </a>
         </article>
         </div>
       </div>
@@ -804,6 +749,7 @@
 
     <!-- Scripts al final para que la pagina se vea antes de cargarlos -->
   <script src="/js/main.js" defer></script>
+  <script src="/js/audio.js" defer></script>
   <script src="/js/player.js" defer></script>
 
 </body>
