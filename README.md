@@ -29,8 +29,8 @@ El sitio tiene **dos versiones distintas** para que compares y elijas:
 
 | Versión | Dirección | Cómo se ve la home |
 |---|---|---|
-| **A** | `tusitio.com` | El reel arriba, y abajo una **grilla de tarjetas** con la portada de cada proyecto. Clickeás una y entrás al proyecto. Es la estructura del Carrd original. |
-| **B** | `tusitio.com/b` | El reel arriba, y abajo una **grilla de 3 columnas** con los videos de cada proyecto. Al pasar el mouse (o enfocar con el teclado) el video de esa tarjeta arranca solo, con su propio resplandor de color; al sacarlo, se detiene. Clickeando la tarjeta entrás al proyecto. |
+| **A** | `tusitio.com` | Sin reel arriba: arranca directo en una **grilla de tarjetas**. Arriba de todo hay dos botones, **Sound Portfolio** y **Audiovisual Portfolio**, que alternan qué grilla se ve sin cambiar de página. Al pasar el mouse por una tarjeta (o enfocarla con el teclado), su video arranca y un resplandor con ese mismo video, agrandado y borroso, se prende alrededor. Clickeando entrás al proyecto. |
+| **B** | `tusitio.com/b` | Arriba, un **carrusel**: podés ir pasando de proyecto en proyecto con las flechas o los puntos de abajo. A los pocos segundos aparece un botón "Ver más" que te lleva a esa página. Abajo del carrusel, la grilla con **todos** los proyectos (igual que en la A). Sound y Audiovisual siguen siendo dos páginas separadas, como en el Carrd original. |
 
 **Todo lo demás (las páginas de cada proyecto) es idéntico en las dos.**
 
@@ -114,7 +114,7 @@ está entre `<p class="prose">` y `</p>`. Nada más.
 ### El título de las tarjetas de la home
 
 ```html
-<h2 class="card__title">The Carbon Case</h2>
+<h2 class="tile__title">The Carbon Case</h2>
 ```
 
 ### Dos cosas para tener cuidado
@@ -128,14 +128,13 @@ está entre `<p class="prose">` y `</p>`. Nada más.
 
 ## 4. Cambiar una imagen
 
-Las imágenes viven en `assets/img/`. Cada proyecto tiene **cuatro archivos**:
+Las imágenes viven en `assets/img/`. Cada proyecto tiene **tres archivos**:
 
 | Archivo | Para qué sirve |
 |---|---|
 | `lumia.webp` | el original grande |
 | `lumia-480.webp` | versión chica (celulares) |
 | `lumia-960.webp` | versión mediana (pantallas grandes) |
-| `poster/lumia.webp` | la imagen de espera del video (solo Versión B) |
 
 Suena complicado, pero **no tenés que generarlas a mano**. Hacé esto:
 
@@ -183,60 +182,90 @@ Son de YouTube. Buscá esta línea en el HTML:
 del video: en `youtube.com/watch?v=ABC123`, el código es `ABC123`.
 Reemplazalo y listo.
 
-### Los videos de la grilla (Versión B)
+### Los videos de las tarjetas (grilla, las dos versiones)
 
 Ahora **todos usan tu reel como provisorio**. Cuando tengas el video de cada
 proyecto:
 
 1. Guardá el archivo `.mp4` en `assets/video/`, por ejemplo `lumia.mp4`.
-2. En `b/index.html`, buscá la tarjeta de ese proyecto (el cartel dice
-   `SECCION 1 de 12 — HOME` o `AUDIOVISUAL PORTFOLIO`) y cambiá:
+2. En el HTML, buscá la tarjeta de ese proyecto y vas a ver **dos** videos
+   seguidos, uno adentro del otro: primero el de la aura (el fondo borroso) y
+   después el de la tarjeta en sí. Cambiá el `data-src` de los dos, para que
+   apunten al mismo archivo:
 
 ```html
-<video class="hovercard__video" data-src="/assets/video/reel.mp4" ...
+<video class="aura__video" data-src="/assets/video/reel.mp4" ...>
+...
+<video class="tile__video" data-src="/assets/video/reel.mp4" ...>
 ```
 
 por:
 
 ```html
-<video class="hovercard__video" data-src="/assets/video/lumia.mp4" ...
+<video class="aura__video" data-src="/assets/video/lumia.mp4" ...>
+...
+<video class="tile__video" data-src="/assets/video/lumia.mp4" ...>
 ```
 
 **Recomendaciones para los videos:**
 - Formato **MP4** (códec H.264 + audio AAC). Es el que anda en todos lados.
-- Proporción **16:9** (apaisado).
+- Proporción **16:9** (apaisado), o lo más parecida posible a la portada del
+  proyecto — si son muy distintas, el video se va a ver recortado dentro de
+  la tarjeta.
 - Que no pesen más de 8–10 MB cada uno. Si pesan más, el sitio carga lento.
 - Como el video arranca apenas pasás el mouse, conviene que los primeros
   segundos ya muestren algo representativo del proyecto.
 
-### El resplandor de color de cada tarjeta
+### El video del carrusel (Versión B)
 
-En la grilla, cada tarjeta tiene un brillo de color propio detrás (se nota al
-pasar el mouse). Sale de esta parte del HTML, dentro de cada tarjeta:
+Es la misma idea, pero en `b/index.html`, dentro del bloque marcado
+`CARRUSEL`. Cada proyecto tiene su propio `.carousel__slide`, con el mismo
+patrón de dos videos (aura + el de la diapositiva).
 
-```html
-<div class="hovercard__media" style="--glow:#51b6d1">
-```
+Ahora mismo hay **dos proyectos con video real de prueba** (Lumia y Red Bull
+Batallas) para que veas cómo se ve el carrusel cambiando de contenido — pero
+**ninguno de esos dos videos es en realidad de esos proyectos**: son clips
+que me pasaste para probar (uno es un visualizador genérico, el otro una
+grabación de pantalla de un sitio ajeno). Reemplazalos por los videos reales
+apenas los tengas, siguiendo el mismo paso de arriba.
 
-Ese `#51b6d1` es un color en formato hexadecimal. Podés cambiarlo por
-cualquier otro (lo mismo que en la [sección 6](#6-cambiar-los-colores)) si
-querés que el resplandor de un proyecto sea de otro tono.
+### El fondo reactivo (la "aura")
 
-### El control de sonido (Versión B)
+Cada tarjeta y cada diapositiva del carrusel tiene, detrás, una copia de su
+propio video agrandada y muy borrosa — es el mismo efecto que tenía el reel
+en la versión anterior, ahora repetido en cada proyecto. Se prende sola
+cuando pasás el mouse (o cuando esa diapositiva del carrusel está activa) y
+no hace falta configurar nada: usa automáticamente el mismo video de la
+tarjeta.
 
-Ya no hay un botón de mute en cada video. Ahora hay **un solo control, en el
-header, arriba a la derecha**: un altavoz con una barra de volumen al lado.
-Prende o apaga el sonido de lo que se esté reproduciendo en cada momento — el
-reel del inicio, o el proyecto que estés mirando con el mouse en la grilla.
+### El control de sonido
+
+No hay un botón de mute en cada video. Hay **un solo control, en el header,
+arriba a la derecha**: un altavoz con una barra de volumen al lado, más larga
+y con un brillo cyan que crece a medida que subís el volumen. Prende o apaga
+el sonido de lo que se esté reproduciendo en cada momento — el carrusel de la
+Versión B, o el proyecto que estés mirando con el mouse en la grilla.
 
 Esto es así por como funcionan los navegadores: la primera vez que entrás al
 sitio, todo arranca en silencio a la fuerza (ningún sitio puede sonar solo,
-sin que vos lo pidas). Apenas tocás ese control una vez, el sitio queda
-habilitado a sonar por el resto de la visita.
+sin que vos lo pidas). Apenas tocás ese control una vez (el botón, o
+arrastrando la barra), el sitio queda habilitado a sonar por el resto de la
+visita.
 
-No hay nada para configurar acá: es un comportamiento del sitio, no un texto
-para editar. Los videos de YouTube y los podcasts de Spotify de las páginas
-de cada proyecto quedan afuera de este control — esos tienen sus propios
+El volumen se guarda en tu navegador: si volvés a entrar más tarde, va a
+recordar el nivel que dejaste (aunque siempre arranca en silencio, por lo de
+arriba).
+
+Aparte, el carrusel de la Versión B tiene su **propio botón de play/pausa**
+(no confundirlo con el volumen): frena o retoma el video, sin tocar el
+sonido. Es el único video del sitio con ese botón — los de las tarjetas se
+reproducen solo mientras les pasás el mouse por encima, así que no
+necesitan uno.
+
+No hay nada para configurar en el control de sonido: es un comportamiento
+del sitio, no un texto para editar. Los videos de YouTube y los podcasts de
+Spotify de las páginas de cada proyecto quedan afuera de este control — esos
+tienen sus propios
 botones, porque son de otra plataforma.
 
 ---
@@ -361,11 +390,13 @@ webportfolio/
 │
 ├── assets/
 │   ├── img/            ← todas las imágenes
-│   │   ├── poster/     ← imágenes de espera de los videos (Versión B)
 │   │   └── _originales/← respaldo del Carrd: las imágenes y los textos
 │   │                      originales, por si alguna vez los necesitás
 │   ├── video/
-│   │   └── reel.mp4    ← tu demo reel
+│   │   ├── reel.mp4    ← tu demo reel (placeholder de las tarjetas)
+│   │   └── test/        ← los 2 videos de prueba que mandaste — no son de
+│   │                       ningún proyecto real, borralos cuando ya no los
+│   │                       necesites (ver sección 11)
 │   └── fonts/          ← la tipografía Alexandria, guardada acá adentro
 │
 ├── favicon.ico         ← el iconito de la pestaña del navegador
@@ -380,36 +411,65 @@ webportfolio/
 
 Estas decisiones las tomé yo durante la migración. Todas se pueden revertir.
 
-**1. El reel del inicio ya no viene de Vimeo.**
-Ahora es el archivo `assets/video/reel.mp4`, guardado en tu propio sitio. Es el
-mismo video, pero así carga mucho más rápido, arranca solo y lo controlás con
-el volumen global del header y la línea de tiempo. Si querés volver a Vimeo,
-pedímelo y lo cambio.
+**1. El reel del inicio ya no viene de Vimeo, y en la Versión A directamente
+ya no existe.**
+El video ahora vive en `assets/video/`, en tu propio sitio (carga mucho más
+rápido). En la Versión A lo saqué del todo: la home arranca directo en la
+grilla, como pediste. En la Versión B se convirtió en el carrusel.
 
-**2. Los puntos sueltos (`.`) desaparecieron.**
+**2. El botón "Back" de cada proyecto ya no vuelve al principio de la
+página — vuelve directo a la grilla.**
+Antes, si estabas en `#lumia` y apretabas Back, terminabas arriba de todo
+(en la Versión B, eso significaba ver el carrusel de nuevo y tener que
+scrollear). Ahora te deja directo en la grilla de proyectos.
+
+**3. En Audiovisual Portfolio (Versión A), pasé de páginas separadas a un
+selector con dos botones.**
+Antes "Audiovisual Portfolio" era otra página (otro `#`, otro scroll al
+tope). Ahora Sound y Audiovisual conviven en la misma página: los botones de
+arriba solo cambian qué grilla se ve, sin mover el scroll ni recargar nada.
+La Versión B no la toqué: ahí siguen siendo dos páginas, como en el Carrd
+original.
+
+**4. Le puse dos videos de prueba al carrusel para que veas cómo cambia de
+contenido.**
+Son los que me mandaste — están en `assets/video/test/`. **Ninguno de los
+dos es en realidad de esos proyectos** (uno es un visualizador genérico, el
+otro una grabación de pantalla de otro sitio web): los use solo para probar
+que el carrusel funciona con videos de duración y contenido distintos.
+Reemplazalos en cuanto tengas los videos reales — la sección 5 explica cómo.
+
+**5. Los puntos sueltos (`.`) desaparecieron.**
 El Carrd tenía títulos que decían solamente un punto. Eran separadores para
 hacer espacio, no texto. Ahora ese espacio lo hace el diseño.
 
-**3. Los textos del `title` y de la descripción los escribí yo.**
+**6. Los textos del `title` y de la descripción los escribí yo.**
 En el Carrd decían literalmente "a". Puse:
 *"Ian Iacono — sound design, mezcla y master. Portfolio de sonido y audiovisual…"*.
 Cambialo cuando quieras: está arriba de todo en el HTML, bien marcado.
 
-**4. Le agregué un botón "Back" a la página de Te Lo Aseguro | Analipsis.**
+**7. Le agregué un botón "Back" a la página de Te Lo Aseguro | Analipsis.**
 Era la única sin botón de volver: se entraba y quedabas encerrado.
 
-**5. El sitio es oscuro siempre.**
+**8. El sitio es oscuro siempre.**
 No cambia según la configuración del celular o la computadora. Es una decisión
 de marca: tus portadas y tus videos son oscuros y se ven mejor sobre negro.
 
-**6. El CSS y el JavaScript no están comprimidos.**
-Se podrían achicar un poco, pero quedarían ilegibles y vos no podrías editarlos.
-Preferí que puedas entenderlos. Igual el sitio saca 99/100 en velocidad.
+**9. Los colores pasaron de ámbar a violeta + cyan.**
+Me dijiste que el ámbar no te convencía y que preferías algo entre violeta y
+cyan oscuros. Te dejé esa combinación puesta (violeta para textos y links,
+cyan para el control de volumen), y te generé otras dos opciones para
+comparar — están en las capturas que te mandé. Si preferís otra, la
+cambiamos en un momento: son 4 líneas en `css/style.css` (ver sección 6).
 
-**7. En la Versión B, solo un video suena a la vez.**
-Si pasás el mouse de una tarjeta a otra sin sacarlo de la grilla, la anterior
-se silencia sola y empieza a sonar la nueva. Es a propósito: nunca vas a
-tener dos proyectos sonando al mismo tiempo.
+**10. El CSS y el JavaScript no están comprimidos.**
+Se podrían achicar un poco, pero quedarían ilegibles y vos no podrías editarlos.
+Preferí que puedas entenderlos.
+
+**11. Solo un video suena a la vez, en las dos versiones.**
+Si pasás el mouse de una tarjeta a otra, o cambiás de diapositiva en el
+carrusel, el video anterior se silencia solo y empieza a sonar el nuevo. Es
+a propósito: nunca vas a tener dos proyectos sonando al mismo tiempo.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 

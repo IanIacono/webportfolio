@@ -7,17 +7,18 @@
    02. Reset y base
    03. Tipografia
    04. Layout y utilidades
-   05. Navegacion
+   05. Navegacion + control global de sonido
    06. Paginas (el router muestra una a la vez)
-   07. Hero / reel
-   08. Tabs (Sound Portfolio / Audiovisual Portfolio)
-   09. Grilla de proyectos
-   10. Pagina de proyecto
-   11. Botones y links
-   12. Reproductor de video propio (solo Version B)
-   13. Feed de videos (solo Version B)
-   14. Animaciones de entrada
-   15. Responsive
+   07. Fondo reactivo (aura): el mismo video, agrandado y borroso
+   08. Tarjetas de proyecto (tiles): la grilla de ambas versiones
+   09. Selector Sound / Audiovisual (solo Version A)
+   10. Encabezado de seccion (solo Version B)
+   11. Carrusel del inicio (solo Version B)
+   12. Pagina de proyecto
+   13. Botones y links
+   14. Reproductor de video (controles compartidos)
+   15. Animaciones de entrada
+   16. Responsive
    ========================================================================== */
 
 
@@ -29,19 +30,23 @@
 
 :root {
   /* --- Colores ------------------------------------------------------------
-     El sitio es oscuro siempre, a proposito: la marca es oscura y las
-     portadas y videos son los unicos que ponen color.                       */
-  --c-bg:            #08090a;   /* fondo general, casi negro                 */
-  --c-bg-sunken:     #050506;   /* fondo mas hundido (barras, pie de video)  */
-  --c-bg-raised:     #101214;   /* superficies elevadas (tarjetas)           */
-  --c-bg-hover:      #16191c;   /* superficie con el mouse encima            */
+     El sitio es oscuro siempre, a proposito: la marca es oscura. El negro
+     tiene un tinte violeta muy sutil, y hay dos acentos: violeta (textos de
+     marca, foco, roles) y cyan (el control de volumen). El resto del color
+     lo ponen las propias portadas y videos.                                 */
+  --c-bg:            #0a0910;   /* fondo general, casi negro con tinte violeta */
+  --c-bg-sunken:     #060509;   /* fondo mas hundido                         */
+  --c-bg-raised:     #131019;   /* superficies elevadas (tarjetas)           */
+  --c-bg-hover:      #1a1524;   /* superficie con el mouse encima            */
 
-  --c-text:          #f4f4f3;   /* texto principal   — contraste 17.4:1      */
-  --c-text-muted:    #a8adb2;   /* texto secundario  — contraste  7.8:1      */
-  --c-text-faint:    #7e858c;   /* texto terciario   — contraste  4.9:1      */
+  --c-text:          #f4f3f7;   /* texto principal   — contraste 17.9:1      */
+  --c-text-muted:    #a9a6b4;   /* texto secundario  — contraste  8.6:1      */
+  --c-text-faint:    #7d7a8a;   /* texto terciario   — contraste  4.9:1      */
 
-  --c-accent:        #d9a15b;   /* ambar: el unico color de la interfaz      */
-  --c-accent-soft:   #f0c68f;   /* ambar claro para hover                    */
+  --c-accent:        #8b7cf6;   /* violeta: el acento principal              */
+  --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover                 */
+  --c-accent-2:      #35c9d6;   /* cyan: el control de volumen               */
+  --c-accent-2-soft: #7fe0e8;   /* cyan claro, para hover                    */
 
   --c-line:          rgba(255,255,255,.10);  /* lineas finas                 */
   --c-line-strong:   rgba(255,255,255,.24);  /* lineas con enfasis           */
@@ -156,6 +161,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 ul, ol { list-style: none; }
 
+/* El atributo hidden tiene que ganar siempre, aunque el elemento tenga una
+   clase que le ponga su propio "display" (como .grid, que usa display:grid).
+   Sin esta regla, esa clase le gana al hidden del navegador y el bloque
+   sigue viendose. */
+[hidden] { display: none !important; }
+
 /* Foco visible y consistente en TODO lo que se puede tocar con el teclado */
 :focus-visible {
   outline: 2px solid var(--c-accent);
@@ -164,7 +175,7 @@ ul, ol { list-style: none; }
 }
 :focus:not(:focus-visible) { outline: none; }
 
-::selection { background: var(--c-accent); color: #000; }
+::selection { background: var(--c-accent); color: #0a0910; }
 
 /* Link para saltar directo al contenido (lectores de pantalla / teclado) */
 .skip-link {
@@ -174,7 +185,7 @@ ul, ol { list-style: none; }
   z-index: 200;
   padding: var(--sp-3) var(--sp-5);
   background: var(--c-accent);
-  color: #000;
+  color: #0a0910;
   font-size: var(--fs-sm);
   font-weight: 500;
   border-radius: var(--r-sm);
@@ -274,8 +285,9 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   05. NAVEGACION
-   Barra fija arriba: el nombre a la izquierda, los links a la derecha.
+   05. NAVEGACION + CONTROL GLOBAL DE SONIDO
+   Barra fija arriba: el nombre a la izquierda, el volumen y los links a la
+   derecha.
    ========================================================================== */
 
 .nav {
@@ -285,31 +297,18 @@ p { text-wrap: pretty; }
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  transition: background var(--dur-slow) var(--ease),
-              border-color var(--dur-slow) var(--ease),
-              backdrop-filter var(--dur-slow) var(--ease);
-  border-bottom: 1px solid transparent;
-}
-
-/* Cuando bajas, la barra se vuelve solida para que se lea siempre */
-.nav.is-stuck {
-  background: rgba(8,9,10,.78);
+  background: rgba(10,9,16,.7);
   backdrop-filter: blur(14px) saturate(1.4);
   -webkit-backdrop-filter: blur(14px) saturate(1.4);
-  border-bottom-color: var(--c-line);
+  border-bottom: 1px solid transparent;
+  transition: background var(--dur-slow) var(--ease),
+              border-color var(--dur-slow) var(--ease);
 }
 
-/* Degrade suave para que el nombre se lea sobre el video del hero */
-.nav::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,.65), transparent);
-  opacity: 1;
-  transition: opacity var(--dur-slow) var(--ease);
-  pointer-events: none;
+.nav.is-stuck {
+  background: rgba(10,9,16,.86);
+  border-bottom-color: var(--c-line);
 }
-.nav.is-stuck::before { opacity: 0; }
 
 .nav__inner {
   position: relative;
@@ -379,13 +378,15 @@ p { text-wrap: pretty; }
 .nav__link:hover::after { transform: scaleX(1); }
 
 /* --- Control global de sonido ---------------------------------------------
-   El unico control de audio de todo el sitio. El boton prende/apaga el
-   sonido; la barra de volumen solo se ve a partir de 640px (en el celular
-   el espacio de la barra de navegacion es demasiado justo). */
+   El unico control de audio de todo el sitio. Vive en cyan (--c-accent-2)
+   para distinguirse del violeta que usa el resto de la interfaz. A medida
+   que subis el volumen, la barra y el circulo brillan mas: por eso el
+   nivel se guarda dos veces en el HTML (--level en % y --level-num en
+   numero, para poder hacer cuentas con calc()). */
 .audio-control {
   display: flex;
   align-items: center;
-  gap: var(--sp-2);
+  gap: var(--sp-3);
 }
 
 .audio-control__toggle {
@@ -402,75 +403,82 @@ p { text-wrap: pretty; }
   cursor: pointer;
   transition: background var(--dur) var(--ease),
               border-color var(--dur) var(--ease),
-              color var(--dur) var(--ease);
+              color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
 }
 .audio-control__toggle:hover {
   background: var(--c-text);
   border-color: var(--c-text);
-  color: #0a0a0a;
+  color: #0a0910;
 }
 .audio-control__toggle svg { width: 16px; height: 16px; pointer-events: none; }
 .audio-control__toggle .icon-on  { display: none; }
 .audio-control__toggle[aria-pressed="true"] .icon-on   { display: block; }
 .audio-control__toggle[aria-pressed="true"] .icon-off  { display: none; }
-/* Mientras el sonido esta activo, el boton queda remarcado en ambar */
+/* Mientras el sonido esta activo, el boton queda remarcado en cyan */
 .audio-control__toggle[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--c-accent) 20%, transparent);
-  border-color: var(--c-accent);
-  color: var(--c-accent-soft);
+  background: color-mix(in srgb, var(--c-accent-2) 22%, transparent);
+  border-color: var(--c-accent-2);
+  color: var(--c-accent-2-soft);
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent-2) 55%, transparent);
 }
 
 .audio-control__level {
   display: none;
   -webkit-appearance: none;
   appearance: none;
-  width: 84px;
+  width: 168px;                 /* mas larga que antes: mas comoda de agarrar */
   height: var(--tap);
   background: transparent;
   cursor: pointer;
 }
 .audio-control__level::-webkit-slider-runnable-track {
-  height: 3px;
+  height: 4px;
   border-radius: var(--r-full);
   background: linear-gradient(
     to right,
-    var(--c-accent) 0 var(--level, 80%),
-    rgba(255,255,255,.28) var(--level, 80%) 100%
+    var(--c-accent-2) 0 var(--level, 80%),
+    rgba(255,255,255,.22) var(--level, 80%) 100%
   );
+  box-shadow: 0 0 calc(var(--level-num, 0) * 0.22px)
+              color-mix(in srgb, var(--c-accent-2) 70%, transparent);
+  transition: box-shadow 120ms linear;
 }
 .audio-control__level::-moz-range-track {
-  height: 3px;
+  height: 4px;
   border-radius: var(--r-full);
-  background: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.22);
 }
 .audio-control__level::-moz-range-progress {
-  height: 3px;
+  height: 4px;
   border-radius: var(--r-full);
-  background: var(--c-accent);
+  background: var(--c-accent-2);
 }
 .audio-control__level::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 13px; height: 13px;
-  margin-top: -5px;
+  width: 15px; height: 15px;
+  margin-top: -5.5px;
   border: 0;
   border-radius: var(--r-full);
   background: var(--c-text);
-  box-shadow: var(--sh-1);
-  transition: transform var(--dur) var(--ease);
+  box-shadow: var(--sh-1),
+              0 0 calc(var(--level-num, 0) * 0.34px)
+              color-mix(in srgb, var(--c-accent-2) 85%, transparent);
+  transition: transform 150ms var(--ease), box-shadow 120ms linear;
 }
 .audio-control__level::-moz-range-thumb {
-  width: 13px; height: 13px;
+  width: 15px; height: 15px;
   border: 0;
   border-radius: var(--r-full);
   background: var(--c-text);
-  transition: transform var(--dur) var(--ease);
+  transition: transform 150ms var(--ease);
 }
 .audio-control__level:hover::-webkit-slider-thumb,
-.audio-control__level:focus-visible::-webkit-slider-thumb { transform: scale(1.2); }
+.audio-control__level:focus-visible::-webkit-slider-thumb { transform: scale(1.25); }
+.audio-control__level:active::-webkit-slider-thumb { transform: scale(1.5); }
 .audio-control__level:hover::-moz-range-thumb,
-.audio-control__level:focus-visible::-moz-range-thumb { transform: scale(1.2); }
-.audio-control__level:disabled { opacity: .35; cursor: not-allowed; }
+.audio-control__level:focus-visible::-moz-range-thumb { transform: scale(1.25); }
 
 @media (min-width: 640px) {
   .audio-control__level { display: block; }
@@ -484,7 +492,6 @@ p { text-wrap: pretty; }
    ========================================================================== */
 
 .page { display: block; }
-.page[hidden] { display: none; }
 
 /* Espacio para que el contenido no quede tapado por la barra fija */
 .page__body {
@@ -492,7 +499,7 @@ p { text-wrap: pretty; }
   padding-bottom: var(--sp-10);
 }
 
-/* Cuando el bloque viene justo despues del reel, la barra ya no lo tapa */
+/* Cuando el bloque viene justo despues del carrusel, la barra ya no lo tapa */
 .page__body--after-hero { padding-top: var(--sp-9); }
 
 /* Encabezado de pagina interna: etiqueta + titulo grande */
@@ -500,99 +507,203 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   07. HERO / REEL
-   El video principal, con una copia borrosa de fondo llenando la pantalla.
+   07. FONDO REACTIVO (AURA)
+   El mismo video del proyecto, agrandado y desenfocado detras del contenido.
+   Se usa en cada tarjeta de las grillas y en cada diapositiva del carrusel.
+   En reposo es invisible; se enciende cuando ese proyecto entra en foco
+   (hover, teclado, o el que este activo en el carrusel).
    ========================================================================== */
 
-.hero {
-  position: relative;
-  width: 100%;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #000;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-/* Capa de fondo: el mismo video, escalado y desenfocado */
-.hero__bg {
+.aura {
   position: absolute;
-  inset: 0;
-  z-index: -2;
+  inset: -35%;
+  z-index: -1;
   overflow: hidden;
+  opacity: 0;
   pointer-events: none;
-  background: #000;
+  /* Los bordes se disuelven en vez de cortar en seco: asi el resplandor de
+     una tarjeta se funde bien con el de la de al lado. */
+  mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+  transition: opacity 620ms var(--ease);
 }
-.hero__bg video,
-.hero__bg img {
+.aura__video {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 128%;
-  height: 128%;
+  width: 150%;
+  height: 150%;
   transform: translate(-50%, -50%);
   object-fit: cover;
-  filter: blur(56px) brightness(.42) saturate(1.5);
+  filter: blur(48px) brightness(.58) saturate(1.6);
 }
 
-/* Vineta: oscurece los bordes para que el video central resalte */
-.hero__bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(120% 90% at 50% 45%, transparent 30%, rgba(0,0,0,.55) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,.5), transparent 22%, transparent 72%, rgba(8,9,10,1));
+.tile__link:hover .aura,
+.tile__link:focus-visible .aura,
+.tile__link.is-playing .aura,
+.carousel__slide.is-active .aura {
+  opacity: .95;
 }
-
-.hero__frame {
-  position: relative;
-  z-index: 1;
-  width: min(94vw, calc((100svh - var(--nav-h) - var(--sp-8)) * 16 / 9));
-  aspect-ratio: 16 / 9;
-  box-shadow: var(--sh-3);
-  border-radius: var(--r-sm);
-  overflow: hidden;
-  background: #000;
-}
-.hero__frame > iframe,
-.hero__frame > video {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  object-fit: cover;
-}
-
-/* Flecha "seguir bajando" */
-.hero__scroll {
-  position: absolute;
-  bottom: var(--sp-5);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-2);
-  min-height: var(--tap);
-  padding: var(--sp-2) var(--sp-4);
-  color: var(--c-text-muted);
-  text-decoration: none;
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  transition: color var(--dur) var(--ease);
-}
-.hero__scroll:hover { color: var(--c-text); }
-.hero__scroll svg { width: 14px; height: 14px; }
 
 
 /* ==========================================================================
-   08. ENCABEZADO DE SECCION
-   El titulo de la parte que estas viendo, y a la derecha el link a la otra.
-   En el Carrd original eran estos mismos dos textos, uno al lado del otro.
+   08. TARJETAS DE PROYECTO (TILES)
+   La grilla usa columnas al estilo mosaico: cada tarjeta conserva la
+   proporcion real de su imagen (nada de recortes ni bordes borrosos de
+   relleno), asi que las columnas absorben las alturas distintas sin dejar
+   huecos raros. Al pasar el mouse o enfocar con el teclado, el video del
+   proyecto reemplaza la portada y arranca, con su aura prendiendose atras.
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: var(--sp-8) var(--sp-6);
+}
+
+.tile { position: relative; }
+
+.tile__link {
+  position: relative;
+  display: block;
+  isolation: isolate;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--r-md);
+}
+
+.tile__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-line);
+  transition: transform 340ms var(--ease),
+              border-color 340ms var(--ease),
+              box-shadow 340ms var(--ease);
+}
+
+.tile__poster,
+.tile__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tile__poster {
+  transition: opacity 300ms var(--ease), filter 340ms var(--ease);
+  filter: saturate(.86) brightness(.92);
+}
+.tile__video { opacity: 0; transition: opacity 320ms var(--ease); }
+
+/* El video queda oculto hasta que realmente arranca a reproducirse: asi
+   nunca se ve un cuadro negro mientras carga. */
+.tile__link.is-playing .tile__video  { opacity: 1; }
+.tile__link.is-playing .tile__poster { opacity: 0; }
+
+.tile__link:hover .tile__media,
+.tile__link:focus-visible .tile__media {
+  transform: translateY(-4px);
+  border-color: var(--c-line-strong);
+  box-shadow: var(--sh-2);
+}
+.tile__link:hover .tile__poster,
+.tile__link:focus-visible .tile__poster { filter: saturate(1) brightness(1); }
+
+.tile__meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-top: var(--sp-4);
+  min-height: var(--tap);
+}
+
+.tile__title {
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  letter-spacing: var(--ls-normal);
+  line-height: var(--lh-snug);
+  color: var(--c-text);
+  transition: color var(--dur) var(--ease);
+}
+.tile__link:hover .tile__title,
+.tile__link:focus-visible .tile__title { color: var(--c-accent); }
+
+.tile__role {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs);
+  color: var(--c-text-faint);
+  transition: color var(--dur) var(--ease);
+}
+.tile__link:hover .tile__role,
+.tile__link:focus-visible .tile__role { color: var(--c-accent); }
+
+.tile__arrow {
+  flex: none;
+  width: 18px; height: 18px;
+  color: var(--c-text-faint);
+  transform: translateX(-4px);
+  opacity: 0;
+  transition: transform var(--dur-slow) var(--ease),
+              opacity var(--dur-slow) var(--ease),
+              color var(--dur) var(--ease);
+}
+.tile__link:hover .tile__arrow,
+.tile__link:focus-visible .tile__arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--c-accent);
+}
+
+
+/* ==========================================================================
+   09. SELECTOR SOUND / AUDIOVISUAL  (solo Version A)
+   Dos botones: alternan que grilla se ve, sin cambiar de pagina.
+   ========================================================================== */
+
+.portfolio-tabs {
+  display: inline-flex;
+  gap: var(--sp-1);
+  padding: var(--sp-1);
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-full);
+  margin-bottom: var(--sp-8);
+}
+
+.portfolio-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  min-height: var(--tap);
+  padding-inline: clamp(var(--sp-4), 3vw, var(--sp-6));
+  border-radius: var(--r-full);
+  font: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--c-text-faint);
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.portfolio-tab:hover { color: var(--c-text); background: var(--c-bg-hover); }
+.portfolio-tab[aria-selected="true"] {
+  background: var(--c-text);
+  color: #0a0910;
+  font-weight: 500;
+}
+.portfolio-tab[aria-selected="true"]:hover { background: var(--c-text); }
+
+
+/* ==========================================================================
+   10. ENCABEZADO DE SECCION  (solo Version B)
+   El titulo de la parte que estas viendo, y a la derecha el link a la otra
+   pagina (Sound / Audiovisual siguen siendo dos paginas en esta version).
    ========================================================================== */
 
 .section-head {
@@ -638,107 +749,146 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   09. GRILLA DE PROYECTOS
-   Cada grilla usa una proporcion fija para que las filas queden alineadas:
-   cuadrada en Sound Portfolio, 16:9 en Audiovisual Portfolio.
+   11. CARRUSEL DEL INICIO  (solo Version B)
+   Reemplaza al reel unico: se puede ir pasando de proyecto en proyecto con
+   las flechas o los puntos de abajo. Cada diapositiva tiene su propia aura
+   sincronizada. A los pocos segundos aparece "Ver mas", que lleva a la
+   pagina de ese proyecto.
    ========================================================================== */
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: start;
-  gap: var(--sp-8) var(--sp-6);
-}
+.carousel { position: relative; }
 
-.card { position: relative; }
-
-.card__link {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  border-radius: var(--r-md);
-}
-
-.card__media {
+.carousel__frame {
   position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 76svh;
+  border-radius: var(--r-lg);
   overflow: hidden;
-  border-radius: var(--r-md);
-  background: var(--c-bg-raised);
   border: 1px solid var(--c-line);
+  box-shadow: var(--sh-3);
+  background: #000;
+  isolation: isolate;
 }
-/* Proporcion fija por grilla: asi todas las tarjetas de una fila
-   terminan a la misma altura y los titulos quedan alineados. */
-.card__media--square { aspect-ratio: 1 / 1; }
-.card__media--wide   { aspect-ratio: 16 / 9; }
 
-.card__media img {
+.carousel__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 620ms var(--ease);
+  pointer-events: none;
+}
+.carousel__slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+/* La aura del carrusel es mas grande que la de una tarjeta: hay mas marco
+   alrededor para que se note. */
+.carousel__slide .aura { inset: -20%; }
+
+.carousel__inner { position: relative; width: 100%; height: 100%; }
+.carousel__video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-  transition: transform 320ms var(--ease),
-              filter var(--dur-slow) var(--ease);
-  filter: saturate(.82) brightness(.88);
 }
 
-/* Velo que se corre al pasar el mouse */
-.card__media::after {
-  content: "";
+.carousel__more {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,.55), transparent 55%);
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease);
-}
-
-.card__link:hover .card__media img,
-.card__link:focus-visible .card__media img {
-  transform: scale(1.035);
-  filter: saturate(1) brightness(1);
-}
-.card__link:hover .card__media::after,
-.card__link:focus-visible .card__media::after { opacity: 1; }
-
-.card__meta {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  margin-top: var(--sp-4);
+  right: var(--sp-5);
+  bottom: var(--sp-5);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
   min-height: var(--tap);
-}
-
-.card__title {
-  font-size: var(--fs-lg);
-  font-weight: 400;
-  letter-spacing: var(--ls-normal);
-  line-height: var(--lh-snug);
+  padding-inline: var(--sp-4);
+  border-radius: var(--r-full);
+  background: rgba(10,9,16,.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--c-line-strong);
   color: var(--c-text);
-  transition: color var(--dur) var(--ease);
-}
-.card__link:hover .card__title,
-.card__link:focus-visible .card__title { color: var(--c-accent); }
-
-.card__arrow {
-  flex: none;
-  width: 18px; height: 18px;
-  color: var(--c-text-faint);
-  transform: translateX(-4px);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.03em;
+  text-decoration: none;
   opacity: 0;
-  transition: transform var(--dur-slow) var(--ease),
-              opacity var(--dur-slow) var(--ease),
-              color var(--dur) var(--ease);
+  transform: translateY(6px);
+  transition: opacity 460ms var(--ease), transform 460ms var(--ease),
+              background var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
-.card__link:hover .card__arrow,
-.card__link:focus-visible .card__arrow {
-  opacity: 1;
-  transform: translateX(0);
-  color: var(--c-accent);
+.carousel__slide.show-more .carousel__more { opacity: 1; transform: none; }
+.carousel__more:hover { background: var(--c-text); color: #0a0910; border-color: var(--c-text); }
+.carousel__more svg { width: 14px; height: 14px; }
+
+.carousel__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: var(--tap); height: var(--tap);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-full);
+  border: 1px solid var(--c-line-strong);
+  background: rgba(10,9,16,.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--c-text);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease),
+              background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+.carousel:hover .carousel__nav,
+.carousel__nav:focus-visible { opacity: 1; }
+.carousel__nav:hover { background: var(--c-text); color: #0a0910; border-color: var(--c-text); }
+.carousel__nav--prev { left: var(--sp-4); }
+.carousel__nav--next { right: var(--sp-4); }
+.carousel__nav--prev svg { transform: rotate(180deg); }
+.carousel__nav svg { width: 18px; height: 18px; }
+
+.carousel__controls { z-index: 3; }
+
+.carousel__dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+}
+.carousel__dot {
+  width: var(--tap); height: var(--tap);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+.carousel__dot::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: var(--r-full);
+  background: var(--c-line-strong);
+  transition: background var(--dur) var(--ease), width var(--dur) var(--ease);
+}
+.carousel__dot:hover::before { background: var(--c-text-muted); }
+.carousel__dot[aria-selected="true"]::before {
+  background: var(--c-accent);
+  width: 22px;
 }
 
 
 /* ==========================================================================
-   10. PAGINA DE PROYECTO
+   12. PAGINA DE PROYECTO
    Dos columnas: el material (video/audio) a la izquierda, el texto a la derecha.
    ========================================================================== */
 
@@ -833,7 +983,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   11. BOTONES Y LINKS
+   13. BOTONES Y LINKS
    ========================================================================== */
 
 .btn {
@@ -861,20 +1011,20 @@ p { text-wrap: pretty; }
 .btn:hover {
   background: var(--c-text);
   border-color: var(--c-text);
-  color: #0a0a0a;
+  color: #0a0910;
 }
 .btn svg { width: 15px; height: 15px; flex: none; }
 
 .btn--primary {
   background: var(--c-accent);
   border-color: var(--c-accent);
-  color: #14100a;
+  color: #100c1c;
   font-weight: 500;
 }
 .btn--primary:hover {
   background: var(--c-accent-soft);
   border-color: var(--c-accent-soft);
-  color: #14100a;
+  color: #100c1c;
 }
 
 .btn--ghost { border-color: transparent; color: var(--c-text-muted); }
@@ -883,36 +1033,19 @@ p { text-wrap: pretty; }
 .link {
   color: var(--c-accent);
   text-decoration: none;
-  border-bottom: 1px solid rgba(217,161,91,.4);
+  border-bottom: 1px solid color-mix(in srgb, var(--c-accent) 40%, transparent);
   transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .link:hover { color: var(--c-accent-soft); border-bottom-color: var(--c-accent-soft); }
 
 
 /* ==========================================================================
-   12. REPRODUCTOR DE VIDEO PROPIO
-   Lo usan el reel del inicio (las dos versiones) y el feed de la Version B.
-   Solo dos controles: silencio si/no, y la linea de tiempo.
+   14. REPRODUCTOR DE VIDEO — controles compartidos
+   Los usa el carrusel de la Version B. Play/pausa es el unico control que
+   arranca o frena la reproduccion; el sonido lo maneja siempre el control
+   del header.
    ========================================================================== */
 
-.player {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: var(--r-md);
-  background: #000;
-  isolation: isolate;
-}
-
-.player video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #000;
-}
-
-/* Barra de controles: aparece al pasar el mouse o al enfocar con teclado */
 .player__controls {
   position: absolute;
   inset: auto 0 0 0;
@@ -927,12 +1060,40 @@ p { text-wrap: pretty; }
   transition: opacity var(--dur-slow) var(--ease),
               transform var(--dur-slow) var(--ease);
 }
-.player:hover .player__controls,
-.player:focus-within .player__controls,
-.player.is-touch .player__controls {
+.carousel__frame:hover .player__controls,
+.carousel__frame:focus-within .player__controls,
+.player__controls.is-touch {
   opacity: 1;
   transform: translateY(0);
 }
+
+.player__playpause {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--r-full);
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--c-text);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+}
+.player__playpause:hover {
+  background: var(--c-text);
+  border-color: var(--c-text);
+  color: #0a0910;
+}
+.player__playpause svg { width: 15px; height: 15px; pointer-events: none; }
+.player__playpause .icon-play { display: none; }
+.player__playpause[aria-pressed="false"] .icon-play  { display: block; }
+.player__playpause[aria-pressed="false"] .icon-pause { display: none; }
 
 /* Linea de tiempo: es un <input type="range"> real, asi anda con el teclado */
 .player__scrub {
@@ -983,9 +1144,9 @@ p { text-wrap: pretty; }
   transform: scale(.72);
   transition: transform var(--dur) var(--ease);
 }
-.player:hover .player__scrub::-webkit-slider-thumb,
+.carousel__frame:hover .player__scrub::-webkit-slider-thumb,
 .player__scrub:focus-visible::-webkit-slider-thumb { transform: scale(1); }
-.player:hover .player__scrub::-moz-range-thumb,
+.carousel__frame:hover .player__scrub::-moz-range-thumb,
 .player__scrub:focus-visible::-moz-range-thumb { transform: scale(1); }
 
 .player__time {
@@ -998,77 +1159,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   13. GRILLA CON VISTA PREVIA  (solo Version B)
-   Cada proyecto es una tarjeta con su propio video de fondo "reactivo": en
-   reposo se ve la portada (con el mismo tratamiento borroso y luminoso que
-   el fondo del reel), y al pasar el mouse o enfocarla con el teclado el
-   video real toma su lugar y arranca. El resplandor de cada tarjeta sale
-   del color de su propia portada (variable --glow, definida en el HTML).
-   ========================================================================== */
-
-.hovergrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--sp-8) var(--sp-6);
-}
-
-.hovercard__media {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: var(--r-md);
-  background: var(--c-bg-raised);
-  border: 1px solid var(--c-line);
-  isolation: isolate;
-  transition: box-shadow 320ms var(--ease),
-              border-color 320ms var(--ease),
-              transform 320ms var(--ease);
-}
-
-.hovercard__poster,
-.hovercard__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hovercard__poster {
-  transition: opacity 280ms var(--ease);
-}
-
-.hovercard__video {
-  opacity: 0;
-  transition: opacity 280ms var(--ease);
-}
-
-/* El video queda oculto hasta que realmente arranca a reproducirse: asi
-   nunca se ve un cuadro negro mientras carga. */
-.hovercard__link.is-playing .hovercard__video { opacity: 1; }
-.hovercard__link.is-playing .hovercard__poster { opacity: 0; }
-
-.hovercard__link:hover .hovercard__media,
-.hovercard__link:focus-visible .hovercard__media {
-  transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--glow, var(--c-accent)) 50%, var(--c-line-strong));
-  box-shadow:
-    0 26px 60px -20px color-mix(in srgb, var(--glow, var(--c-accent)) 45%, transparent),
-    var(--sh-2);
-}
-
-.hovercard__role {
-  margin-top: var(--sp-1);
-  font-size: var(--fs-xs);
-  color: var(--c-text-faint);
-  transition: color var(--dur) var(--ease);
-}
-.hovercard__link:hover .hovercard__role,
-.hovercard__link:focus-visible .hovercard__role { color: var(--c-accent); }
-
-
-/* ==========================================================================
-   14. ANIMACIONES DE ENTRADA
+   15. ANIMACIONES DE ENTRADA
    Aparecen suavemente al hacer scroll. Se apagan solas si la persona pidio
    "menos movimiento" en la configuracion de su sistema.
    ========================================================================== */
@@ -1106,14 +1197,13 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   15. RESPONSIVE
+   16. RESPONSIVE
    Se diseno primero para celular; aca se ajusta lo que hace falta.
    ========================================================================== */
 
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
-  .grid,
-  .hovergrid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
 
   .project {
     grid-template-columns: minmax(0, 1fr);
@@ -1126,11 +1216,11 @@ p { text-wrap: pretty; }
 @media (max-width: 640px) {
   :root { --nav-h: 4rem; }
 
-  .grid,
-  .hovergrid { grid-template-columns: minmax(0, 1fr); gap: var(--sp-7); }
+  .grid { grid-template-columns: minmax(0, 1fr); gap: var(--sp-7); }
 
-  .hero__frame { width: 100%; border-radius: 0; }
-  .hero { min-height: 100svh; }
+  .carousel__frame { border-radius: var(--r-md); max-height: none; }
+  .carousel__more span { display: none; }   /* queda solo la flecha: no entra el texto */
+  .carousel__nav { width: 38px; height: 38px; }
 
   .player__controls { gap: var(--sp-3); padding: var(--sp-4) var(--sp-3) var(--sp-3); }
   .player__time { display: none; }   /* no entra: se prioriza la barra */
@@ -1139,6 +1229,8 @@ p { text-wrap: pretty; }
 
   .section-head { margin-bottom: var(--sp-6); }
   .page__body { padding-top: calc(var(--nav-h) + var(--sp-6)); }
+  .portfolio-tabs { width: 100%; }
+  .portfolio-tab { flex: 1 1 0; padding-inline: var(--sp-2); }
 }
 
 /* --- Pantallas muy angostas (360px y menos) --- */
@@ -1156,7 +1248,7 @@ p { text-wrap: pretty; }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
 @media print {
-  .nav, .player__controls, .hero__scroll { display: none !important; }
+  .nav, .player__controls, .carousel__nav, .carousel__dots { display: none !important; }
   body { background: #fff; color: #000; }
   .page[hidden] { display: block !important; }
 }

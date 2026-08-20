@@ -2,10 +2,12 @@
    IAN IACONO — SOUND PORTFOLIO
    main.js — lo comparten la Version A (/) y la Version B (/b)
 
-   Hace tres cosas:
+   Hace cuatro cosas:
      1. Cambia de pagina cuando cambia el # de la direccion (igual que Carrd)
      2. Hace aparecer los bloques suavemente al hacer scroll
      3. Vuelve solida la barra de arriba cuando bajas
+     4. En la Version A, alterna Sound / Audiovisual Portfolio sin cambiar
+        de pagina (solo existe si el HTML trae el bloque [data-portfolio-tabs])
 
    No hace falta tocar este archivo para cambiar textos ni imagenes.
    ========================================================================== */
@@ -155,6 +157,39 @@
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
+  }
+
+
+  /* ======================================================================
+     4. SELECTOR SOUND / AUDIOVISUAL  (solo existe en la Version A)
+     Dos botones que alternan cual grilla se ve. No es un cambio de pagina:
+     no dispara el router de arriba, no mueve el scroll.
+     ====================================================================== */
+
+  var portfolioTabs = document.querySelector("[data-portfolio-tabs]");
+  if (portfolioTabs) {
+    var tabs = Array.prototype.slice.call(portfolioTabs.querySelectorAll(".portfolio-tab"));
+
+    function selectPortfolio(name) {
+      tabs.forEach(function (tab) {
+        var active = tab.dataset.portfolioTarget === name;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        var panel = document.getElementById(tab.getAttribute("aria-controls"));
+        if (panel) {
+          panel.hidden = !active;
+          if (active) observeReveals(panel);
+        }
+      });
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () { selectPortfolio(tab.dataset.portfolioTarget); });
+    });
+
+    /* Un link viejo a #audiovisual (por ejemplo, de un buscador) abre
+       directo en esa pestana en vez de la de Sound. */
+    if (currentHash() === "audiovisual") selectPortfolio("audiovisual");
   }
 
 

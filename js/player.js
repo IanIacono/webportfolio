@@ -2,18 +2,15 @@
    IAN IACONO — SOUND PORTFOLIO
    player.js — reproduccion de video propio
 
-   Maneja dos cosas:
-     1. El reel del inicio: arranca solo cuando esta a la vista, se pausa
-        cuando sale de pantalla, y tiene una linea de tiempo para saltar
-        a un momento concreto.
-     2. La grilla de proyectos (Version B): el video de cada tarjeta arranca
-        al pasar el mouse (o al enfocarla con el teclado) y se detiene al
-        sacarlo.
-
-   El sonido lo decide siempre audio.js (el control del header). Este
-   archivo solo se encarga de que, en cada momento, a lo sumo UN video este
-   sonando: el que este "en foco" (el reel mientras se ve, o la tarjeta que
-   se esta mirando).
+   Maneja tres cosas:
+     1. El carrusel del inicio (Version B): flechas, puntos, play/pausa,
+        linea de tiempo, y el "Ver mas" que aparece a los pocos segundos.
+     2. Las tarjetas de las grillas (las dos versiones): el video de cada
+        proyecto arranca al pasar el mouse o enfocarla con el teclado, y su
+        fondo reactivo (el mismo video, agrandado y borroso) se prende atras.
+     3. El foco de sonido: a lo sumo un video suena a la vez. El sonido en
+        si lo decide siempre audio.js (el control del header); aca solo se
+        decide QUE video es "el que esta sonando" en cada momento.
 
    No hace falta tocar este archivo para cambiar textos ni videos.
    ========================================================================== */
@@ -22,6 +19,7 @@
   "use strict";
 
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var isTouch = window.matchMedia("(hover: none)").matches;
 
   function formatTime(seconds) {
     if (!isFinite(seconds) || seconds < 0) seconds = 0;
@@ -31,7 +29,7 @@
   }
 
   /* Corre la funcion cuando la pagina ya cargo y el navegador esta libre.
-     Sirve para no pelear con la carga inicial: el reel pesa varios MB. */
+     Sirve para no pelear con la carga inicial de la pagina. */
   function afterLoad(fn) {
     var run = function () {
       if ("requestIdleCallback" in window) window.requestIdleCallback(fn, { timeout: 2000 });
@@ -39,6 +37,12 @@
     };
     if (document.readyState === "complete") run();
     else window.addEventListener("load", run, { once: true });
+  }
+
+  function loadEl(v) {
+    if (!v || v.src) return;
+    var src = v.dataset.src;
+    if (src) { v.src = src; v.load(); }
   }
 
 
@@ -79,125 +83,187 @@
 
 
   /* ======================================================================
-     REEL DEL INICIO
+     CARRUSEL DEL INICIO  (solo Version B)
      ====================================================================== */
 
-  var hero = document.querySelector("[data-hero-main] video");
+  var carousel = document.querySelector("[data-carousel]");
 
-  if (hero) {
-    var heroRoot = hero.closest(".player");
-    var scrub = heroRoot.querySelector(".player__scrub");
-    var time = heroRoot.querySelector(".player__time");
-    var heroLoaded = false;
-    var heroInView = false;
+  if (carousel) {
+    var slides = Array.prototype.slice.call(carousel.querySelectorAll(".carousel__slide"));
+    var frame = carousel.querySelector(".carousel__frame");
+    var prevBtn = carousel.querySelector("[data-carousel-prev]");
+    var nextBtn = carousel.querySelector("[data-carousel-next]");
+    var dots = Array.prototype.slice.call(carousel.querySelectorAll(".carousel__dot"));
+    var playBtn = carousel.querySelector("[data-carousel-playpause]");
+    var scrub = carousel.querySelector("[data-carousel-scrub]");
+    var timeEl = carousel.querySelector("[data-carousel-time]");
+    var controlsBar = carousel.querySelector(".player__controls");
 
-    /* En celular no hay "hover": la barra de controles queda siempre
-       visible, si no nadie encontraria la linea de tiempo. */
-    if (window.matchMedia("(hover: none)").matches) heroRoot.classList.add("is-touch");
+    if (isTouch && controlsBar) controlsBar.classList.add("is-touch");
 
-    var heroLoad = function () {
-      if (heroLoaded) return;
-      heroLoaded = true;
-      var src = hero.dataset.src;
-      if (src) { hero.src = src; hero.load(); }
-    };
+    var current = 0;
+    var activeVideo = null;
+    var inView = false;
+    var userPaused = false;
+    var moreTimer = null;
 
-    var paintHero = function () {
-      if (!scrub || !isFinite(hero.duration) || hero.duration <= 0) return;
-      var ratio = hero.currentTime / hero.duration;
+    function videoOf(s) { return s.querySelector(".carousel__video"); }
+    function auraOf(s) { var a = s.querySelector(".aura__video"); return a; }
+
+    function paintPlayPause(playing) {
+      if (!playBtn) return;
+      playBtn.setAttribute("aria-pressed", String(playing));
+      playBtn.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+    }
+
+    function paintScrub() {
+      var v = activeVideo;
+      if (!v || !scrub || !isFinite(v.duration) || v.duration <= 0) return;
+      var ratio = v.currentTime / v.duration;
       if (document.activeElement !== scrub) scrub.value = String(Math.round(ratio * 1000));
       scrub.style.setProperty("--progress", (ratio * 100).toFixed(2) + "%");
-      scrub.setAttribute("aria-valuetext", formatTime(hero.currentTime) + " de " + formatTime(hero.duration));
-      if (time) time.textContent = formatTime(hero.currentTime) + " / " + formatTime(hero.duration);
-    };
+      scrub.setAttribute("aria-valuetext", formatTime(v.currentTime) + " de " + formatTime(v.duration));
+      if (timeEl) timeEl.textContent = formatTime(v.currentTime) + " / " + formatTime(v.duration);
+    }
+
+    function playActive() {
+      var v = activeVideo, a = auraOf(slides[current]);
+      if (!v) return;
+      loadEl(v); loadEl(a);
+      focusVideo(v);
+      /* El boton recien muestra "reproduciendo" cuando el video realmente
+         arranco: si el navegador bloquea el play(), no queremos un boton
+         de pausa mintiendo sobre un video que sigue quieto. */
+      var pr = v.play();
+      if (pr && pr.then) {
+        pr.then(function () { paintPlayPause(true); }).catch(function () { paintPlayPause(false); });
+      } else {
+        paintPlayPause(true);
+      }
+      if (a) { var pr2 = a.play(); if (pr2 && pr2.catch) pr2.catch(function () {}); }
+    }
+
+    function pauseActive() {
+      var v = activeVideo, a = auraOf(slides[current]);
+      if (v && !v.paused) v.pause();
+      if (a && !a.paused) a.pause();
+      if (v) blurVideo(v);
+      paintPlayPause(false);
+    }
+
+    function goTo(index) {
+      index = (index + slides.length) % slides.length;
+      if (index === current && activeVideo) return;
+
+      var prevSlide = slides[current];
+      if (prevSlide) {
+        var pv = videoOf(prevSlide), pa = auraOf(prevSlide);
+        if (pv && !pv.paused) pv.pause();
+        if (pa && !pa.paused) pa.pause();
+        if (pv) blurVideo(pv);
+        prevSlide.classList.remove("is-active", "show-more");
+        clearTimeout(moreTimer);
+      }
+
+      current = index;
+      var next = slides[current];
+      next.classList.add("is-active");
+      activeVideo = videoOf(next);
+
+      dots.forEach(function (d, i) { d.setAttribute("aria-selected", String(i === current)); });
+
+      loadEl(activeVideo);
+      loadEl(auraOf(next));
+
+      if (!reduceMotion.matches && inView && !userPaused) playActive();
+      else paintPlayPause(false);
+
+      /* "Ver mas" aparece recien despues de unos segundos mirando el proyecto */
+      moreTimer = setTimeout(function () { next.classList.add("show-more"); }, 2700);
+
+      paintScrub();
+    }
+
+    if (prevBtn) prevBtn.addEventListener("click", function () { goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { goTo(current + 1); });
+    dots.forEach(function (d, i) { d.addEventListener("click", function () { goTo(i); }); });
+
+    if (playBtn) {
+      playBtn.addEventListener("click", function () {
+        if (activeVideo && activeVideo.paused) { userPaused = false; playActive(); }
+        else { userPaused = true; pauseActive(); }
+      });
+    }
 
     if (scrub) {
       scrub.addEventListener("input", function () {
-        if (isFinite(hero.duration)) hero.currentTime = (Number(scrub.value) / 1000) * hero.duration;
+        var v = activeVideo;
+        if (v && isFinite(v.duration)) v.currentTime = (Number(scrub.value) / 1000) * v.duration;
         scrub.style.setProperty("--progress", (Number(scrub.value) / 10).toFixed(2) + "%");
       });
-      scrub.addEventListener("pointerdown", heroLoad);
+      scrub.addEventListener("pointerdown", function () { loadEl(activeVideo); });
     }
 
-    hero.addEventListener("loadedmetadata", paintHero);
-    hero.addEventListener("timeupdate", paintHero);
-    hero.addEventListener("durationchange", paintHero);
+    slides.forEach(function (s) {
+      var v = videoOf(s);
+      var repaint = function () { if (s.classList.contains("is-active")) paintScrub(); };
+      v.addEventListener("timeupdate", repaint);
+      v.addEventListener("loadedmetadata", repaint);
+      v.addEventListener("durationchange", repaint);
+    });
 
-    var heroObserver = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
+    /* Se pausa solo cuando el carrusel sale de pantalla, y se retoma al
+       volver (salvo que lo hayas pausado vos con el boton). */
+    var carouselObserver = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        heroInView = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+        inView = entry.isIntersecting && entry.intersectionRatio >= 0.5;
         if (reduceMotion.matches) return;
-        if (heroInView) {
-          heroLoad();
-          var pr = hero.play();
-          if (pr && pr.catch) pr.catch(function () {});
-          focusVideo(hero);
-        } else {
-          if (!hero.paused) hero.pause();
-          blurVideo(hero);
-        }
+        if (inView && !userPaused) playActive();
+        else if (!inView) pauseActive();
       });
     }, { threshold: [0, 0.5] }) : null;
 
-    /* Se conecta despues del load: si no, el archivo de video compite con
-       el texto y las imagenes, y la pagina tarda en verse. */
     afterLoad(function () {
-      if (heroObserver) heroObserver.observe(heroRoot);
-      else { heroLoad(); hero.play().catch(function () {}); }
+      goTo(0);
+      if (carouselObserver) carouselObserver.observe(frame);
+      else { inView = true; playActive(); }
     });
 
-    /* Si la persona pidio menos movimiento, el reel no arranca solo:
-       un click sobre el video lo reproduce o lo pausa. */
-    if (reduceMotion.matches) {
-      hero.style.cursor = "pointer";
-      hero.addEventListener("click", function () {
-        heroLoad();
-        if (hero.paused) { hero.play().catch(function () {}); focusVideo(hero); }
-        else { hero.pause(); blurVideo(hero); }
-      });
-    }
+    document.addEventListener("page:change", function (event) {
+      if (!event.detail.page.contains(carousel) && activeVideo && !activeVideo.paused) pauseActive();
+    });
 
-    /* Fondo borroso del hero: el mismo video, agrandado y desenfocado,
-       siguiendo siempre el mismo momento que el video principal. */
-    (function () {
-      var bg = document.querySelector("[data-hero-bg]");
-      if (!bg) return;
-      if (window.matchMedia("(max-width: 768px)").matches) { bg.removeAttribute("src"); return; }
-
-      function align(force) {
-        if (!isFinite(hero.currentTime)) return;
-        var drift = Math.abs(bg.currentTime - hero.currentTime);
-        if (force || drift > 0.35) {
-          try { bg.currentTime = hero.currentTime; } catch (e) { /* todavia no cargo */ }
-        }
+    document.addEventListener("visibilitychange", function () {
+      if (reduceMotion.matches) return;
+      if (document.hidden) {
+        if (activeVideo && !activeVideo.paused) pauseActive();
+      } else if (inView && !userPaused) {
+        playActive();
       }
-      hero.addEventListener("play", function () { bg.play().catch(function () {}); align(true); });
-      hero.addEventListener("pause", function () { bg.pause(); });
-      hero.addEventListener("seeked", function () { align(true); });
-      hero.addEventListener("timeupdate", function () { align(false); });
-      hero.addEventListener("loadeddata", function () { bg.load(); });
-    })();
+    });
   }
 
 
   /* ======================================================================
-     GRILLA CON VISTA PREVIA AL PASAR EL MOUSE  (Version B)
-     Cada tarjeta tiene su propio <video>. No se descarga hasta el primer
-     hover o enfoque, arranca ahi mismo, y se detiene al salir.
+     TARJETAS DE PROYECTO  (grillas de las dos versiones)
+     Cada tarjeta tiene su propio <video> y su propia aura. No se descargan
+     hasta el primer hover o enfoque, arrancan ahi mismo, y se detienen al
+     salir.
      ====================================================================== */
 
-  var hoverLinks = Array.prototype.slice.call(document.querySelectorAll(".hovercard__link"));
+  var tileLinks = Array.prototype.slice.call(document.querySelectorAll(".tile__link"));
 
-  hoverLinks.forEach(function (link) {
-    var video = link.querySelector(".hovercard__video");
+  tileLinks.forEach(function (link) {
+    var video = link.querySelector(".tile__video");
+    var auraVideo = link.querySelector(".aura__video");
     if (!video) return;
     var loaded = false;
 
     var load = function () {
       if (loaded) return;
       loaded = true;
-      var src = video.dataset.src;
-      if (src) { video.src = src; video.load(); }
+      loadEl(video);
+      loadEl(auraVideo);
     };
 
     var enter = function () {
@@ -205,12 +271,14 @@
       load();
       var pr = video.play();
       if (pr && pr.catch) pr.catch(function () {});
+      if (auraVideo) { var pr2 = auraVideo.play(); if (pr2 && pr2.catch) pr2.catch(function () {}); }
       focusVideo(video);
     };
 
     var leave = function () {
       if (!video.paused) video.pause();
       try { video.currentTime = 0; } catch (e) {}
+      if (auraVideo && !auraVideo.paused) auraVideo.pause();
       blurVideo(video);
       link.classList.remove("is-playing");
     };
@@ -222,43 +290,20 @@
     link.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") enter(); });
     link.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") leave(); });
 
-    /* Enfocar la tarjeta con el teclado hace lo mismo que pasarle el mouse,
-       para que la vista previa tambien este disponible sin mouse. */
+    /* Enfocar la tarjeta con el teclado hace lo mismo que pasarle el mouse. */
     link.addEventListener("focus", enter);
     link.addEventListener("blur", leave);
   });
 
-
-  /* ======================================================================
-     Pausar todo lo que no se ve al cambiar de pagina o de pestana
-     ====================================================================== */
-
   document.addEventListener("page:change", function (event) {
     var activePage = event.detail.page;
-
-    if (hero && !activePage.contains(hero)) {
-      if (!hero.paused) hero.pause();
-      blurVideo(hero);
-    }
-    hoverLinks.forEach(function (link) {
-      var v = link.querySelector(".hovercard__video");
-      if (v && !v.paused) {
-        v.pause();
-        try { v.currentTime = 0; } catch (e) {}
-        blurVideo(v);
-        link.classList.remove("is-playing");
-      }
+    tileLinks.forEach(function (link) {
+      if (activePage.contains(link)) return;
+      var v = link.querySelector(".tile__video");
+      var a = link.querySelector(".aura__video");
+      if (v && !v.paused) { v.pause(); try { v.currentTime = 0; } catch (e) {} blurVideo(v); }
+      if (a && !a.paused) a.pause();
+      link.classList.remove("is-playing");
     });
-  });
-
-  document.addEventListener("visibilitychange", function () {
-    if (!hero || reduceMotion.matches) return;
-    if (document.hidden) {
-      if (!hero.paused) hero.pause();
-    } else if (heroInView) {
-      var pr = hero.play();
-      if (pr && pr.catch) pr.catch(function () {});
-      focusVideo(hero);
-    }
   });
 })();

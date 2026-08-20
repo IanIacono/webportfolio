@@ -46,8 +46,11 @@
   <!-- Las tipografias estan en este mismo sitio: no dependemos de nadie -->
   <link rel="preload" href="/assets/fonts/alexandria-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- La imagen de espera del reel es lo primero grande que se ve: se pide con prioridad -->
-  <link rel="preload" href="/assets/img/reel-poster.webp" as="image" fetchpriority="high">
+  <!-- La primera imagen de la pagina se pide con prioridad. En la Version A
+       se le pasan las mismas variantes que al <img> real (imagesrcset/
+       imagesizes), para que el navegador precargue la MISMA que despues va
+       a usar, y no dos versiones distintas de la misma foto. -->
+  <link rel="preload" as="image" fetchpriority="high" imagesrcset="/assets/img/the-carbon-case-480.webp 480w, /assets/img/the-carbon-case-960.webp 960w" imagesizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw" href="/assets/img/the-carbon-case-960.webp">
 
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -66,15 +69,15 @@
       <div class="nav__right">
         <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
              el sitio: prende o apaga el volumen de lo que se este
-             reproduciendo (el reel, o el proyecto que estes mirando en la
-             grilla). Los navegadores exigen un click real para permitir
-             sonido, por eso arranca siempre en silencio. -->
+             reproduciendo (el carrusel/reel, o el proyecto que estes
+             mirando en la grilla). Los navegadores exigen un click real
+             para permitir sonido, por eso arranca siempre en silencio. -->
         <div class="audio-control">
           <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Activar sonido del sitio">
             <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
           </button>
           <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
-                 aria-label="Volumen del sitio">
+                 aria-label="Volumen del sitio" style="--level-num:80">
         </div>
 
         <nav class="nav__links" aria-label="Navegacion principal">
@@ -88,211 +91,254 @@
   <main id="main">
 
     <!-- ==========================================================================
-         SECCION 1 de 12  —  HOME / SOUND PORTFOLIO   (direccion: # o #home)
+         SECCION 1 de 12  —  HOME   (direccion: # o #home)
          ========================================================================== -->
     <section class="page" id="home" data-title="Sound Portfolio">
-      <!-- Reel principal. El video de fondo es el mismo, agrandado y borroso. -->
-      <div class="hero">
-        <div class="hero__bg" aria-hidden="true">
-          <video src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                 tabindex="-1" data-hero-bg></video>
+      <div class="wrap page__body" id="projects">
+
+        <!-- SELECTOR SOUND / AUDIOVISUAL. Los dos botones alternan cual
+             grilla de abajo se ve. No cambia de pagina. -->
+        <div class="portfolio-tabs reveal" data-portfolio-tabs role="tablist" aria-label="Categoria de proyectos">
+          <button type="button" class="portfolio-tab" data-portfolio-target="sound"
+                  role="tab" aria-selected="true" aria-controls="grid-sound" id="tab-sound">
+            Sound Portfolio
+          </button>
+          <button type="button" class="portfolio-tab" data-portfolio-target="audiovisual"
+                  role="tab" aria-selected="false" aria-controls="grid-audiovisual" id="tab-audiovisual" tabindex="-1">
+            Audiovisual Portfolio
+          </button>
         </div>
 
-        <div class="hero__frame">
-          <div class="player" data-hero-main>
-            <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                   poster="/assets/img/reel-poster.webp"
-                   width="1280" height="720"
-                   aria-label="Demo reel de sound design de Ian Iacono"></video>
-
-            <!-- El sonido de este video lo maneja el control del header:
-                 aca solo queda la linea de tiempo. -->
-            <div class="player__controls">
-              <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                     aria-label="Linea de tiempo del video">
-              <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
-            </div>
-          </div>
-        </div>
-
-        <a class="hero__scroll" href="#projects">
-          <span>Proyectos</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        </a>
-      </div>
-
-      <div class="wrap page__body page__body--after-hero" id="projects">
-      <div class="section-head reveal">
-        <h1 class="section-head__title">Sound Portfolio</h1>
-        <a class="section-head__switch" href="#audiovisual">
-          <span>Audiovisual Portfolio</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-
-
-        <!-- GRILLA DE PROYECTOS. Cada bloque <article> es una tarjeta. -->
-        <div class="grid">
-        <article class="card reveal" data-delay="0">
-          <a class="card__link" href="#thecarboncase">
-            <div class="card__media card__media--square">
-              <img src="/assets/img/the-carbon-case-960.webp"
+        <!-- GRILLA: SOUND PORTFOLIO -->
+        <div class="grid" id="grid-sound" data-portfolio-panel="sound"
+             role="tabpanel" aria-labelledby="tab-sound">
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1600/1531">
+              <img class="tile__poster" src="/assets/img/the-carbon-case-960.webp"
                    srcset="/assets/img/the-carbon-case-480.webp 480w, /assets/img/the-carbon-case-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1600" height="1531" alt="Portada de The Carbon Case: un campo sembrado bajo un cielo celeste" loading="eager">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1600" height="1531" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">The Carbon Case</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">The Carbon Case</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="1">
-          <a class="card__link" href="#lumia">
-            <div class="card__media card__media--square">
-              <img src="/assets/img/lumia-960.webp"
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#lumia" aria-label="Ver proyecto: Lumia">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1253/1045">
+              <img class="tile__poster" src="/assets/img/lumia-960.webp"
                    srcset="/assets/img/lumia-480.webp 480w, /assets/img/lumia-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1253" height="1045" alt="Portada de Lumia: una figura geometrica de lineas blancas sobre fondo negro" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1253" height="1045" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Lumia</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Lumia</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="2">
-          <a class="card__link" href="#redbull">
-            <div class="card__media card__media--square">
-              <img src="/assets/img/red-bull-batallas-960.webp"
+        <article class="tile reveal" data-delay="2">
+          <a class="tile__link" href="#redbull" aria-label="Ver proyecto: Red Bull Batallas">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1125/1013">
+              <img class="tile__poster" src="/assets/img/red-bull-batallas-960.webp"
                    srcset="/assets/img/red-bull-batallas-480.webp 480w, /assets/img/red-bull-batallas-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1125" height="1013" alt="Portada de Red Bull Batallas: el logo sobre el escenario de una batalla de rap" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1125" height="1013" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Red Bull Batallas</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Red Bull Batallas</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="3">
-          <a class="card__link" href="#lallamada">
-            <div class="card__media card__media--square">
-              <img src="/assets/img/la-llamada-fatal-960.webp"
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#lallamada" aria-label="Ver proyecto: La Llamada Fatal">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:640/640">
+              <img class="tile__poster" src="/assets/img/la-llamada-fatal-960.webp"
                    srcset="/assets/img/la-llamada-fatal-480.webp 480w, /assets/img/la-llamada-fatal-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="640" height="640" alt="Portada del podcast La Llamada Fatal: un telefono rojo sobre fondo oscuro" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="640" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">La Llamada Fatal</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">La Llamada Fatal</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="0">
-          <a class="card__link" href="#koupe">
-            <div class="card__media card__media--square">
-              <img src="/assets/img/koupe-960.webp"
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#koupe" aria-label="Ver proyecto: Koupe">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:958/1080">
+              <img class="tile__poster" src="/assets/img/koupe-960.webp"
                    srcset="/assets/img/koupe-480.webp 480w, /assets/img/koupe-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="958" height="1080" alt="Portada de Koupe: el titulo en letras celestes sobre una textura metalica" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="958" height="1080" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Koupe</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Koupe</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
         </div>
-      </div>
-    </section>
 
-    <!-- ==========================================================================
-         SECCION 2 de 12  —  AUDIOVISUAL PORTFOLIO   (direccion: #audiovisual)
-         ========================================================================== -->
-    <section class="page" id="audiovisual" data-title="Audiovisual Portfolio" hidden>
-      <div class="wrap page__body">
-      <div class="section-head reveal">
-        <h1 class="section-head__title">Audiovisual Portfolio</h1>
-        <a class="section-head__switch" href="#home">
-          <span>Sound Portfolio</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-
-
-        <div class="grid">
-        <article class="card reveal" data-delay="0">
-          <a class="card__link" href="#faiketen">
-            <div class="card__media card__media--wide">
-              <img src="/assets/img/te-lo-aseguro-960.webp"
+        <!-- GRILLA: AUDIOVISUAL PORTFOLIO -->
+        <div class="grid" id="grid-audiovisual" data-portfolio-panel="audiovisual"
+             role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:983/593">
+              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
                    srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="983" height="593" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title visually-hidden">Ver proyecto</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title visually-hidden">Ver proyecto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="1">
-          <a class="card__link" href="#reports">
-            <div class="card__media card__media--wide">
-              <img src="/assets/img/report-travel-media-960.webp"
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1252/1252">
+              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
                    srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Rèport Travel Media</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="2">
-          <a class="card__link" href="#ddp">
-            <div class="card__media card__media--wide">
-              <img src="/assets/img/detras-del-puesto-960.webp"
+        <article class="tile reveal" data-delay="2">
+          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:822/640">
+              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
                    srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Detras del Puesto</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="3">
-          <a class="card__link" href="#reports">
-            <div class="card__media card__media--wide">
-              <img src="/assets/img/report-travel-media-2-960.webp"
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1023/1027">
+              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
                    srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Rèport Travel Media</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-        <article class="card reveal" data-delay="0">
-          <a class="card__link" href="#ddp">
-            <div class="card__media card__media--wide">
-              <img src="/assets/img/detras-del-puesto-2-960.webp"
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:822/640">
+              <img class="tile__poster" src="/assets/img/detras-del-puesto-2-960.webp"
                    srcset="/assets/img/detras-del-puesto-2-480.webp 480w, /assets/img/detras-del-puesto-2-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
-              <h2 class="card__title">Detras del Puesto</h2>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
         </div>
+
       </div>
     </section>
 
@@ -329,7 +375,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -371,7 +419,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -418,7 +468,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -463,7 +515,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -496,7 +550,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -532,7 +588,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -573,7 +631,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -614,7 +674,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -655,7 +717,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 

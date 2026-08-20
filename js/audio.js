@@ -47,8 +47,12 @@
        forma mas intuitiva de activar el sonido, ademas del boton. Un input
        deshabilitado tambien desaparece de la navegacion por teclado, y no
        queremos que el volumen se pueda perder de esa forma. */
-    slider.value = String(state.muted ? 0 : pct);
-    slider.style.setProperty("--level", (state.muted ? 0 : pct) + "%");
+    var shown = state.muted ? 0 : pct;
+    slider.value = String(shown);
+    slider.style.setProperty("--level", shown + "%");
+    /* Numero sin unidad, para que el CSS pueda usarlo en un calc() y hacer
+       que el resplandor de la barra crezca junto con el volumen. */
+    slider.style.setProperty("--level-num", String(shown));
     slider.setAttribute("aria-valuetext", state.muted ? "Silenciado" : pct + "%");
   }
 

@@ -46,8 +46,11 @@
   <!-- Las tipografias estan en este mismo sitio: no dependemos de nadie -->
   <link rel="preload" href="/assets/fonts/alexandria-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- La imagen de espera del reel es lo primero grande que se ve: se pide con prioridad -->
-  <link rel="preload" href="/assets/img/reel-poster.webp" as="image" fetchpriority="high">
+  <!-- La primera imagen de la pagina se pide con prioridad. En la Version A
+       se le pasan las mismas variantes que al <img> real (imagesrcset/
+       imagesizes), para que el navegador precargue la MISMA que despues va
+       a usar, y no dos versiones distintas de la misma foto. -->
+  <link rel="preload" href="/assets/img/the-carbon-case-960.webp" as="image" fetchpriority="high">
 
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -66,15 +69,15 @@
       <div class="nav__right">
         <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
              el sitio: prende o apaga el volumen de lo que se este
-             reproduciendo (el reel, o el proyecto que estes mirando en la
-             grilla). Los navegadores exigen un click real para permitir
-             sonido, por eso arranca siempre en silencio. -->
+             reproduciendo (el carrusel/reel, o el proyecto que estes
+             mirando en la grilla). Los navegadores exigen un click real
+             para permitir sonido, por eso arranca siempre en silencio. -->
         <div class="audio-control">
           <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Activar sonido del sitio">
             <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
           </button>
           <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
-                 aria-label="Volumen del sitio">
+                 aria-label="Volumen del sitio" style="--level-num:80">
         </div>
 
         <nav class="nav__links" aria-label="Navegacion principal">
@@ -91,34 +94,124 @@
          SECCION 1 de 12  —  HOME / SOUND PORTFOLIO   (direccion: # o #home)
          ========================================================================== -->
     <section class="page" id="home" data-title="Sound Portfolio">
-      <!-- Reel principal. El video de fondo es el mismo, agrandado y borroso. -->
-      <div class="hero">
-        <div class="hero__bg" aria-hidden="true">
-          <video src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                 tabindex="-1" data-hero-bg></video>
-        </div>
-
-        <div class="hero__frame">
-          <div class="player" data-hero-main>
-            <video data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                   poster="/assets/img/reel-poster.webp"
-                   width="1280" height="720"
-                   aria-label="Demo reel de sound design de Ian Iacono"></video>
-
-            <!-- El sonido de este video lo maneja el control del header:
-                 aca solo queda la linea de tiempo. -->
-            <div class="player__controls">
-              <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                     aria-label="Linea de tiempo del video">
-              <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
+      <div class="wrap page__body">
+      <!-- CARRUSEL. Cada bloque .carousel__slide es un proyecto: las flechas y
+           los puntos de abajo pasan de uno a otro. El video de fondo
+           (agrandado y borroso) acompaña siempre al que este activo. -->
+      <div class="carousel" data-carousel="home">
+        <div class="carousel__frame">
+          <div class="carousel__slide is-active" id="home-slide-0" data-slide="0">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="carousel__inner">
+              <video class="carousel__video" data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
+                     poster="/assets/img/the-carbon-case-960.webp" width="1600" height="1531"
+                     aria-label="The Carbon Case — video del proyecto"></video>
+              <!-- aria-label repite el texto del <span>: en celular el span se
+                   oculta (no entra el texto) y solo queda la flecha, pero el
+                   link sigue necesitando un nombre para lectores de pantalla. -->
+              <a class="carousel__more" href="#thecarboncase" aria-label="Ver más — The Carbon Case">
+                <span aria-hidden="true">Ver más — The Carbon Case</span>
+                <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
             </div>
+          </div>
+          <div class="carousel__slide" id="home-slide-1" data-slide="1">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/test/visualizer.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="carousel__inner">
+              <video class="carousel__video" data-src="/assets/video/test/visualizer.mp4" preload="none" loop playsinline muted
+                     poster="/assets/img/poster-visualizer-960.webp" width="1920" height="1080"
+                     aria-label="Lumia — video del proyecto"></video>
+              <!-- aria-label repite el texto del <span>: en celular el span se
+                   oculta (no entra el texto) y solo queda la flecha, pero el
+                   link sigue necesitando un nombre para lectores de pantalla. -->
+              <a class="carousel__more" href="#lumia" aria-label="Ver más — Lumia">
+                <span aria-hidden="true">Ver más — Lumia</span>
+                <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="carousel__slide" id="home-slide-2" data-slide="2">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/test/screenrec.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="carousel__inner">
+              <video class="carousel__video" data-src="/assets/video/test/screenrec.mp4" preload="none" loop playsinline muted
+                     poster="/assets/img/poster-screenrec-960.webp" width="1920" height="1080"
+                     aria-label="Red Bull Batallas — video del proyecto"></video>
+              <!-- aria-label repite el texto del <span>: en celular el span se
+                   oculta (no entra el texto) y solo queda la flecha, pero el
+                   link sigue necesitando un nombre para lectores de pantalla. -->
+              <a class="carousel__more" href="#redbull" aria-label="Ver más — Red Bull Batallas">
+                <span aria-hidden="true">Ver más — Red Bull Batallas</span>
+                <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="carousel__slide" id="home-slide-3" data-slide="3">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="carousel__inner">
+              <video class="carousel__video" data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
+                     poster="/assets/img/la-llamada-fatal-960.webp" width="640" height="640"
+                     aria-label="La Llamada Fatal — video del proyecto"></video>
+              <!-- aria-label repite el texto del <span>: en celular el span se
+                   oculta (no entra el texto) y solo queda la flecha, pero el
+                   link sigue necesitando un nombre para lectores de pantalla. -->
+              <a class="carousel__more" href="#lallamada" aria-label="Ver más — La Llamada Fatal">
+                <span aria-hidden="true">Ver más — La Llamada Fatal</span>
+                <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+            </div>
+          </div>
+          <div class="carousel__slide" id="home-slide-4" data-slide="4">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="carousel__inner">
+              <video class="carousel__video" data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
+                     poster="/assets/img/koupe-960.webp" width="958" height="1080"
+                     aria-label="Koupe — video del proyecto"></video>
+              <!-- aria-label repite el texto del <span>: en celular el span se
+                   oculta (no entra el texto) y solo queda la flecha, pero el
+                   link sigue necesitando un nombre para lectores de pantalla. -->
+              <a class="carousel__more" href="#koupe" aria-label="Ver más — Koupe">
+                <span aria-hidden="true">Ver más — Koupe</span>
+                <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <button type="button" class="carousel__nav carousel__nav--prev" data-carousel-prev aria-label="Proyecto anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <button type="button" class="carousel__nav carousel__nav--next" data-carousel-next aria-label="Proyecto siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+
+          <div class="player__controls carousel__controls">
+            <button type="button" class="player__playpause" data-carousel-playpause aria-pressed="true" aria-label="Pausar">
+              <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
+            </button>
+            <input type="range" class="player__scrub" data-carousel-scrub min="0" max="1000" value="0" step="1"
+                   aria-label="Linea de tiempo del video">
+            <span class="player__time" data-carousel-time aria-hidden="true">0:00 / 0:00</span>
           </div>
         </div>
 
-        <a class="hero__scroll" href="#projects">
-          <span>Proyectos</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        </a>
+        <div class="carousel__dots" role="tablist" aria-label="Elegir proyecto">
+<button type="button" class="carousel__dot" role="tab" data-slide-to="0" id="home-dot-0" aria-controls="home-slide-0" aria-label="Ir a The Carbon Case" aria-selected="true"></button>
+<button type="button" class="carousel__dot" role="tab" data-slide-to="1" id="home-dot-1" aria-controls="home-slide-1" aria-label="Ir a Lumia" aria-selected="false"></button>
+<button type="button" class="carousel__dot" role="tab" data-slide-to="2" id="home-dot-2" aria-controls="home-slide-2" aria-label="Ir a Red Bull Batallas" aria-selected="false"></button>
+<button type="button" class="carousel__dot" role="tab" data-slide-to="3" id="home-dot-3" aria-controls="home-slide-3" aria-label="Ir a La Llamada Fatal" aria-selected="false"></button>
+<button type="button" class="carousel__dot" role="tab" data-slide-to="4" id="home-dot-4" aria-controls="home-slide-4" aria-label="Ir a Koupe" aria-selected="false"></button>
+        </div>
+      </div>
+
       </div>
 
       <div class="wrap page__body page__body--after-hero" id="projects">
@@ -131,105 +224,115 @@
       </div>
 
 
-        <!-- GRILLA CON VISTA PREVIA. Cada <article> es un proyecto: al pasar
-             el mouse (o enfocarlo con el teclado) el video arranca solo.     -->
-        <div class="hovergrid">
-        <article class="hovercard reveal" data-delay="0">
-          <a class="hovercard__link card__link" href="#thecarboncase"
-             aria-label="Ver proyecto: The Carbon Case — Sound design, Re-recording Mix &amp; Master">
-            <div class="hovercard__media" style="--glow:#51b6d1">
-              <img class="hovercard__poster" src="/assets/img/poster/the-carbon-case.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <!-- GRILLA CON TODOS LOS PROYECTOS. -->
+        <div class="grid">
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case — Sound design, Re-recording Mix &amp; Master">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1600/1531">
+              <img class="tile__poster" src="/assets/img/the-carbon-case-960.webp"
+                   srcset="/assets/img/the-carbon-case-480.webp 480w, /assets/img/the-carbon-case-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1600" height="1531" alt="The Carbon Case" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1600" height="1531" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">The Carbon Case</h2>
-                <p class="hovercard__role">Sound design, Re-recording Mix &amp; Master</p>
+                <h2 class="tile__title">The Carbon Case</h2>
+                <p class="tile__role">Sound design, Re-recording Mix &amp; Master</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="1">
-          <a class="hovercard__link card__link" href="#lumia"
-             aria-label="Ver proyecto: Lumia — Sound design, Music &amp; Mix">
-            <div class="hovercard__media" style="--glow:#d9a15b">
-              <img class="hovercard__poster" src="/assets/img/poster/lumia.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#lumia" aria-label="Ver proyecto: Lumia — Sound design, Music &amp; Mix">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1253/1045">
+              <img class="tile__poster" src="/assets/img/lumia-960.webp"
+                   srcset="/assets/img/lumia-480.webp 480w, /assets/img/lumia-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1253" height="1045" alt="Lumia" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1253" height="1045" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Lumia</h2>
-                <p class="hovercard__role">Sound design, Music &amp; Mix</p>
+                <h2 class="tile__title">Lumia</h2>
+                <p class="tile__role">Sound design, Music &amp; Mix</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="2">
-          <a class="hovercard__link card__link" href="#redbull"
-             aria-label="Ver proyecto: Red Bull Batallas — Sound Editing, Mix">
-            <div class="hovercard__media" style="--glow:#d12e5e">
-              <img class="hovercard__poster" src="/assets/img/poster/red-bull-batallas.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="2">
+          <a class="tile__link" href="#redbull" aria-label="Ver proyecto: Red Bull Batallas — Sound Editing, Mix">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1125/1013">
+              <img class="tile__poster" src="/assets/img/red-bull-batallas-960.webp"
+                   srcset="/assets/img/red-bull-batallas-480.webp 480w, /assets/img/red-bull-batallas-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1125" height="1013" alt="Red Bull Batallas" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1125" height="1013" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Red Bull Batallas</h2>
-                <p class="hovercard__role">Sound Editing, Mix</p>
+                <h2 class="tile__title">Red Bull Batallas</h2>
+                <p class="tile__role">Sound Editing, Mix</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="0">
-          <a class="hovercard__link card__link" href="#lallamada"
-             aria-label="Ver proyecto: La Llamada Fatal — Sound editing, Mix &amp; Master">
-            <div class="hovercard__media" style="--glow:#d1791f">
-              <img class="hovercard__poster" src="/assets/img/poster/la-llamada-fatal.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#lallamada" aria-label="Ver proyecto: La Llamada Fatal — Sound editing, Mix &amp; Master">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:640/640">
+              <img class="tile__poster" src="/assets/img/la-llamada-fatal-960.webp"
+                   srcset="/assets/img/la-llamada-fatal-480.webp 480w, /assets/img/la-llamada-fatal-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="640" height="640" alt="La Llamada Fatal" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="640" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">La Llamada Fatal</h2>
-                <p class="hovercard__role">Sound editing, Mix &amp; Master</p>
+                <h2 class="tile__title">La Llamada Fatal</h2>
+                <p class="tile__role">Sound editing, Mix &amp; Master</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="1">
-          <a class="hovercard__link card__link" href="#koupe"
-             aria-label="Ver proyecto: Koupe — Music, animation">
-            <div class="hovercard__media" style="--glow:#1fc7d1">
-              <img class="hovercard__poster" src="/assets/img/poster/koupe.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#koupe" aria-label="Ver proyecto: Koupe — Music, animation">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:958/1080">
+              <img class="tile__poster" src="/assets/img/koupe-960.webp"
+                   srcset="/assets/img/koupe-480.webp 480w, /assets/img/koupe-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="958" height="1080" alt="Koupe" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="958" height="1080" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Koupe</h2>
-                <p class="hovercard__role">Music, animation</p>
+                <h2 class="tile__title">Koupe</h2>
+                <p class="tile__role">Music, animation</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
@@ -251,103 +354,114 @@
       </div>
 
 
-        <div class="hovergrid">
-        <article class="hovercard reveal" data-delay="0">
-          <a class="hovercard__link card__link" href="#faiketen"
-             aria-label="Ver proyecto: Te Lo Aseguro | Analipsis — V">
-            <div class="hovercard__media" style="--glow:#1f6cd1">
-              <img class="hovercard__poster" src="/assets/img/poster/te-lo-aseguro.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <div class="grid">
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Te Lo Aseguro | Analipsis — V">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:983/593">
+              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
+                   srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="983" height="593" alt="Te Lo Aseguro | Analipsis" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="983" height="593" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Te Lo Aseguro | Analipsis</h2>
-                <p class="hovercard__role">V</p>
+                <h2 class="tile__title">Te Lo Aseguro | Analipsis</h2>
+                <p class="tile__role">V</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="1">
-          <a class="hovercard__link card__link" href="#reports"
-             aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
-            <div class="hovercard__media" style="--glow:#d11f2d">
-              <img class="hovercard__poster" src="/assets/img/poster/report-travel-media.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1252/1252">
+              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
+                   srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1252" height="1252" alt="Rèport Travel Media" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Rèport Travel Media</h2>
-                <p class="hovercard__role">Sound editing</p>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                <p class="tile__role">Sound editing</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="2">
-          <a class="hovercard__link card__link" href="#ddp"
-             aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
-            <div class="hovercard__media" style="--glow:#d14f1f">
-              <img class="hovercard__poster" src="/assets/img/poster/detras-del-puesto.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="2">
+          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:822/640">
+              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
+                   srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="822" height="640" alt="Detras del Puesto" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Detras del Puesto</h2>
-                <p class="hovercard__role">Music, logo animation &amp; audio branding</p>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                <p class="tile__role">Music, logo animation &amp; audio branding</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="0">
-          <a class="hovercard__link card__link" href="#reports"
-             aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
-            <div class="hovercard__media" style="--glow:#d9a15b">
-              <img class="hovercard__poster" src="/assets/img/poster/report-travel-media-2.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:1023/1027">
+              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
+                   srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1023" height="1027" alt="Rèport Travel Media" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Rèport Travel Media</h2>
-                <p class="hovercard__role">Sound editing</p>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                <p class="tile__role">Sound editing</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
-
-        <article class="hovercard reveal" data-delay="1">
-          <a class="hovercard__link card__link" href="#ddp"
-             aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
-            <div class="hovercard__media" style="--glow:#d14f1f">
-              <img class="hovercard__poster" src="/assets/img/poster/detras-del-puesto-2.webp"
-                   width="1280" height="720" alt="" loading="lazy" decoding="async">
-              <video class="hovercard__video" data-src="/assets/video/reel.mp4"
-                     muted loop playsinline preload="none" width="1280" height="720"
-                     aria-hidden="true" tabindex="-1"></video>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
+            <span class="aura" aria-hidden="true">
+                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
+              </span>
+            <div class="tile__media" style="aspect-ratio:822/640">
+              <img class="tile__poster" src="/assets/img/detras-del-puesto-2-960.webp"
+                   srcset="/assets/img/detras-del-puesto-2-480.webp 480w, /assets/img/detras-del-puesto-2-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="822" height="640" alt="Detras del Puesto" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="card__meta">
+            <div class="tile__meta">
               <div>
-                <h2 class="card__title">Detras del Puesto</h2>
-                <p class="hovercard__role">Music, logo animation &amp; audio branding</p>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                <p class="tile__role">Music, logo animation &amp; audio branding</p>
               </div>
-              <svg class="card__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </div>
           </a>
         </article>
@@ -388,7 +502,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -430,7 +546,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -477,7 +595,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -522,7 +642,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -555,7 +677,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -591,7 +715,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -632,7 +758,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -673,7 +801,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
@@ -714,7 +844,9 @@
           </div>
 
           <div class="project__actions">
-            <a class="btn" href="#home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 carrusel/reel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
           </div>
         </div>
 
