@@ -43,6 +43,7 @@
 
   --c-accent:        #8b7cf6;   /* violeta: el acento principal              */
   --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover                 */
+  --c-accent-deep:   #531e9e;   /* violeta profundo: sliders (linea de tiempo del reel, volumen) */
 
   --c-line:          rgba(255,255,255,.10);  /* lineas finas                 */
   --c-line-strong:   rgba(255,255,255,.24);  /* lineas con enfasis           */
@@ -436,43 +437,50 @@ p { text-wrap: pretty; }
   background: transparent;
   cursor: pointer;
 }
+/* El tramo vacio va "hundido" (sombra interna, como un canal tallado);
+   el tramo lleno va "de relieve" (brillo arriba), como en un fader fisico
+   de consola. */
 .audio-control__level::-webkit-slider-runnable-track {
-  height: 4px;
+  height: 6px;
   border-radius: var(--r-full);
   background: linear-gradient(
     to right,
     color-mix(in srgb, var(--c-accent) var(--level, 80%), #d8d5e0) 0 var(--level, 80%),
-    rgba(255,255,255,.22) var(--level, 80%) 100%
+    rgba(255,255,255,.14) var(--level, 80%) 100%
   );
-  box-shadow: 0 0 calc(var(--level-num, 0) * 0.3px)
-              color-mix(in srgb, var(--c-accent) 70%, transparent);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.65),
+              inset 0 -1px 0 rgba(255,255,255,.05),
+              0 0 calc(var(--level-num, 0) * 0.25px) color-mix(in srgb, var(--c-accent) 70%, transparent),
+              0 0 calc(var(--level-num, 0) * 0.5px) color-mix(in srgb, var(--c-accent-deep) 55%, transparent);
   transition: box-shadow 120ms linear;
 }
 .audio-control__level::-moz-range-track {
-  height: 4px;
+  height: 6px;
   border-radius: var(--r-full);
-  background: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.14);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.65), inset 0 -1px 0 rgba(255,255,255,.05);
 }
 .audio-control__level::-moz-range-progress {
-  height: 4px;
+  height: 6px;
   border-radius: var(--r-full);
   background: color-mix(in srgb, var(--c-accent) var(--level, 80%), #d8d5e0);
 }
 .audio-control__level::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 15px; height: 15px;
-  margin-top: -5.5px;
+  width: 16px; height: 16px;
+  margin-top: -5px;
   border: 0;
   border-radius: var(--r-full);
   background: color-mix(in srgb, var(--c-accent) var(--level, 80%), var(--c-text));
   box-shadow: var(--sh-1),
-              0 0 calc(var(--level-num, 0) * 0.4px)
-              color-mix(in srgb, var(--c-accent) 85%, transparent);
+              inset 0 1px 1px rgba(255,255,255,.55),
+              0 0 calc(var(--level-num, 0) * 0.3px) color-mix(in srgb, var(--c-accent-soft) 85%, transparent),
+              0 0 calc(var(--level-num, 0) * 0.6px) color-mix(in srgb, var(--c-accent-deep) 60%, transparent);
   transition: transform 150ms var(--ease), box-shadow 120ms linear, background 120ms linear;
 }
 .audio-control__level::-moz-range-thumb {
-  width: 15px; height: 15px;
+  width: 16px; height: 16px;
   border: 0;
   border-radius: var(--r-full);
   background: color-mix(in srgb, var(--c-accent) var(--level, 80%), var(--c-text));
@@ -483,6 +491,17 @@ p { text-wrap: pretty; }
 .audio-control__level:active::-webkit-slider-thumb { transform: scale(1.5); }
 .audio-control__level:hover::-moz-range-thumb,
 .audio-control__level:focus-visible::-moz-range-thumb { transform: scale(1.25); }
+
+/* Mientras el sitio esta silenciado, la bolita "respira" achicandose y
+   agrandandose de a poco, como invitando a subir el volumen. */
+@keyframes volume-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35); }
+}
+.audio-control__level.is-muted::-webkit-slider-thumb { animation: volume-pulse 1.6s ease-in-out infinite; }
+.audio-control__level.is-muted::-moz-range-thumb { animation: volume-pulse 1.6s ease-in-out infinite; }
+.audio-control__level.is-muted:hover::-webkit-slider-thumb,
+.audio-control__level.is-muted:active::-webkit-slider-thumb { animation-play-state: paused; }
 
 @media (min-width: 640px) {
   .audio-control__level { display: block; }
@@ -586,22 +605,24 @@ p { text-wrap: pretty; }
   border-radius: var(--r-sm);
   overflow: hidden;
   background: #000;
-  /* Los tres bordes (abajo, izquierda, derecha) se disuelven en vez de
-     cortar de golpe — nada de video/sombra/marco duro justo ahi, se
-     desvanece hacia la pagina. Los costados tienen bastante lugar libre
-     y se difuminan en 40px, bien gradual (asi no se nota como un
-     "gradiente" sino como que simplemente se apaga). Abajo el boton de
-     pausa y la linea de tiempo quedan practicamente pegados al borde
-     (a menos de 10px), asi que ese difuminado se queda mas corto (22px)
-     para no comerselos. El borde de arriba se deja tal cual. */
-  -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent),
-    linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
-  -webkit-mask-composite: source-in, source-in;
-          mask-image:
-    linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent),
-    linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
-          mask-composite: intersect, intersect;
+  /* Solo el borde inferior se disuelve en vez de cortar de golpe — nada
+     de video/sombra/marco duro justo ahi, se desvanece hacia la pagina.
+     Los costados y el borde de arriba se dejan tal cual. */
+  -webkit-mask-image: linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
+          mask-image: linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
+}
+/* Pantalla completa: llena toda la pantalla, sin marco ni difuminado —
+   esas son decisiones de diseno para cuando esta encajado en la pagina,
+   no tienen sentido a pantalla completa. */
+.hero__frame:fullscreen,
+.hero__frame:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-mask-image: none;
+          mask-image: none;
 }
 .hero__frame [data-hero-main] {
   position: relative;
@@ -985,7 +1006,8 @@ p { text-wrap: pretty; }
   transform: translateY(0);
 }
 
-.player__playpause {
+.player__playpause,
+.player__fullscreen {
   flex: none;
   display: inline-flex;
   align-items: center;
@@ -1005,16 +1027,22 @@ p { text-wrap: pretty; }
               color var(--dur) var(--ease),
               box-shadow var(--dur) var(--ease);
 }
-.player__playpause:hover {
+.player__playpause:hover,
+.player__fullscreen:hover {
   background: var(--c-text);
   border-color: var(--c-text);
   color: #0a0910;
   box-shadow: 0 0 22px -1px color-mix(in srgb, var(--c-accent) 85%, transparent);
 }
-.player__playpause svg { width: 15px; height: 15px; pointer-events: none; }
+.player__playpause svg,
+.player__fullscreen svg { width: 15px; height: 15px; pointer-events: none; }
 .player__playpause .icon-play { display: none; }
 .player__playpause[aria-pressed="false"] .icon-play  { display: block; }
 .player__playpause[aria-pressed="false"] .icon-pause { display: none; }
+
+.player__fullscreen .icon-compress { display: none; }
+.player__fullscreen[aria-pressed="true"] .icon-expand   { display: none; }
+.player__fullscreen[aria-pressed="true"] .icon-compress { display: block; }
 
 /* Linea de tiempo: es un <input type="range"> real, asi anda con el teclado */
 .player__scrub {
@@ -1026,12 +1054,16 @@ p { text-wrap: pretty; }
   background: transparent;
   cursor: pointer;
 }
+/* El recorrido ya andado va de un violeta profundo (arranque) a uno claro
+   justo en la bolita — como si el brillo se acumulara a medida que
+   avanza, en vez de un violeta plano. */
 .player__scrub::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: var(--r-full);
   background: linear-gradient(
     to right,
-    var(--c-accent) 0 var(--progress, 0%),
+    var(--c-accent-deep) 0%,
+    var(--c-accent-soft) var(--progress, 0%),
     rgba(255,255,255,.28) var(--progress, 0%) 100%
   );
 }
@@ -1043,7 +1075,7 @@ p { text-wrap: pretty; }
 .player__scrub::-moz-range-progress {
   height: 3px;
   border-radius: var(--r-full);
-  background: var(--c-accent);
+  background: linear-gradient(to right, var(--c-accent-deep), var(--c-accent-soft));
 }
 .player__scrub::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -1053,7 +1085,9 @@ p { text-wrap: pretty; }
   border: 0;
   border-radius: var(--r-full);
   background: var(--c-text);
-  box-shadow: var(--sh-1), 0 0 10px 1px color-mix(in srgb, var(--c-accent) 75%, transparent);
+  box-shadow: var(--sh-1),
+              0 0 7px 1px color-mix(in srgb, var(--c-accent-soft) 85%, transparent),
+              0 0 14px 2px color-mix(in srgb, var(--c-accent-deep) 55%, transparent);
   transform: scale(.72);
   transition: transform var(--dur) var(--ease);
 }
@@ -1062,7 +1096,8 @@ p { text-wrap: pretty; }
   border: 0;
   border-radius: var(--r-full);
   background: var(--c-text);
-  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--c-accent) 75%, transparent);
+  box-shadow: 0 0 7px 1px color-mix(in srgb, var(--c-accent-soft) 85%, transparent),
+              0 0 14px 2px color-mix(in srgb, var(--c-accent-deep) 55%, transparent);
   transform: scale(.72);
   transition: transform var(--dur) var(--ease);
 }

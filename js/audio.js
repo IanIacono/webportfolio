@@ -49,6 +49,7 @@
        queremos que el volumen se pueda perder de esa forma. */
     var shown = state.muted ? 0 : pct;
     slider.value = String(shown);
+    slider.classList.toggle("is-muted", state.muted);
     slider.style.setProperty("--level", shown + "%");
     /* Numero sin unidad, para que el CSS pueda usarlo en un calc() y hacer
        que el resplandor de la barra crezca junto con el volumen. */

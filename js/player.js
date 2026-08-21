@@ -196,6 +196,35 @@
       });
     }
 
+    /* Pantalla completa: se agranda el marco entero (no solo el <video>),
+       asi los controles propios (pausa, linea de tiempo) siguen andando
+       arriba del video en vez de perderse detras de los del navegador. */
+    var heroFrame = heroRoot.closest(".hero__frame");
+    var heroFsBtn = heroRoot.querySelector("[data-hero-fullscreen]");
+    if (heroFsBtn && heroFrame && (heroFrame.requestFullscreen || heroFrame.webkitRequestFullscreen)) {
+      heroFsBtn.addEventListener("click", function () {
+        var current = document.fullscreenElement || document.webkitFullscreenElement;
+        if (current === heroFrame) {
+          if (document.exitFullscreen) document.exitFullscreen();
+          else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        } else if (heroFrame.requestFullscreen) {
+          var pr = heroFrame.requestFullscreen();
+          if (pr && pr.catch) pr.catch(function () {});
+        } else if (heroFrame.webkitRequestFullscreen) {
+          heroFrame.webkitRequestFullscreen();
+        }
+      });
+      var paintFullscreen = function () {
+        var active = (document.fullscreenElement || document.webkitFullscreenElement) === heroFrame;
+        heroFsBtn.setAttribute("aria-pressed", String(active));
+        heroFsBtn.setAttribute("aria-label", active ? "Salir de pantalla completa" : "Pantalla completa");
+      };
+      document.addEventListener("fullscreenchange", paintFullscreen);
+      document.addEventListener("webkitfullscreenchange", paintFullscreen);
+    } else if (heroFsBtn) {
+      heroFsBtn.hidden = true;
+    }
+
     var paintHero = function () {
       if (!heroScrub || !isFinite(hero.duration) || hero.duration <= 0) return;
       var ratio = hero.currentTime / hero.duration;
@@ -255,23 +284,50 @@
     });
 
     /* Fondo borroso del hero: el mismo video, agrandado y desenfocado,
-       siguiendo siempre el mismo momento que el video principal. */
+       siguiendo siempre el mismo momento que el video principal.
+
+       Antes la correccion se disparaba con "timeupdate", que el navegador
+       tira solo un puñado de veces por segundo — entre corrida y corrida
+       los dos videos se podian desalinear un rato y se veia entrecortado,
+       sobre todo recien arrancada la pagina (recien al buscar manualmente
+       un punto del video se forzaba un realineo y ahi se veia fluido).
+       Ahora, mientras el hero esta reproduciendose, se chequea y corrige
+       en cada cuadro (requestAnimationFrame), asi los dos quedan
+       practicamente pegados todo el tiempo. */
     (function () {
       var bg = document.querySelector("[data-hero-bg]");
       if (!bg) return;
       if (window.matchMedia("(max-width: 768px)").matches) { bg.removeAttribute("src"); return; }
 
+      var rafId = null;
+
       function align(force) {
         if (!isFinite(hero.currentTime)) return;
         var drift = Math.abs(bg.currentTime - hero.currentTime);
-        if (force || drift > 0.35) {
+        if (force || drift > 0.08) {
           try { bg.currentTime = hero.currentTime; } catch (e) { /* todavia no cargo */ }
         }
       }
-      hero.addEventListener("play", function () { bg.play().catch(function () {}); align(true); });
-      hero.addEventListener("pause", function () { bg.pause(); });
+
+      function tick() {
+        align(false);
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function startSync() {
+        if (rafId) return;
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function stopSync() {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+
+      hero.addEventListener("play", function () { bg.play().catch(function () {}); align(true); startSync(); });
+      hero.addEventListener("pause", stopSync);
+      hero.addEventListener("ended", stopSync);
       hero.addEventListener("seeked", function () { align(true); });
-      hero.addEventListener("timeupdate", function () { align(false); });
       hero.addEventListener("loadeddata", function () { bg.load(); });
     })();
   }

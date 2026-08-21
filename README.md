@@ -492,14 +492,46 @@ porque el botón de pausa y la línea de tiempo están a menos de 10px de
 ese borde, y un difuminado más ancho ahí se los empezaba a comer.
 
 **19. El fondo borroso del reel debería ir más fluido.**
-Me dijiste que se veía entrecortado (como a pocos cuadros por segundo) en
-vez de acompañar al video de arriba en tiempo real. La causa más probable
-es el costo de recalcular el desenfoque (`blur`) sobre un video grande en
-cada cuadro: le agregué una pista para que el navegador lo procese en la
-placa de video en vez de a pulso, y bajé un poco el radio del desenfoque
-(de 56px a 44px) para aliviarlo más. No pude confirmar el resultado a
-ojo en este entorno — avisame si en tu navegador se sigue viendo
-entrecortado y seguimos ajustando.
+Primero até el costo de repintado (el `blur` sobre un video grande en cada
+cuadro) — ayuda, pero me dijiste que el problema real era otro: al cargar
+la página se veía entrecortado, pero apenas buscabas un punto del video con
+la línea de tiempo (o volvías a él) se ponía fluido. Esa pista apuntaba al
+mecanismo que mantiene sincronizados el video de adelante y su copia
+borrosa de atrás: antes se corregía el desvío entre los dos solo cuando el
+navegador avisaba "timeupdate" (un puñado de veces por segundo), así que
+podían quedar un rato notoriamente desalineados entre corrección y
+corrección — buscar un punto forzaba una resincronización manual al
+instante, por eso ahí se veía bien. Ahora la corrección se chequea en cada
+cuadro (no unas pocas veces por segundo), así los dos quedan pegados todo
+el tiempo, desde el arranque. Como en este entorno no puedo reproducir
+video de verdad, no lo pude confirmar a ojo — avisame si en tu navegador
+se sigue viendo entrecortado.
+
+**20. El reel se puede ver a pantalla completa.**
+Nuevo botón en los controles (el de las flechitas en las esquinas). Agranda
+todo el marco del reel, no solo el video, así el botón de pausa y la línea
+de tiempo lo siguen acompañando arriba de la pantalla completa en vez de
+perderse.
+
+**21. La línea de tiempo del reel ya no es de un violeta plano.**
+Ahora el tramo ya recorrido va de un violeta profundo (al principio) a uno
+claro con brillo (justo en la bolita) — como si el resplandor se
+acumulara a medida que avanza, en vez de un solo color parejo.
+
+**22. El control de volumen "respira" cuando el sitio está silenciado.**
+La bolita blanca se agranda y achica de a poco todo el tiempo que el sonido
+esté apagado, como invitando a subirlo. Se para sola en cuanto lo activás.
+
+**23. El control de volumen tiene más relieve.**
+El tramo vacío de la barra ahora tiene una sombra hacia adentro (como un
+canal tallado); el tramo ya subido tiene un brillo violeta de dos capas
+(uno claro pegado a la barra, uno más profundo alrededor) en vez de un
+resplandor parejo — un poco más tridimensional, como pediste.
+
+**24. El difuminado del reel volvió a ser solo abajo.**
+Habíamos probado agregarlo también a los costados; lo sacamos de ahí y
+quedó como al principio: solo el borde inferior se disuelve hacia la
+página, izquierda y derecha quedan con el corte normal.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
