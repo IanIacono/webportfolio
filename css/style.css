@@ -29,9 +29,9 @@
 :root {
   /* --- Colores ------------------------------------------------------------
      El sitio es oscuro siempre, a proposito: la marca es oscura. El negro
-     tiene un tinte violeta muy sutil, y hay dos acentos: violeta (textos de
-     marca, foco, roles) y cyan (el control de volumen). El resto del color
-     lo ponen las propias portadas y videos.                                 */
+     tiene un tinte violeta muy sutil, y el violeta es el unico acento
+     (textos de marca, foco, roles, y el control de volumen cuando esta
+     activo). El resto del color lo ponen las propias portadas y videos.    */
   --c-bg:            #0a0910;   /* fondo general, casi negro con tinte violeta */
   --c-bg-sunken:     #060509;   /* fondo mas hundido                         */
   --c-bg-raised:     #131019;   /* superficies elevadas (tarjetas)           */
@@ -43,8 +43,6 @@
 
   --c-accent:        #8b7cf6;   /* violeta: el acento principal              */
   --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover                 */
-  --c-accent-2:      #35c9d6;   /* cyan: el control de volumen               */
-  --c-accent-2-soft: #7fe0e8;   /* cyan claro, para hover                    */
 
   --c-line:          rgba(255,255,255,.10);  /* lineas finas                 */
   --c-line-strong:   rgba(255,255,255,.24);  /* lineas con enfasis           */
@@ -381,11 +379,11 @@ p { text-wrap: pretty; }
 .nav__link:hover::after { transform: scaleX(1); }
 
 /* --- Control global de sonido ---------------------------------------------
-   El unico control de audio de todo el sitio. Vive en cyan (--c-accent-2)
-   para distinguirse del violeta que usa el resto de la interfaz. A medida
-   que subis el volumen, la barra y el circulo brillan mas: por eso el
-   nivel se guarda dos veces en el HTML (--level en % y --level-num en
-   numero, para poder hacer cuentas con calc()). */
+   El unico control de audio de todo el sitio. En reposo es blanco/gris
+   (neutro); a medida que subis el volumen se va poniendo violeta y le
+   crece un brillo alrededor. Por eso el nivel se guarda dos veces en el
+   HTML (--level en % y --level-num en numero, para poder hacer cuentas
+   con calc() y color-mix()). */
 .audio-control {
   display: flex;
   align-items: center;
@@ -418,19 +416,22 @@ p { text-wrap: pretty; }
 .audio-control__toggle .icon-on  { display: none; }
 .audio-control__toggle[aria-pressed="true"] .icon-on   { display: block; }
 .audio-control__toggle[aria-pressed="true"] .icon-off  { display: none; }
-/* Mientras el sonido esta activo, el boton queda remarcado en cyan */
+/* Mientras el sonido esta activo, el boton queda remarcado en violeta */
 .audio-control__toggle[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--c-accent-2) 22%, transparent);
-  border-color: var(--c-accent-2);
-  color: var(--c-accent-2-soft);
-  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent-2) 55%, transparent);
+  background: color-mix(in srgb, var(--c-accent) 22%, transparent);
+  border-color: var(--c-accent);
+  color: var(--c-accent-soft);
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 55%, transparent);
 }
 
+/* El color de la barra y el circulo van de blanco/gris (nivel 0) a
+   violeta (nivel 100): color-mix() con --level-num hace la mezcla en
+   vivo, sin pasos ni JavaScript extra. */
 .audio-control__level {
   display: none;
   -webkit-appearance: none;
   appearance: none;
-  width: 168px;                 /* mas larga que antes: mas comoda de agarrar */
+  width: 240px;                 /* larga: comoda de agarrar y de leer el nivel */
   height: var(--tap);
   background: transparent;
   cursor: pointer;
@@ -440,11 +441,11 @@ p { text-wrap: pretty; }
   border-radius: var(--r-full);
   background: linear-gradient(
     to right,
-    var(--c-accent-2) 0 var(--level, 80%),
+    color-mix(in srgb, var(--c-accent) var(--level, 80%), #d8d5e0) 0 var(--level, 80%),
     rgba(255,255,255,.22) var(--level, 80%) 100%
   );
-  box-shadow: 0 0 calc(var(--level-num, 0) * 0.22px)
-              color-mix(in srgb, var(--c-accent-2) 70%, transparent);
+  box-shadow: 0 0 calc(var(--level-num, 0) * 0.3px)
+              color-mix(in srgb, var(--c-accent) 70%, transparent);
   transition: box-shadow 120ms linear;
 }
 .audio-control__level::-moz-range-track {
@@ -455,7 +456,7 @@ p { text-wrap: pretty; }
 .audio-control__level::-moz-range-progress {
   height: 4px;
   border-radius: var(--r-full);
-  background: var(--c-accent-2);
+  background: color-mix(in srgb, var(--c-accent) var(--level, 80%), #d8d5e0);
 }
 .audio-control__level::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -464,18 +465,18 @@ p { text-wrap: pretty; }
   margin-top: -5.5px;
   border: 0;
   border-radius: var(--r-full);
-  background: var(--c-text);
+  background: color-mix(in srgb, var(--c-accent) var(--level, 80%), var(--c-text));
   box-shadow: var(--sh-1),
-              0 0 calc(var(--level-num, 0) * 0.34px)
-              color-mix(in srgb, var(--c-accent-2) 85%, transparent);
-  transition: transform 150ms var(--ease), box-shadow 120ms linear;
+              0 0 calc(var(--level-num, 0) * 0.4px)
+              color-mix(in srgb, var(--c-accent) 85%, transparent);
+  transition: transform 150ms var(--ease), box-shadow 120ms linear, background 120ms linear;
 }
 .audio-control__level::-moz-range-thumb {
   width: 15px; height: 15px;
   border: 0;
   border-radius: var(--r-full);
-  background: var(--c-text);
-  transition: transform 150ms var(--ease);
+  background: color-mix(in srgb, var(--c-accent) var(--level, 80%), var(--c-text));
+  transition: transform 150ms var(--ease), background 120ms linear;
 }
 .audio-control__level:hover::-webkit-slider-thumb,
 .audio-control__level:focus-visible::-webkit-slider-thumb { transform: scale(1.25); }
@@ -544,9 +545,14 @@ p { text-wrap: pretty; }
   left: 50%;
   width: 128%;
   height: 128%;
-  transform: translate(-50%, -50%);
+  /* translateZ(0) fuerza una capa propia en la GPU para este elemento:
+     sin esto, el navegador tiene que recalcular el blur sobre un video
+     grande en cada cuadro sin aceleracion, y la reproduccion se ve
+     entrecortada en vez de fluida. */
+  transform: translate(-50%, -50%) translateZ(0);
   object-fit: cover;
-  filter: blur(56px) brightness(.42) saturate(1.5);
+  filter: blur(44px) brightness(.42) saturate(1.5);
+  will-change: filter;
 }
 
 /* Vineta: oscurece los bordes para que el video central resalte */
@@ -582,17 +588,19 @@ p { text-wrap: pretty; }
   background: #000;
   /* Los tres bordes (abajo, izquierda, derecha) se disuelven en vez de
      cortar de golpe — nada de video/sombra/marco duro justo ahi, se
-     desvanece hacia la pagina. Es un hilo fino (14px) pegado al borde
-     nomas, para no comerse el boton de pausa ni la linea de tiempo,
-     que quedan practicamente pegados al borde inferior del marco. El
-     borde de arriba se deja tal cual (ahi no hace falta). */
+     desvanece hacia la pagina. Los costados tienen bastante lugar libre
+     y se difuminan en 40px, bien gradual (asi no se nota como un
+     "gradiente" sino como que simplemente se apaga). Abajo el boton de
+     pausa y la linea de tiempo quedan practicamente pegados al borde
+     (a menos de 10px), asi que ese difuminado se queda mas corto (22px)
+     para no comerselos. El borde de arriba se deja tal cual. */
   -webkit-mask-image:
-    linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent),
-    linear-gradient(to bottom, #000, #000 calc(100% - 14px), transparent);
+    linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent),
+    linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
   -webkit-mask-composite: source-in, source-in;
           mask-image:
-    linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent),
-    linear-gradient(to bottom, #000, #000 calc(100% - 14px), transparent);
+    linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent),
+    linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
           mask-composite: intersect, intersect;
 }
 .hero__frame [data-hero-main] {
@@ -991,14 +999,17 @@ p { text-wrap: pretty; }
   -webkit-backdrop-filter: blur(8px);
   color: var(--c-text);
   cursor: pointer;
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 70%, transparent);
   transition: background var(--dur) var(--ease),
               border-color var(--dur) var(--ease),
-              color var(--dur) var(--ease);
+              color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
 }
 .player__playpause:hover {
   background: var(--c-text);
   border-color: var(--c-text);
   color: #0a0910;
+  box-shadow: 0 0 22px -1px color-mix(in srgb, var(--c-accent) 85%, transparent);
 }
 .player__playpause svg { width: 15px; height: 15px; pointer-events: none; }
 .player__playpause .icon-play { display: none; }
@@ -1042,7 +1053,7 @@ p { text-wrap: pretty; }
   border: 0;
   border-radius: var(--r-full);
   background: var(--c-text);
-  box-shadow: var(--sh-1);
+  box-shadow: var(--sh-1), 0 0 10px 1px color-mix(in srgb, var(--c-accent) 75%, transparent);
   transform: scale(.72);
   transition: transform var(--dur) var(--ease);
 }
@@ -1051,6 +1062,7 @@ p { text-wrap: pretty; }
   border: 0;
   border-radius: var(--r-full);
   background: var(--c-text);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--c-accent) 75%, transparent);
   transform: scale(.72);
   transition: transform var(--dur) var(--ease);
 }

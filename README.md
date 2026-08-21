@@ -252,18 +252,19 @@ buscá arriba de todo el bloque que dice `01. SISTEMA DE DISENO`:
   --c-text-muted:    #a9a6b4;   /* texto secundario */
   --c-text-faint:    #7d7a8a;   /* texto terciario */
 
-  --c-accent:        #8b7cf6;   /* violeta: el acento principal */
+  --c-accent:        #8b7cf6;   /* violeta: el unico acento del sitio */
   --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover */
-  --c-accent-2:      #35c9d6;   /* cyan: el control de volumen */
-  --c-accent-2-soft: #7fe0e8;   /* cyan claro, para hover */
 }
 ```
 
 Cambiás un código de color ahí y **se actualiza en todo el sitio solo**.
-No busques colores en otro lado: no hay.
+No busques colores en otro lado: no hay. El control de volumen del header
+también usa `--c-accent`: en reposo es blanco/gris, y a medida que subís el
+nivel se va mezclando con este violeta (y le crece el brillo alrededor) —
+es automático, no hay un color aparte para eso.
 
-> ⚠️ Si cambiás `--c-accent` o `--c-accent-2` por un color muy oscuro, va a
-> perder contraste contra el fondo negro y va a costar leerlo. Probá en
+> ⚠️ Si cambiás `--c-accent` por un color muy oscuro, va a perder contraste
+> contra el fondo negro y va a costar leerlo. Probá en
 > [webaim.org/resources/contrastchecker](https://webaim.org/resources/contrastchecker/)
 > que dé **4.5 o más** contra `#0a0910`.
 
@@ -468,6 +469,37 @@ barra de scroll solo cuando hace falta: una página larga (como la home) la
 tiene, una corta (como algunos proyectos) no, y como el header está
 centrado, ese cambio de ancho disponible lo corría un poquito. Ahora ese
 espacio se reserva siempre, así el ancho nunca cambia entre páginas.
+
+**16. El control de volumen dejó el cyan y ahora es blanco/gris → violeta.**
+Era el único lugar del sitio con un color aparte (`--c-accent-2`, cyan) —
+ese token ya no existe. Ahora usa el mismo violeta que el resto de la
+interfaz: en reposo la barra y el círculo son blancos/grises, y a medida
+que subís el volumen se van poniendo violeta con un brillo que crece
+alrededor. También la alargué (240px, antes 168px) para que sea más cómoda
+de agarrar y de leer el nivel de un vistazo.
+
+**17. El botón de pausa y la línea de tiempo del reel tienen un brillo
+violeta permanente.**
+Antes eran simples (blanco sobre gris oscuro); ahora, mientras están
+visibles (al pasar el mouse, o siempre en celular), tienen un resplandor
+violeta que los hace más fáciles de encontrar sobre el video.
+
+**18. El difuminado de los bordes del reel es más ancho y gradual.**
+La primera versión (14px) se notaba como una línea de gradiente en vez de
+un desvanecido suave. Los costados (que tienen lugar de sobra) ahora se
+difuminan en 40px; el borde de abajo se quedó en uno más corto (22px)
+porque el botón de pausa y la línea de tiempo están a menos de 10px de
+ese borde, y un difuminado más ancho ahí se los empezaba a comer.
+
+**19. El fondo borroso del reel debería ir más fluido.**
+Me dijiste que se veía entrecortado (como a pocos cuadros por segundo) en
+vez de acompañar al video de arriba en tiempo real. La causa más probable
+es el costo de recalcular el desenfoque (`blur`) sobre un video grande en
+cada cuadro: le agregué una pista para que el navegador lo procese en la
+placa de video en vez de a pulso, y bajé un poco el radio del desenfoque
+(de 56px a 44px) para aliviarlo más. No pude confirmar el resultado a
+ojo en este entorno — avisame si en tu navegador se sigue viendo
+entrecortado y seguimos ajustando.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
