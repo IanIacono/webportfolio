@@ -29,8 +29,8 @@ El sitio tiene **dos versiones distintas** para que compares y elijas:
 
 | Versión | Dirección | Cómo se ve la home |
 |---|---|---|
-| **A** | `tusitio.com` | Sin reel arriba: arranca directo en una **grilla de tarjetas**. Arriba de todo hay dos botones, **Sound Portfolio** y **Audiovisual Portfolio**, que alternan qué grilla se ve sin cambiar de página. Al pasar el mouse por una tarjeta (o enfocarla con el teclado), su video arranca y un resplandor con ese mismo video, agrandado y borroso, se prende alrededor. Clickeando entrás al proyecto. |
-| **B** | `tusitio.com/b` | Arriba, un **carrusel**: podés ir pasando de proyecto en proyecto con las flechas o los puntos de abajo. A los pocos segundos aparece un botón "Ver más" que te lleva a esa página. Abajo del carrusel, la grilla con **todos** los proyectos (igual que en la A). Sound y Audiovisual siguen siendo dos páginas separadas, como en el Carrd original. |
+| **A** | `tusitio.com` | Arranca con el **reel** a pantalla completa (con su fondo sincronizado y borroso, como antes), que se desvanece hacia abajo con un degradé en vez de cortarse de golpe. Debajo, dos botones, **Sound Portfolio** y **Audiovisual Portfolio**, alternan qué grilla se ve sin cambiar de página. Todas las tarjetas tienen el mismo tamaño (16:9) y la imagen las llena por completo, sin bordes borrosos. Al pasar el mouse por una (o enfocarla con el teclado) arranca su video con sonido y un resplandor blanco suave se prende alrededor de esa tarjeta sola. Clickeando entrás al proyecto. |
+| **B** | `tusitio.com/b` | Arriba, un **carrusel**: podés ir pasando de proyecto en proyecto con las flechas o los puntos de abajo. A los pocos segundos aparece un botón "Ver más" que te lleva a esa página. Abajo del carrusel, la grilla con **todos** los proyectos, con las mismas tarjetas parejas de 16:9 y el mismo resplandor blanco al hacer hover que en la A. Sound y Audiovisual siguen siendo dos páginas separadas, como en el Carrd original. |
 
 **Todo lo demás (las páginas de cada proyecto) es idéntico en las dos.**
 
@@ -96,7 +96,7 @@ cambiá **solo lo que está entre las etiquetas**. Nunca borres las etiquetas
 
 ```html
 <h1 class="project__title">The Carbon Case</h1>          ← el TÍTULO grande
-<p class="project__role">Sound design, Mix &amp; Master</p>  ← el SUBTÍTULO en ámbar
+<p class="project__role">Sound design, Mix &amp; Master</p>  ← el SUBTÍTULO en violeta
 
 <div class="lang">
   <p class="label lang__label">ESP</p>                    ← la etiqueta del idioma
@@ -188,33 +188,46 @@ Ahora **todos usan tu reel como provisorio**. Cuando tengas el video de cada
 proyecto:
 
 1. Guardá el archivo `.mp4` en `assets/video/`, por ejemplo `lumia.mp4`.
-2. En el HTML, buscá la tarjeta de ese proyecto y vas a ver **dos** videos
-   seguidos, uno adentro del otro: primero el de la aura (el fondo borroso) y
-   después el de la tarjeta en sí. Cambiá el `data-src` de los dos, para que
-   apunten al mismo archivo:
+2. En el HTML, buscá la tarjeta de ese proyecto (`class="tile"`) y vas a ver
+   un único video adentro. Cambiá su `data-src`:
 
 ```html
-<video class="aura__video" data-src="/assets/video/reel.mp4" ...>
-...
 <video class="tile__video" data-src="/assets/video/reel.mp4" ...>
 ```
 
 por:
 
 ```html
-<video class="aura__video" data-src="/assets/video/lumia.mp4" ...>
-...
 <video class="tile__video" data-src="/assets/video/lumia.mp4" ...>
 ```
 
 **Recomendaciones para los videos:**
 - Formato **MP4** (códec H.264 + audio AAC). Es el que anda en todos lados.
-- Proporción **16:9** (apaisado), o lo más parecida posible a la portada del
-  proyecto — si son muy distintas, el video se va a ver recortado dentro de
-  la tarjeta.
+- Proporción **16:9** (apaisado). La tarjeta siempre recorta al video a ese
+  formato (con `object-fit: cover`), así que si tu video es muy vertical o
+  muy cuadrado, va a perder los bordes izquierdo/derecho o arriba/abajo.
 - Que no pesen más de 8–10 MB cada uno. Si pesan más, el sitio carga lento.
 - Como el video arranca apenas pasás el mouse, conviene que los primeros
   segundos ya muestren algo representativo del proyecto.
+
+### El reel del inicio (Versión A)
+
+Es el video grande de la portada, con su fondo sincronizado y borroso atrás.
+Buscá el bloque marcado `hero` cerca del principio de `index.html` y vas a
+ver dos videos con el mismo `data-src`, uno chico (`data-hero-main`, el que
+se ve nítido) y otro grande (`data-hero-bg`, el fondo borroso — es
+automático, no hace falta tocarlo aparte):
+
+```html
+<video data-hero-bg ... data-src="/assets/video/reel.mp4"></video>
+...
+<video ... data-src="/assets/video/reel.mp4"></video>
+```
+
+Cambiá **los dos** `data-src` al mismo archivo nuevo. También hay una imagen
+de portada mientras el video carga (`assets/img/reel-poster.webp`, referida
+como `poster="..."` en el video principal) — si querés reemplazarla, guardá
+tu propia imagen ahí con el mismo nombre, o cambiá la ruta en el HTML.
 
 ### El video del carrusel (Versión B)
 
@@ -231,12 +244,16 @@ apenas los tengas, siguiendo el mismo paso de arriba.
 
 ### El fondo reactivo (la "aura")
 
-Cada tarjeta y cada diapositiva del carrusel tiene, detrás, una copia de su
-propio video agrandada y muy borrosa — es el mismo efecto que tenía el reel
-en la versión anterior, ahora repetido en cada proyecto. Se prende sola
-cuando pasás el mouse (o cuando esa diapositiva del carrusel está activa) y
-no hace falta configurar nada: usa automáticamente el mismo video de la
-tarjeta.
+Este efecto — una copia del mismo video, agrandada y muy borrosa detrás —
+solo existe en **dos lugares**: el reel del inicio de la Versión A, y cada
+diapositiva del carrusel de la Versión B. Ahí se prende sola (con el reel,
+apenas entrás; con el carrusel, cuando esa diapositiva está activa) y no
+hace falta configurar nada: usa automáticamente el mismo video.
+
+Las **tarjetas de la grilla** (en las dos versiones) ya no la tienen — se
+probó con un fondo borroso ahí también, pero con varias tarjetas juntas el
+efecto se mezclaba entre vecinas, así que quedó solo el resplandor blanco al
+hacer hover, contenido dentro de cada tarjeta.
 
 ### El control de sonido
 
@@ -277,25 +294,27 @@ buscá arriba de todo el bloque que dice `01. SISTEMA DE DISENO`:
 
 ```css
 :root {
-  --c-bg:            #08090a;   /* fondo general, casi negro */
-  --c-bg-raised:     #101214;   /* superficies elevadas (tarjetas) */
+  --c-bg:            #0a0910;   /* fondo general, casi negro con tinte violeta */
+  --c-bg-raised:     #131019;   /* superficies elevadas (tarjetas)           */
 
-  --c-text:          #f4f4f3;   /* texto principal */
-  --c-text-muted:    #a8adb2;   /* texto secundario */
-  --c-text-faint:    #7e858c;   /* texto terciario */
+  --c-text:          #f4f3f7;   /* texto principal */
+  --c-text-muted:    #a9a6b4;   /* texto secundario */
+  --c-text-faint:    #7d7a8a;   /* texto terciario */
 
-  --c-accent:        #d9a15b;   /* ámbar: el único color de la interfaz */
-  --c-accent-soft:   #f0c68f;   /* ámbar claro para el hover */
+  --c-accent:        #8b7cf6;   /* violeta: el acento principal */
+  --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover */
+  --c-accent-2:      #35c9d6;   /* cyan: el control de volumen */
+  --c-accent-2-soft: #7fe0e8;   /* cyan claro, para hover */
 }
 ```
 
 Cambiás un código de color ahí y **se actualiza en todo el sitio solo**.
 No busques colores en otro lado: no hay.
 
-> ⚠️ Si cambiás `--c-accent` por un color muy oscuro, va a perder contraste
-> contra el fondo negro y va a costar leerlo. Probá en
+> ⚠️ Si cambiás `--c-accent` o `--c-accent-2` por un color muy oscuro, va a
+> perder contraste contra el fondo negro y va a costar leerlo. Probá en
 > [webaim.org/resources/contrastchecker](https://webaim.org/resources/contrastchecker/)
-> que dé **4.5 o más** contra `#08090a`.
+> que dé **4.5 o más** contra `#0a0910`.
 
 En ese mismo bloque también están los tamaños de letra (`--fs-...`), los
 espacios (`--sp-...`), los redondeos (`--r-...`) y las sombras (`--sh-...`).
@@ -376,9 +395,9 @@ git push
 ```
 webportfolio/
 │
-├── index.html          ← VERSIÓN A: la home con grilla de tarjetas + los proyectos
+├── index.html          ← VERSIÓN A: reel + grilla de tarjetas + los proyectos
 ├── b/
-│   └── index.html      ← VERSIÓN B: la home con el feed de videos + los proyectos
+│   └── index.html      ← VERSIÓN B: carrusel + grilla de tarjetas + los proyectos
 │
 ├── css/
 │   └── style.css       ← TODOS los estilos: colores, tamaños, espacios
@@ -386,14 +405,17 @@ webportfolio/
 ├── js/
 │   ├── main.js         ← cambia de página y hace aparecer los bloques al scrollear
 │   ├── audio.js        ← el control global de sonido del header
-│   └── player.js       ← reproduce los videos (el reel, y la grilla de la Versión B)
+│   └── player.js       ← reproduce los videos: el reel (A), el carrusel (B)
+│                          y las tarjetas de la grilla (las dos versiones)
 │
 ├── assets/
 │   ├── img/            ← todas las imágenes
+│   │   ├── reel-poster.webp ← portada del reel mientras carga el video
 │   │   └── _originales/← respaldo del Carrd: las imágenes y los textos
 │   │                      originales, por si alguna vez los necesitás
 │   ├── video/
-│   │   ├── reel.mp4    ← tu demo reel (placeholder de las tarjetas)
+│   │   ├── reel.mp4    ← tu demo reel (el video del inicio en la A, y
+│   │   │                  también el placeholder de las tarjetas)
 │   │   └── test/        ← los 2 videos de prueba que mandaste — no son de
 │   │                       ningún proyecto real, borralos cuando ya no los
 │   │                       necesites (ver sección 11)
@@ -411,17 +433,24 @@ webportfolio/
 
 Estas decisiones las tomé yo durante la migración. Todas se pueden revertir.
 
-**1. El reel del inicio ya no viene de Vimeo, y en la Versión A directamente
-ya no existe.**
-El video ahora vive en `assets/video/`, en tu propio sitio (carga mucho más
-rápido). En la Versión A lo saqué del todo: la home arranca directo en la
-grilla, como pediste. En la Versión B se convirtió en el carrusel.
+**1. El reel del inicio ya no viene de Vimeo — vive en `assets/video/`, en tu
+propio sitio (carga mucho más rápido).**
+Lo probamos sin reel en la Versión A (arrancando directo en la grilla), pero
+terminamos volviendo a ponerlo: ahora la A arranca con el reel a pantalla
+completa (con su fondo sincronizado y borroso) y se desvanece con un degradé
+hacia la grilla de proyectos, en vez de cortarse de golpe. En mobile, abajo
+del reel queda el cartel "SEE PROJECTS ↓" invitando a scrollear; en
+escritorio no hace falta, así que no se muestra. En la Versión B el reel
+sigue siendo el carrusel, como ya estaba.
 
 **2. El botón "Back" de cada proyecto ya no vuelve al principio de la
 página — vuelve directo a la grilla.**
 Antes, si estabas en `#lumia` y apretabas Back, terminabas arriba de todo
-(en la Versión B, eso significaba ver el carrusel de nuevo y tener que
-scrollear). Ahora te deja directo en la grilla de proyectos.
+(en la Versión A eso significa ver el reel de nuevo, y en la B el carrusel,
+en los dos casos con que scrollear para volver a ver los proyectos). Ahora
+te deja directo en la grilla de proyectos. Al lado de "Back" agregué un
+botón **"Next"** que te lleva al siguiente proyecto en orden — y al llegar
+al último, vuelve a empezar por el primero.
 
 **3. En Audiovisual Portfolio (Versión A), pasé de páginas separadas a un
 selector con dos botones.**
@@ -470,6 +499,21 @@ Preferí que puedas entenderlos.
 Si pasás el mouse de una tarjeta a otra, o cambiás de diapositiva en el
 carrusel, el video anterior se silencia solo y empieza a sonar el nuevo. Es
 a propósito: nunca vas a tener dos proyectos sonando al mismo tiempo.
+
+**12. Todas las tarjetas de la grilla miden lo mismo (16:9), en las dos
+versiones.**
+Antes cada una tenía el tamaño de su imagen original, así que quedaban
+bordes borrosos rellenando el espacio sobrante dentro de algunas. Ahora el
+recuadro siempre es 16:9 y la imagen (o el video, al hacer hover) lo llena
+por completo — recortando un poco los bordes si hace falta, nunca
+estirando ni dejando espacio vacío.
+
+**13. La portada del reel (el ecualizador con "IAN IACONO") la volví a
+pintar en violeta.**
+Era un placeholder que hice al principio, cuando el color de acento todavía
+era ámbar. Al cambiar la paleta (punto 9) se quedó con el color viejo sin
+que se notara porque el reel había desaparecido de la Versión A; al
+volver a ponerlo, la recoloreé para que combine con el resto del sitio.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 

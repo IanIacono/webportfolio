@@ -315,6 +315,7 @@
 
   if (hero) {
     var heroRoot = hero.closest(".player");
+    var heroControls = heroRoot.querySelector(".player__controls");
     var heroScrub = heroRoot.querySelector(".player__scrub");
     var heroTime = heroRoot.querySelector(".player__time");
     var heroLoaded = false;
@@ -322,7 +323,7 @@
 
     /* En celular no hay "hover": la barra de controles queda siempre
        visible, si no nadie encontraria la linea de tiempo. */
-    if (isTouch) heroRoot.classList.add("is-touch");
+    if (isTouch && heroControls) heroControls.classList.add("is-touch");
 
     var heroLoad = function () {
       if (heroLoaded) return;
