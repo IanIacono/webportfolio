@@ -49,7 +49,7 @@
   --c-line-strong:   rgba(255,255,255,.24);  /* lineas con enfasis           */
 
   /* --- Tipografia --------------------------------------------------------- */
-  --font: "Alexandria", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  --font: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
 
   /* Escala tipografica fluida: crece sola entre celular y desktop */
@@ -142,7 +142,7 @@ body {
   color: var(--c-text);
   font-family: var(--font);
   font-size: var(--fs-base);
-  font-weight: 300;
+  font-weight: 400;
   line-height: var(--lh-normal);
   letter-spacing: var(--ls-normal);
   -webkit-font-smoothing: antialiased;
@@ -213,9 +213,9 @@ ul, ol { list-style: none; }
    ========================================================================== */
 
 @font-face {
-  font-family: "Alexandria";
-  src: url("/assets/fonts/alexandria-latin.woff2") format("woff2");
-  font-weight: 100 900;          /* una sola fuente cubre todos los pesos */
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/spacegrotesk-latin.woff2") format("woff2");
+  font-weight: 300 700;          /* una sola fuente cubre todos los pesos */
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
@@ -224,9 +224,9 @@ ul, ol { list-style: none; }
                  U+FFFD;
 }
 @font-face {
-  font-family: "Alexandria";
-  src: url("/assets/fonts/alexandria-latin-ext.woff2") format("woff2");
-  font-weight: 100 900;
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/spacegrotesk-latin-ext.woff2") format("woff2");
+  font-weight: 300 700;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
@@ -236,7 +236,7 @@ ul, ol { list-style: none; }
 }
 
 h1, h2, h3, h4 {
-  font-weight: 300;
+  font-weight: 700;
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   text-wrap: balance;
@@ -326,7 +326,7 @@ p { text-wrap: pretty; }
 
 .nav__name {
   font-size: var(--fs-sm);
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--c-text);
   text-decoration: none;
@@ -624,6 +624,16 @@ p { text-wrap: pretty; }
   -webkit-mask-image: none;
           mask-image: none;
 }
+/* A pantalla completa la pantalla casi nunca es 16:9 (en celular es al
+   reves, mas alta que ancha): con "cover" el video se agranda tanto que
+   recorta los costados casi enteros. "contain" respeta la proporcion
+   real del video y deja franjas negras arriba/abajo o a los costados en
+   vez de recortar — como cualquier reproductor de video de verdad. */
+.hero__frame:fullscreen .hero__video,
+.hero__frame:-webkit-full-screen .hero__video {
+  object-fit: contain;
+  background: #000;
+}
 .hero__frame [data-hero-main] {
   position: relative;
   display: block;
@@ -748,7 +758,7 @@ p { text-wrap: pretty; }
 
 .tile__title {
   font-size: var(--fs-lg);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: var(--ls-normal);
   line-height: var(--lh-snug);
   color: var(--c-text);
@@ -881,7 +891,7 @@ p { text-wrap: pretty; }
 
 .project__title {
   font-size: var(--fs-3xl);
-  font-weight: 200;
+  font-weight: 700;
   letter-spacing: var(--ls-tight);
   line-height: var(--lh-tight);
   margin-bottom: var(--sp-3);
@@ -889,7 +899,7 @@ p { text-wrap: pretty; }
 
 .project__role {
   font-size: var(--fs-lg);
-  font-weight: 300;
+  font-weight: 600;
   line-height: var(--lh-snug);
   color: var(--c-accent);
   letter-spacing: var(--ls-normal);
@@ -1175,7 +1185,15 @@ p { text-wrap: pretty; }
 
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
 
-  .hero__frame { width: 100%; border-radius: 0; }
+  /* En celular el marco ocupa todo el ancho, pegado al video: el
+     difuminado del borde inferior no tiene el mismo lugar para "respirar"
+     que en desktop y termina viendose como un corte raro. Se lo saca. */
+  .hero__frame {
+    width: 100%;
+    border-radius: 0;
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
   .hero { min-height: 100svh; }
 
   .player__controls { gap: var(--sp-3); padding: var(--sp-4) var(--sp-3) var(--sp-3); }

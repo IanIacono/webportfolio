@@ -363,7 +363,7 @@ webportfolio/
 │   ├── video/
 │   │   └── reel.mp4    ← tu demo reel (el video del inicio, y también el
 │   │                      placeholder de las tarjetas)
-│   └── fonts/          ← la tipografía Alexandria, guardada acá adentro
+│   └── fonts/          ← la tipografía Space Grotesk, guardada acá adentro
 │
 ├── favicon.ico         ← el iconito de la pestaña del navegador
 ├── apple-touch-icon.png← el icono cuando alguien guarda el sitio en el celular
@@ -532,6 +532,40 @@ resplandor parejo — un poco más tridimensional, como pediste.
 Habíamos probado agregarlo también a los costados; lo sacamos de ahí y
 quedó como al principio: solo el borde inferior se disuelve hacia la
 página, izquierda y derecha quedan con el corte normal.
+
+**25. En celular el reel ya no tiene difuminado abajo.**
+Ahí el marco ocupa todo el ancho pegado al video, sin el mismo "aire"
+alrededor que en desktop, y el difuminado se terminaba viendo como un
+corte raro en vez de un desvanecido. En desktop sigue igual.
+
+**26. La pantalla completa del reel ya no recorta los bordes en celular.**
+Antes el video llenaba la pantalla completa recortando lo que sobraba
+(`object-fit: cover`), y en un celular en vertical eso significaba perder
+casi todo el video a los costados. Ahora, a pantalla completa, el video
+respeta su proporción real y deja franjas negras en vez de recortar —
+como cualquier reproductor de video de verdad.
+
+**27. La tipografía cambió de Alexandria a Space Grotesk.**
+Me dijiste que la anterior era muy fina y elegante, y que querías algo
+más grueso y moderno — parecido al título de una imagen que me
+mandaste. Elegí Space Grotesk (gratis, de Google Fonts) por ese estilo
+geométrico y contundente. Los títulos pasaron a negrita (antes eran
+livianos) y el cuerpo de texto también subió un poco de peso. Está
+autoalojada igual que la anterior — no depende de Google en cada visita.
+
+> ⚠️ El logo del reel (el ecualizador con "IAN IACONO") sigue siendo la
+> imagen placeholder vieja, con la tipografía del sistema, no Space
+> Grotesk — es una imagen fija, no texto. Cuando subas tu reel real,
+> esto deja de importar.
+
+**28. Te generé dos paletas de color nuevas para comparar, a partir de las
+imágenes que mandaste — no elegí ninguna, quedan como archivos aparte
+hasta que decidas.**
+Mantuve el fondo oscuro (es la decisión de marca del punto 8) y adapté
+el color dominante de cada imagen como acento, en vez de copiar los 5
+colores literales de cada una — meterlos todos tal cual rompía los
+degradados de los controles. Te mandé un archivo único por cada opción
+para que las compares vos.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
