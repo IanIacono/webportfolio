@@ -567,6 +567,36 @@ colores literales de cada una — meterlos todos tal cual rompía los
 degradados de los controles. Te mandé un archivo único por cada opción
 para que las compares vos.
 
+**29. El selector Sound Portfolio / Audiovisual Portfolio ahora tiene una
+bolita blanca que desliza de un botón al otro, con un brillo suave — y
+volvió a usar la tipografía anterior (Alexandria), pero solo ahí.**
+Pediste que ese control anime en vez de simplemente cambiar de color, así
+que ahora hay una sola "bolita" de fondo (blanca, con glow) que se mueve
+con `transform` — es más fluida que animar el ancho o el color a mano, y
+se acomoda sola aunque "Sound Portfolio" y "Audiovisual Portfolio" midan
+distinto. También pediste mantener Space Grotesk en el resto del sitio
+pero volver a la tipografía anterior solo en este selector: recuperé del
+historial de git los archivos de Alexandria y los dejé exclusivos de
+`.portfolio-tab` con una variable aparte (`--font-tabs`), así el resto del
+sitio no se toca.
+
+**30. Te generé dos versiones más para comparar — "Versión Z" (la paleta
+violeta actual, sin tocar nada) y una versión radical con la paleta
+completa de "Daily Bloom" — y todavía no elegiste ninguna, así que el
+sitio real sigue en violeta.**
+La versión radical usa los 5 colores exactos de esa imagen (blanco,
+magenta, coral, azul pizarra y ciruela — la vez anterior solo había usado
+3) y el fondo dejó de ser un color plano: es un degradado pintado a mano,
+con varias manchas de color superpuestas en vez de un degradado lineal de
+dos puntas, como pediste. Se nota más donde el diseño ya tenía lugar
+libre — debajo del reel, en celular, y en los márgenes alrededor del
+video — porque el reel en sí sigue ocupando la pantalla como decidimos en
+el punto 1. El logo del reel también cambia de color para acompañar
+(mismo aviso del punto 27: es una imagen fija). Los dos arreglos del punto
+29 (bolita animada + tipografía del selector) ya están **en las dos
+versiones nuevas**, porque son arreglos de verdad — no dependen de qué
+paleta elijas.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Siete proyectos comparten el mismo texto (*"Cortometraje sobre la creación

@@ -51,6 +51,8 @@
   /* --- Tipografia --------------------------------------------------------- */
   --font: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;
+  --font-tabs: "Alexandria", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;   /* solo para el selector Sound/Audiovisual */
 
   /* Escala tipografica fluida: crece sola entre celular y desktop */
   --fs-2xs:  0.6875rem;                          /* 11px — etiquetas         */
@@ -227,6 +229,30 @@ ul, ol { list-style: none; }
   font-family: "Space Grotesk";
   src: url("/assets/fonts/spacegrotesk-latin-ext.woff2") format("woff2");
   font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+                 U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+                 U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+                 U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* Alexandria: solo se usa en el selector Sound/Audiovisual (.portfolio-tab) */
+@font-face {
+  font-family: "Alexandria";
+  src: url("/assets/fonts/alexandria-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+                 U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+                 U+FFFD;
+}
+@font-face {
+  font-family: "Alexandria";
+  src: url("/assets/fonts/alexandria-latin-ext.woff2") format("woff2");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
@@ -800,6 +826,7 @@ p { text-wrap: pretty; }
    ========================================================================== */
 
 .portfolio-tabs {
+  position: relative;
   display: inline-flex;
   gap: var(--sp-1);
   padding: var(--sp-1);
@@ -809,7 +836,26 @@ p { text-wrap: pretty; }
   margin-bottom: var(--sp-8);
 }
 
+/* Bolita blanca que desliza detras de la pestana activa */
+.portfolio-tabs__thumb {
+  position: absolute;
+  top: var(--sp-1);
+  bottom: var(--sp-1);
+  left: 0;
+  width: 0;
+  border-radius: var(--r-full);
+  background: var(--c-text);
+  box-shadow: 0 0 14px -2px rgba(255, 255, 255, .55),
+              0 0 3px rgba(255, 255, 255, .4);
+  transform: translateX(0);
+  transition: transform var(--dur) var(--ease), width var(--dur) var(--ease);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .portfolio-tab {
+  position: relative;
+  z-index: 1;
   appearance: none;
   border: 0;
   background: transparent;
@@ -817,7 +863,7 @@ p { text-wrap: pretty; }
   min-height: var(--tap);
   padding-inline: clamp(var(--sp-4), 3vw, var(--sp-6));
   border-radius: var(--r-full);
-  font: inherit;
+  font-family: var(--font-tabs);
   font-size: var(--fs-xs);
   font-weight: 400;
   letter-spacing: 0.05em;
@@ -826,13 +872,11 @@ p { text-wrap: pretty; }
   white-space: nowrap;
   transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.portfolio-tab:hover { color: var(--c-text); background: var(--c-bg-hover); }
+.portfolio-tab:hover:not([aria-selected="true"]) { color: var(--c-text); background: var(--c-bg-hover); }
 .portfolio-tab[aria-selected="true"] {
-  background: var(--c-text);
   color: #0a0910;
   font-weight: 500;
 }
-.portfolio-tab[aria-selected="true"]:hover { background: var(--c-text); }
 
 
 /* ==========================================================================

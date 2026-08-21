@@ -182,18 +182,33 @@
   var portfolioTabs = document.querySelector("[data-portfolio-tabs]");
   if (portfolioTabs) {
     var tabs = Array.prototype.slice.call(portfolioTabs.querySelectorAll(".portfolio-tab"));
+    var thumb = portfolioTabs.querySelector("[data-portfolio-thumb]");
+    var activeTab = tabs[0];
+
+    function positionThumb(tab, skipTransition) {
+      if (!thumb || !tab) return;
+      if (skipTransition) thumb.style.transition = "none";
+      thumb.style.width = tab.offsetWidth + "px";
+      thumb.style.transform = "translateX(" + tab.offsetLeft + "px)";
+      if (skipTransition) {
+        void thumb.offsetHeight; /* fuerza reflow antes de reactivar la transicion */
+        thumb.style.transition = "";
+      }
+    }
 
     function selectPortfolio(name) {
       tabs.forEach(function (tab) {
         var active = tab.dataset.portfolioTarget === name;
         tab.setAttribute("aria-selected", String(active));
         tab.tabIndex = active ? 0 : -1;
+        if (active) activeTab = tab;
         var panel = document.getElementById(tab.getAttribute("aria-controls"));
         if (panel) {
           panel.hidden = !active;
           if (active) observeReveals(panel);
         }
       });
+      positionThumb(activeTab, false);
     }
 
     tabs.forEach(function (tab) {
@@ -203,6 +218,15 @@
     /* Un link viejo a #audiovisual (por ejemplo, de un buscador) abre
        directo en esa pestana en vez de la de Sound. */
     if (currentHash() === "audiovisual") selectPortfolio("audiovisual");
+    else positionThumb(activeTab, true);
+
+    /* Reubica la bolita sin animar si cambia el ancho de las pestanas
+       (rotacion de pantalla, resize, o la fuente Alexandria que termina
+       de cargar y puede correr el ancho del texto). */
+    window.addEventListener("resize", function () { positionThumb(activeTab, true); });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { positionThumb(activeTab, true); });
+    }
   }
 
 
