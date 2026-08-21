@@ -1,6 +1,6 @@
 /* ==========================================================================
    IAN IACONO — SOUND PORTFOLIO
-   Hoja de estilos unica. Compartida por la Version A (/) y la Version B (/b).
+   Hoja de estilos unica para todo el sitio.
 
    COMO ESTA ORGANIZADO ESTE ARCHIVO
    01. Sistema de diseno (los "tokens": colores, tamanos, espacios)
@@ -9,17 +9,14 @@
    04. Layout y utilidades
    05. Navegacion + control global de sonido
    06. Paginas (el router muestra una a la vez)
-   07. Hero / reel (solo Version A)
-   08. Fondo reactivo (aura): el mismo video, agrandado y borroso
-   09. Tarjetas de proyecto (tiles): la grilla de ambas versiones
-   10. Selector Sound / Audiovisual (solo Version A)
-   11. Encabezado de seccion (solo Version B)
-   12. Carrusel del inicio (solo Version B)
-   13. Pagina de proyecto
-   14. Botones y links
-   15. Reproductor de video (controles compartidos)
-   16. Animaciones de entrada
-   17. Responsive
+   07. Hero / reel
+   08. Tarjetas de proyecto (tiles): la grilla de la home
+   09. Selector Sound / Audiovisual
+   10. Pagina de proyecto
+   11. Botones y links
+   12. Reproductor de video (controles compartidos)
+   13. Animaciones de entrada
+   14. Responsive
    ========================================================================== */
 
 
@@ -134,6 +131,11 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--nav-h) + var(--sp-4));
+  /* Reserva el lugar de la barra de scroll siempre, haya o no: si no,
+     el header (position:fixed, centrado) se corre unos pixeles cada vez
+     que se pasa de una pagina larga (con scroll) a una corta (sin scroll),
+     por ejemplo de la home a un proyecto. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -509,7 +511,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   07. HERO / REEL  (solo Version A)
+   07. HERO / REEL
    El video principal, con una copia borrosa de fondo llenando la pantalla.
    Al final se disuelve en el fondo de la pagina en vez de cortar en seco.
    ========================================================================== */
@@ -578,10 +580,20 @@ p { text-wrap: pretty; }
   border-radius: var(--r-sm);
   overflow: hidden;
   background: #000;
-  /* El borde inferior se disuelve en vez de cortar de golpe: nada de
-     video/sombra/marco duro justo ahi, se desvanece a la pagina. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+  /* Los tres bordes (abajo, izquierda, derecha) se disuelven en vez de
+     cortar de golpe — nada de video/sombra/marco duro justo ahi, se
+     desvanece hacia la pagina. Es un hilo fino (14px) pegado al borde
+     nomas, para no comerse el boton de pausa ni la linea de tiempo,
+     que quedan practicamente pegados al borde inferior del marco. El
+     borde de arriba se deja tal cual (ahi no hace falta). */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent),
+    linear-gradient(to bottom, #000, #000 calc(100% - 14px), transparent);
+  -webkit-mask-composite: source-in, source-in;
+          mask-image:
+    linear-gradient(to right, transparent, #000 14px, #000 calc(100% - 14px), transparent),
+    linear-gradient(to bottom, #000, #000 calc(100% - 14px), transparent);
+          mask-composite: intersect, intersect;
 }
 .hero__frame [data-hero-main] {
   position: relative;
@@ -625,44 +637,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   08. FONDO REACTIVO (AURA)
-   El mismo video del proyecto, agrandado y desenfocado detras del contenido.
-   Se usa en cada tarjeta de las grillas y en cada diapositiva del carrusel.
-   En reposo es invisible; se enciende cuando ese proyecto entra en foco
-   (hover, teclado, o el que este activo en el carrusel).
-   ========================================================================== */
-
-.aura {
-  position: absolute;
-  inset: -35%;
-  z-index: -1;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  /* Los bordes se disuelven en vez de cortar en seco: asi el resplandor de
-     una tarjeta se funde bien con el de la de al lado. */
-  mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
-  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
-  transition: opacity 620ms var(--ease);
-}
-.aura__video {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 150%;
-  height: 150%;
-  transform: translate(-50%, -50%);
-  object-fit: cover;
-  filter: blur(48px) brightness(.58) saturate(1.6);
-}
-
-.carousel__slide.is-active .aura {
-  opacity: .95;
-}
-
-
-/* ==========================================================================
-   09. TARJETAS DE PROYECTO (TILES)
+   08. TARJETAS DE PROYECTO (TILES)
    Todas las tarjetas de una grilla comparten el mismo tamano (16:9): la
    imagen se recorta con object-fit para llenar el recuadro entero, sin
    bordes borrosos de relleno. Al pasar el mouse o enfocar con el teclado,
@@ -781,7 +756,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   10. SELECTOR SOUND / AUDIOVISUAL  (solo Version A)
+   09. SELECTOR SOUND / AUDIOVISUAL
    Dos botones: alternan que grilla se ve, sin cambiar de pagina.
    ========================================================================== */
 
@@ -822,194 +797,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   11. ENCABEZADO DE SECCION  (solo Version B)
-   El titulo de la parte que estas viendo, y a la derecha el link a la otra
-   pagina (Sound / Audiovisual siguen siendo dos paginas en esta version).
-   ========================================================================== */
-
-.section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-4) var(--sp-6);
-  flex-wrap: wrap;
-  padding-bottom: var(--sp-5);
-  border-bottom: 1px solid var(--c-line);
-  margin-bottom: var(--sp-8);
-}
-
-.section-head__title {
-  font-size: var(--fs-2xl);
-  font-weight: 200;
-  letter-spacing: var(--ls-tight);
-  line-height: var(--lh-tight);
-}
-
-.section-head__switch {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  min-height: var(--tap);
-  padding-inline: var(--sp-2);
-  margin-inline-end: calc(var(--sp-2) * -1);
-  font-size: var(--fs-2xs);
-  font-weight: 400;
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  color: var(--c-text-faint);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color var(--dur) var(--ease);
-}
-.section-head__switch svg {
-  width: 15px; height: 15px;
-  transition: transform var(--dur-slow) var(--ease);
-}
-.section-head__switch:hover { color: var(--c-accent); }
-.section-head__switch:hover svg { transform: translateX(3px); }
-
-
-/* ==========================================================================
-   12. CARRUSEL DEL INICIO  (solo Version B)
-   Reemplaza al reel unico: se puede ir pasando de proyecto en proyecto con
-   las flechas o los puntos de abajo. Cada diapositiva tiene su propia aura
-   sincronizada. A los pocos segundos aparece "Ver mas", que lleva a la
-   pagina de ese proyecto.
-   ========================================================================== */
-
-.carousel { position: relative; }
-
-.carousel__frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  max-height: 76svh;
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  border: 1px solid var(--c-line);
-  box-shadow: var(--sh-3);
-  background: #000;
-  isolation: isolate;
-}
-
-.carousel__slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 620ms var(--ease);
-  pointer-events: none;
-}
-.carousel__slide.is-active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-/* La aura del carrusel es mas grande que la de una tarjeta: hay mas marco
-   alrededor para que se note. */
-.carousel__slide .aura { inset: -20%; }
-
-.carousel__inner { position: relative; width: 100%; height: 100%; }
-.carousel__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.carousel__more {
-  position: absolute;
-  right: var(--sp-5);
-  bottom: var(--sp-5);
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  min-height: var(--tap);
-  padding-inline: var(--sp-4);
-  border-radius: var(--r-full);
-  background: rgba(10,9,16,.62);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid var(--c-line-strong);
-  color: var(--c-text);
-  font-size: var(--fs-xs);
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 460ms var(--ease), transform 460ms var(--ease),
-              background var(--dur) var(--ease), border-color var(--dur) var(--ease);
-}
-.carousel__slide.show-more .carousel__more { opacity: 1; transform: none; }
-.carousel__more:hover { background: var(--c-text); color: #0a0910; border-color: var(--c-text); }
-.carousel__more svg { width: 14px; height: 14px; }
-
-.carousel__nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 4;
-  width: var(--tap); height: var(--tap);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--r-full);
-  border: 1px solid var(--c-line-strong);
-  background: rgba(10,9,16,.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: var(--c-text);
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity var(--dur-slow) var(--ease),
-              background var(--dur) var(--ease),
-              border-color var(--dur) var(--ease);
-}
-.carousel:hover .carousel__nav,
-.carousel__nav:focus-visible { opacity: 1; }
-.carousel__nav:hover { background: var(--c-text); color: #0a0910; border-color: var(--c-text); }
-.carousel__nav--prev { left: var(--sp-4); }
-.carousel__nav--next { right: var(--sp-4); }
-.carousel__nav--prev svg { transform: rotate(180deg); }
-.carousel__nav svg { width: 18px; height: 18px; }
-
-.carousel__controls { z-index: 3; }
-
-.carousel__dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-top: var(--sp-5);
-}
-.carousel__dot {
-  width: var(--tap); height: var(--tap);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-  padding: 0;
-}
-.carousel__dot::before {
-  content: "";
-  width: 8px; height: 8px;
-  border-radius: var(--r-full);
-  background: var(--c-line-strong);
-  transition: background var(--dur) var(--ease), width var(--dur) var(--ease);
-}
-.carousel__dot:hover::before { background: var(--c-text-muted); }
-.carousel__dot[aria-selected="true"]::before {
-  background: var(--c-accent);
-  width: 22px;
-}
-
-
-/* ==========================================================================
-   13. PAGINA DE PROYECTO
+   10. PAGINA DE PROYECTO
    Dos columnas: el material (video/audio) a la izquierda, el texto a la derecha.
    ========================================================================== */
 
@@ -1107,7 +895,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   14. BOTONES Y LINKS
+   11. BOTONES Y LINKS
    ========================================================================== */
 
 .btn {
@@ -1164,10 +952,9 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   15. REPRODUCTOR DE VIDEO — controles compartidos
-   Los usa el carrusel de la Version B. Play/pausa es el unico control que
-   arranca o frena la reproduccion; el sonido lo maneja siempre el control
-   del header.
+   12. REPRODUCTOR DE VIDEO — controles del reel
+   Play/pausa es el unico control que arranca o frena la reproduccion; el
+   sonido lo maneja siempre el control del header.
    ========================================================================== */
 
 .player__controls {
@@ -1183,8 +970,6 @@ p { text-wrap: pretty; }
   transition: opacity var(--dur-slow) var(--ease),
               transform var(--dur-slow) var(--ease);
 }
-.carousel__frame:hover .player__controls,
-.carousel__frame:focus-within .player__controls,
 .hero__frame:hover .player__controls,
 .hero__frame:focus-within .player__controls,
 .player__controls.is-touch {
@@ -1269,10 +1054,8 @@ p { text-wrap: pretty; }
   transform: scale(.72);
   transition: transform var(--dur) var(--ease);
 }
-.carousel__frame:hover .player__scrub::-webkit-slider-thumb,
 .hero__frame:hover .player__scrub::-webkit-slider-thumb,
 .player__scrub:focus-visible::-webkit-slider-thumb { transform: scale(1); }
-.carousel__frame:hover .player__scrub::-moz-range-thumb,
 .hero__frame:hover .player__scrub::-moz-range-thumb,
 .player__scrub:focus-visible::-moz-range-thumb { transform: scale(1); }
 
@@ -1286,7 +1069,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   16. ANIMACIONES DE ENTRADA
+   13. ANIMACIONES DE ENTRADA
    Aparecen suavemente al hacer scroll. Se apagan solas si la persona pidio
    "menos movimiento" en la configuracion de su sistema.
    ========================================================================== */
@@ -1324,7 +1107,7 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   17. RESPONSIVE
+   14. RESPONSIVE
    Se diseno primero para celular; aca se ajusta lo que hace falta.
    ========================================================================== */
 
@@ -1348,16 +1131,11 @@ p { text-wrap: pretty; }
   .hero__frame { width: 100%; border-radius: 0; }
   .hero { min-height: 100svh; }
 
-  .carousel__frame { border-radius: var(--r-md); max-height: none; }
-  .carousel__more span { display: none; }   /* queda solo la flecha: no entra el texto */
-  .carousel__nav { width: 38px; height: 38px; }
-
   .player__controls { gap: var(--sp-3); padding: var(--sp-4) var(--sp-3) var(--sp-3); }
   .player__time { display: none; }   /* no entra: se prioriza la barra */
 
   .embed--audio > iframe { height: 232px; }
 
-  .section-head { margin-bottom: var(--sp-6); }
   .page__body { padding-top: calc(var(--nav-h) + var(--sp-6)); }
   .portfolio-tabs { width: 100%; }
   .portfolio-tab { flex: 1 1 0; padding-inline: var(--sp-2); }
@@ -1384,7 +1162,7 @@ p { text-wrap: pretty; }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
 @media print {
-  .nav, .player__controls, .carousel__nav, .carousel__dots { display: none !important; }
+  .nav, .player__controls { display: none !important; }
   body { background: #fff; color: #000; }
   .page[hidden] { display: block !important; }
 }

@@ -2,14 +2,12 @@
    IAN IACONO — SOUND PORTFOLIO
    player.js — reproduccion de video propio
 
-   Maneja cuatro cosas:
-     1. El reel del inicio (Version A): arranca solo al entrar en pantalla,
-        con su fondo sincronizado y borroso, y linea de tiempo.
-     2. El carrusel del inicio (Version B): flechas, puntos, play/pausa,
-        linea de tiempo, y el "Ver mas" que aparece a los pocos segundos.
-     3. Las tarjetas de las grillas (las dos versiones): el video de cada
-        proyecto arranca al pasar el mouse o enfocarla con el teclado.
-     4. El foco de sonido: a lo sumo un video suena a la vez. El sonido en
+   Maneja tres cosas:
+     1. El reel del inicio: arranca solo al entrar en pantalla, con su
+        fondo sincronizado y borroso, play/pausa y linea de tiempo.
+     2. Las tarjetas de la grilla: el video de cada proyecto arranca al
+        pasar el mouse o enfocarla con el teclado.
+     3. El foco de sonido: a lo sumo un video suena a la vez. El sonido en
         si lo decide siempre audio.js (el control del header); aca solo se
         decide QUE video es "el que esta sonando" en cada momento.
 
@@ -84,169 +82,7 @@
 
 
   /* ======================================================================
-     CARRUSEL DEL INICIO  (solo Version B)
-     ====================================================================== */
-
-  var carousel = document.querySelector("[data-carousel]");
-
-  if (carousel) {
-    var slides = Array.prototype.slice.call(carousel.querySelectorAll(".carousel__slide"));
-    var frame = carousel.querySelector(".carousel__frame");
-    var prevBtn = carousel.querySelector("[data-carousel-prev]");
-    var nextBtn = carousel.querySelector("[data-carousel-next]");
-    var dots = Array.prototype.slice.call(carousel.querySelectorAll(".carousel__dot"));
-    var playBtn = carousel.querySelector("[data-carousel-playpause]");
-    var scrub = carousel.querySelector("[data-carousel-scrub]");
-    var timeEl = carousel.querySelector("[data-carousel-time]");
-    var controlsBar = carousel.querySelector(".player__controls");
-
-    if (isTouch && controlsBar) controlsBar.classList.add("is-touch");
-
-    var current = 0;
-    var activeVideo = null;
-    var inView = false;
-    var userPaused = false;
-    var moreTimer = null;
-
-    function videoOf(s) { return s.querySelector(".carousel__video"); }
-    function auraOf(s) { var a = s.querySelector(".aura__video"); return a; }
-
-    function paintPlayPause(playing) {
-      if (!playBtn) return;
-      playBtn.setAttribute("aria-pressed", String(playing));
-      playBtn.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
-    }
-
-    function paintScrub() {
-      var v = activeVideo;
-      if (!v || !scrub || !isFinite(v.duration) || v.duration <= 0) return;
-      var ratio = v.currentTime / v.duration;
-      if (document.activeElement !== scrub) scrub.value = String(Math.round(ratio * 1000));
-      scrub.style.setProperty("--progress", (ratio * 100).toFixed(2) + "%");
-      scrub.setAttribute("aria-valuetext", formatTime(v.currentTime) + " de " + formatTime(v.duration));
-      if (timeEl) timeEl.textContent = formatTime(v.currentTime) + " / " + formatTime(v.duration);
-    }
-
-    function playActive() {
-      var v = activeVideo, a = auraOf(slides[current]);
-      if (!v) return;
-      loadEl(v); loadEl(a);
-      focusVideo(v);
-      /* El boton recien muestra "reproduciendo" cuando el video realmente
-         arranco: si el navegador bloquea el play(), no queremos un boton
-         de pausa mintiendo sobre un video que sigue quieto. */
-      var pr = v.play();
-      if (pr && pr.then) {
-        pr.then(function () { paintPlayPause(true); }).catch(function () { paintPlayPause(false); });
-      } else {
-        paintPlayPause(true);
-      }
-      if (a) { var pr2 = a.play(); if (pr2 && pr2.catch) pr2.catch(function () {}); }
-    }
-
-    function pauseActive() {
-      var v = activeVideo, a = auraOf(slides[current]);
-      if (v && !v.paused) v.pause();
-      if (a && !a.paused) a.pause();
-      if (v) blurVideo(v);
-      paintPlayPause(false);
-    }
-
-    function goTo(index) {
-      index = (index + slides.length) % slides.length;
-      if (index === current && activeVideo) return;
-
-      var prevSlide = slides[current];
-      if (prevSlide) {
-        var pv = videoOf(prevSlide), pa = auraOf(prevSlide);
-        if (pv && !pv.paused) pv.pause();
-        if (pa && !pa.paused) pa.pause();
-        if (pv) blurVideo(pv);
-        prevSlide.classList.remove("is-active", "show-more");
-        clearTimeout(moreTimer);
-      }
-
-      current = index;
-      var next = slides[current];
-      next.classList.add("is-active");
-      activeVideo = videoOf(next);
-
-      dots.forEach(function (d, i) { d.setAttribute("aria-selected", String(i === current)); });
-
-      loadEl(activeVideo);
-      loadEl(auraOf(next));
-
-      if (!reduceMotion.matches && inView && !userPaused) playActive();
-      else paintPlayPause(false);
-
-      /* "Ver mas" aparece recien despues de unos segundos mirando el proyecto */
-      moreTimer = setTimeout(function () { next.classList.add("show-more"); }, 2700);
-
-      paintScrub();
-    }
-
-    if (prevBtn) prevBtn.addEventListener("click", function () { goTo(current - 1); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { goTo(current + 1); });
-    dots.forEach(function (d, i) { d.addEventListener("click", function () { goTo(i); }); });
-
-    if (playBtn) {
-      playBtn.addEventListener("click", function () {
-        if (activeVideo && activeVideo.paused) { userPaused = false; playActive(); }
-        else { userPaused = true; pauseActive(); }
-      });
-    }
-
-    if (scrub) {
-      scrub.addEventListener("input", function () {
-        var v = activeVideo;
-        if (v && isFinite(v.duration)) v.currentTime = (Number(scrub.value) / 1000) * v.duration;
-        scrub.style.setProperty("--progress", (Number(scrub.value) / 10).toFixed(2) + "%");
-      });
-      scrub.addEventListener("pointerdown", function () { loadEl(activeVideo); });
-    }
-
-    slides.forEach(function (s) {
-      var v = videoOf(s);
-      var repaint = function () { if (s.classList.contains("is-active")) paintScrub(); };
-      v.addEventListener("timeupdate", repaint);
-      v.addEventListener("loadedmetadata", repaint);
-      v.addEventListener("durationchange", repaint);
-    });
-
-    /* Se pausa solo cuando el carrusel sale de pantalla, y se retoma al
-       volver (salvo que lo hayas pausado vos con el boton). */
-    var carouselObserver = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        inView = entry.isIntersecting && entry.intersectionRatio >= 0.5;
-        if (reduceMotion.matches) return;
-        if (inView && !userPaused) playActive();
-        else if (!inView) pauseActive();
-      });
-    }, { threshold: [0, 0.5] }) : null;
-
-    afterLoad(function () {
-      goTo(0);
-      if (carouselObserver) carouselObserver.observe(frame);
-      else { inView = true; playActive(); }
-    });
-
-    document.addEventListener("page:change", function (event) {
-      if (!event.detail.page.contains(carousel) && activeVideo && !activeVideo.paused) pauseActive();
-    });
-
-    document.addEventListener("visibilitychange", function () {
-      if (reduceMotion.matches) return;
-      if (document.hidden) {
-        if (activeVideo && !activeVideo.paused) pauseActive();
-      } else if (inView && !userPaused) {
-        playActive();
-      }
-    });
-  }
-
-
-  /* ======================================================================
-     TARJETAS DE PROYECTO  (grillas de las dos versiones)
+     TARJETAS DE PROYECTO  (grilla de la home)
      Cada tarjeta tiene su propio <video>. No se descarga hasta el primer
      hover o enfoque, arranca ahi mismo, y se detiene al salir. El
      resplandor blanco que se ve al pasar el mouse es puro CSS (no
@@ -305,10 +141,10 @@
 
 
   /* ======================================================================
-     REEL DEL INICIO  (solo Version A)
+     REEL DEL INICIO
      Arranca solo cuando esta a la vista, se pausa al salir de pantalla, y
-     tiene una linea de tiempo para saltar a un momento concreto. El sonido
-     lo decide siempre el control del header.
+     tiene boton de pausar/reanudar y una linea de tiempo para saltar a un
+     momento concreto. El sonido lo decide siempre el control del header.
      ====================================================================== */
 
   var hero = document.querySelector("[data-hero-main] video");
