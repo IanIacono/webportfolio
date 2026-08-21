@@ -46,10 +46,8 @@
   <!-- Las tipografias estan en este mismo sitio: no dependemos de nadie -->
   <link rel="preload" href="/assets/fonts/alexandria-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- La primera imagen de la pagina se pide con prioridad. En la Version A
-       se le pasan las mismas variantes que al <img> real (imagesrcset/
-       imagesizes), para que el navegador precargue la MISMA que despues va
-       a usar, y no dos versiones distintas de la misma foto. -->
+  <!-- El poster del reel (Version A) o del carrusel (Version B) se pide con
+       prioridad: es lo primero grande que se ve. -->
   <link rel="preload" href="/assets/img/the-carbon-case-960.webp" as="image" fetchpriority="high">
 
   <link rel="stylesheet" href="/css/style.css">
@@ -228,10 +226,7 @@
         <div class="grid">
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case — Sound design, Re-recording Mix &amp; Master">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:1600/1531">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/the-carbon-case-960.webp"
                    srcset="/assets/img/the-carbon-case-480.webp 480w, /assets/img/the-carbon-case-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -250,10 +245,7 @@
         </article>
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#lumia" aria-label="Ver proyecto: Lumia — Sound design, Music &amp; Mix">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:1253/1045">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/lumia-960.webp"
                    srcset="/assets/img/lumia-480.webp 480w, /assets/img/lumia-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -272,10 +264,7 @@
         </article>
         <article class="tile reveal" data-delay="2">
           <a class="tile__link" href="#redbull" aria-label="Ver proyecto: Red Bull Batallas — Sound Editing, Mix">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:1125/1013">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/red-bull-batallas-960.webp"
                    srcset="/assets/img/red-bull-batallas-480.webp 480w, /assets/img/red-bull-batallas-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -294,10 +283,7 @@
         </article>
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#lallamada" aria-label="Ver proyecto: La Llamada Fatal — Sound editing, Mix &amp; Master">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:640/640">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/la-llamada-fatal-960.webp"
                    srcset="/assets/img/la-llamada-fatal-480.webp 480w, /assets/img/la-llamada-fatal-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -316,10 +302,7 @@
         </article>
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#koupe" aria-label="Ver proyecto: Koupe — Music, animation">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:958/1080">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/koupe-960.webp"
                    srcset="/assets/img/koupe-480.webp 480w, /assets/img/koupe-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -357,10 +340,7 @@
         <div class="grid">
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Te Lo Aseguro | Analipsis — V">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:983/593">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
                    srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -379,10 +359,7 @@
         </article>
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:1252/1252">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
                    srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -401,10 +378,7 @@
         </article>
         <article class="tile reveal" data-delay="2">
           <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:822/640">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
                    srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -423,10 +397,7 @@
         </article>
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media — Sound editing">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:1023/1027">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
                    srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -445,10 +416,7 @@
         </article>
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto — Music, logo animation &amp; audio branding">
-            <span class="aura" aria-hidden="true">
-                <video class="aura__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none" tabindex="-1"></video>
-              </span>
-            <div class="tile__media" style="aspect-ratio:822/640">
+            <div class="tile__media">
               <img class="tile__poster" src="/assets/img/detras-del-puesto-2-960.webp"
                    srcset="/assets/img/detras-del-puesto-2-480.webp 480w, /assets/img/detras-del-puesto-2-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
@@ -503,8 +471,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#lumia">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -547,8 +520,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#redbull">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -596,8 +574,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#lallamada">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -643,8 +626,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#ddp">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -678,8 +666,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#faiketen">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -716,8 +709,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#reports">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -759,8 +757,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#koupe">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -802,8 +805,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#section12">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 
@@ -845,8 +853,13 @@
 
           <div class="project__actions">
             <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
-                 carrusel/reel de arriba. -->
+                 reel/carrusel de arriba. -->
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
+            <a class="btn" href="#thecarboncase">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
           </div>
         </div>
 

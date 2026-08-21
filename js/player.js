@@ -2,13 +2,14 @@
    IAN IACONO — SOUND PORTFOLIO
    player.js — reproduccion de video propio
 
-   Maneja tres cosas:
-     1. El carrusel del inicio (Version B): flechas, puntos, play/pausa,
+   Maneja cuatro cosas:
+     1. El reel del inicio (Version A): arranca solo al entrar en pantalla,
+        con su fondo sincronizado y borroso, y linea de tiempo.
+     2. El carrusel del inicio (Version B): flechas, puntos, play/pausa,
         linea de tiempo, y el "Ver mas" que aparece a los pocos segundos.
-     2. Las tarjetas de las grillas (las dos versiones): el video de cada
-        proyecto arranca al pasar el mouse o enfocarla con el teclado, y su
-        fondo reactivo (el mismo video, agrandado y borroso) se prende atras.
-     3. El foco de sonido: a lo sumo un video suena a la vez. El sonido en
+     3. Las tarjetas de las grillas (las dos versiones): el video de cada
+        proyecto arranca al pasar el mouse o enfocarla con el teclado.
+     4. El foco de sonido: a lo sumo un video suena a la vez. El sonido en
         si lo decide siempre audio.js (el control del header); aca solo se
         decide QUE video es "el que esta sonando" en cada momento.
 
@@ -246,16 +247,16 @@
 
   /* ======================================================================
      TARJETAS DE PROYECTO  (grillas de las dos versiones)
-     Cada tarjeta tiene su propio <video> y su propia aura. No se descargan
-     hasta el primer hover o enfoque, arrancan ahi mismo, y se detienen al
-     salir.
+     Cada tarjeta tiene su propio <video>. No se descarga hasta el primer
+     hover o enfoque, arranca ahi mismo, y se detiene al salir. El
+     resplandor blanco que se ve al pasar el mouse es puro CSS (no
+     necesita JavaScript): ver .tile__link:hover .tile__media en el CSS.
      ====================================================================== */
 
   var tileLinks = Array.prototype.slice.call(document.querySelectorAll(".tile__link"));
 
   tileLinks.forEach(function (link) {
     var video = link.querySelector(".tile__video");
-    var auraVideo = link.querySelector(".aura__video");
     if (!video) return;
     var loaded = false;
 
@@ -263,7 +264,6 @@
       if (loaded) return;
       loaded = true;
       loadEl(video);
-      loadEl(auraVideo);
     };
 
     var enter = function () {
@@ -271,14 +271,12 @@
       load();
       var pr = video.play();
       if (pr && pr.catch) pr.catch(function () {});
-      if (auraVideo) { var pr2 = auraVideo.play(); if (pr2 && pr2.catch) pr2.catch(function () {}); }
       focusVideo(video);
     };
 
     var leave = function () {
       if (!video.paused) video.pause();
       try { video.currentTime = 0; } catch (e) {}
-      if (auraVideo && !auraVideo.paused) auraVideo.pause();
       blurVideo(video);
       link.classList.remove("is-playing");
     };
@@ -300,10 +298,128 @@
     tileLinks.forEach(function (link) {
       if (activePage.contains(link)) return;
       var v = link.querySelector(".tile__video");
-      var a = link.querySelector(".aura__video");
       if (v && !v.paused) { v.pause(); try { v.currentTime = 0; } catch (e) {} blurVideo(v); }
-      if (a && !a.paused) a.pause();
       link.classList.remove("is-playing");
     });
   });
+
+
+  /* ======================================================================
+     REEL DEL INICIO  (solo Version A)
+     Arranca solo cuando esta a la vista, se pausa al salir de pantalla, y
+     tiene una linea de tiempo para saltar a un momento concreto. El sonido
+     lo decide siempre el control del header.
+     ====================================================================== */
+
+  var hero = document.querySelector("[data-hero-main] video");
+
+  if (hero) {
+    var heroRoot = hero.closest(".player");
+    var heroScrub = heroRoot.querySelector(".player__scrub");
+    var heroTime = heroRoot.querySelector(".player__time");
+    var heroLoaded = false;
+    var heroInView = false;
+
+    /* En celular no hay "hover": la barra de controles queda siempre
+       visible, si no nadie encontraria la linea de tiempo. */
+    if (isTouch) heroRoot.classList.add("is-touch");
+
+    var heroLoad = function () {
+      if (heroLoaded) return;
+      heroLoaded = true;
+      loadEl(hero);
+    };
+
+    var paintHero = function () {
+      if (!heroScrub || !isFinite(hero.duration) || hero.duration <= 0) return;
+      var ratio = hero.currentTime / hero.duration;
+      if (document.activeElement !== heroScrub) heroScrub.value = String(Math.round(ratio * 1000));
+      heroScrub.style.setProperty("--progress", (ratio * 100).toFixed(2) + "%");
+      heroScrub.setAttribute("aria-valuetext", formatTime(hero.currentTime) + " de " + formatTime(hero.duration));
+      if (heroTime) heroTime.textContent = formatTime(hero.currentTime) + " / " + formatTime(hero.duration);
+    };
+
+    if (heroScrub) {
+      heroScrub.addEventListener("input", function () {
+        if (isFinite(hero.duration)) hero.currentTime = (Number(heroScrub.value) / 1000) * hero.duration;
+        heroScrub.style.setProperty("--progress", (Number(heroScrub.value) / 10).toFixed(2) + "%");
+      });
+      heroScrub.addEventListener("pointerdown", heroLoad);
+    }
+
+    hero.addEventListener("loadedmetadata", paintHero);
+    hero.addEventListener("timeupdate", paintHero);
+    hero.addEventListener("durationchange", paintHero);
+
+    var heroObserver = "IntersectionObserver" in window ? new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        heroInView = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+        if (reduceMotion.matches) return;
+        if (heroInView) {
+          heroLoad();
+          var pr = hero.play();
+          if (pr && pr.catch) pr.catch(function () {});
+          focusVideo(hero);
+        } else {
+          if (!hero.paused) hero.pause();
+          blurVideo(hero);
+        }
+      });
+    }, { threshold: [0, 0.5] }) : null;
+
+    /* Se conecta despues del load: si no, el archivo de video compite con
+       el texto y las imagenes, y la pagina tarda en verse. */
+    afterLoad(function () {
+      if (heroObserver) heroObserver.observe(heroRoot);
+      else { heroLoad(); hero.play().catch(function () {}); }
+    });
+
+    if (reduceMotion.matches) {
+      hero.style.cursor = "pointer";
+      hero.addEventListener("click", function () {
+        heroLoad();
+        if (hero.paused) { hero.play().catch(function () {}); focusVideo(hero); }
+        else { hero.pause(); blurVideo(hero); }
+      });
+    }
+
+    document.addEventListener("page:change", function (event) {
+      if (!event.detail.page.contains(hero)) {
+        if (!hero.paused) hero.pause();
+        blurVideo(hero);
+      }
+    });
+
+    document.addEventListener("visibilitychange", function () {
+      if (reduceMotion.matches) return;
+      if (document.hidden) {
+        if (!hero.paused) hero.pause();
+      } else if (heroInView) {
+        var pr = hero.play();
+        if (pr && pr.catch) pr.catch(function () {});
+        focusVideo(hero);
+      }
+    });
+
+    /* Fondo borroso del hero: el mismo video, agrandado y desenfocado,
+       siguiendo siempre el mismo momento que el video principal. */
+    (function () {
+      var bg = document.querySelector("[data-hero-bg]");
+      if (!bg) return;
+      if (window.matchMedia("(max-width: 768px)").matches) { bg.removeAttribute("src"); return; }
+
+      function align(force) {
+        if (!isFinite(hero.currentTime)) return;
+        var drift = Math.abs(bg.currentTime - hero.currentTime);
+        if (force || drift > 0.35) {
+          try { bg.currentTime = hero.currentTime; } catch (e) { /* todavia no cargo */ }
+        }
+      }
+      hero.addEventListener("play", function () { bg.play().catch(function () {}); align(true); });
+      hero.addEventListener("pause", function () { bg.pause(); });
+      hero.addEventListener("seeked", function () { align(true); });
+      hero.addEventListener("timeupdate", function () { align(false); });
+      hero.addEventListener("loadeddata", function () { bg.load(); });
+    })();
+  }
 })();
