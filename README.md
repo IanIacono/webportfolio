@@ -271,13 +271,12 @@ es automático, no hay un color aparte para eso.
 En ese mismo bloque también están los tamaños de letra (`--fs-...`), los
 espacios (`--sp-...`), los redondeos (`--r-...`) y las sombras (`--sh-...`).
 
-**El degradado del final de la página** (violeta oscuro y naranja, cerca del
-pie de página) usa dos colores propios, `--c-bloom-orange` y
-`--c-bloom-orange-soft`, más `--c-accent` y `--c-accent-deep` — cambiá esos
-cuatro si querés otra combinación. Está armado con varias manchas de color
-superpuestas sobre `body` (buscá el comentario que dice "no es un solo
-degrade lineal" en `css/style.css`), no con una imagen, así que también se
-edita solo ahí.
+**El degradado del final de la página** (negro arriba, violeta muy oscuro y
+sutil abajo, solo en Contact y el pie de página) usa un color propio,
+`--c-bloom-violet` — cambialo si querés otro tono. Es un `linear-gradient`
+simple en `#contact` y `.site-footer` (buscalos en `css/style.css`, sección
+"10b. FORMULARIO DE CONTACTO" y "15. PIE DE PAGINA"), no una imagen, así
+que también se edita solo ahí.
 
 ---
 
@@ -690,6 +689,23 @@ formulario, en `index.html`, dice exactamente dónde.
 páginas.**
 Por ahora linkea a un usuario de ejemplo (`TUUSUARIO`) — reemplazalo por
 el tuyo cuando quieras.
+
+**39. Ajusté "Selected Works" con tu segunda ronda de feedback — pildoras,
+degradado más discreto, tarjetas más grandes, y te mandé el archivo esta
+vez.**
+Las etiquetas "Sound" y "Audiovisual" volvieron a verse como pildora
+blanca, igual que los botones de celular de antes — ahora las dos se ven
+"seleccionadas" al mismo tiempo, ya que conviven en vez de alternar. Saqué
+el degradado pintado (violeta y naranja) que había puesto en el fondo
+general: ahora es mucho más discreto, solo violeta muy oscuro sobre negro,
+y vive únicamente en Contact y el pie de página — no sube más arriba de
+los proyectos. Las tarjetas de proyecto volvieron a su tamaño de antes (se
+habían achicado al dividir la grilla en dos columnas) y además agrandé el
+ancho máximo del sitio, así se aprovechan los costados que quedaban
+vacíos; también achiqué el espacio entre Audiovisual y Sound. Te mando dos
+archivos para comparar: uno con Sound y Audiovisual separados (el que
+quedó en el sitio real) y otro con "Selected Works" mostrando **todos**
+los proyectos juntos, sin distinción — decime cuál te gusta más.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
