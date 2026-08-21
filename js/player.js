@@ -316,10 +316,12 @@
   if (hero) {
     var heroRoot = hero.closest(".player");
     var heroControls = heroRoot.querySelector(".player__controls");
+    var heroPlayBtn = heroRoot.querySelector("[data-hero-playpause]");
     var heroScrub = heroRoot.querySelector(".player__scrub");
     var heroTime = heroRoot.querySelector(".player__time");
     var heroLoaded = false;
     var heroInView = false;
+    var heroUserPaused = false;
 
     /* En celular no hay "hover": la barra de controles queda siempre
        visible, si no nadie encontraria la linea de tiempo. */
@@ -330,6 +332,33 @@
       heroLoaded = true;
       loadEl(hero);
     };
+
+    var paintHeroPlayPause = function (playing) {
+      if (!heroPlayBtn) return;
+      heroPlayBtn.setAttribute("aria-pressed", String(playing));
+      heroPlayBtn.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+    };
+
+    var playHero = function () {
+      heroLoad();
+      var pr = hero.play();
+      if (pr && pr.then) pr.then(function () { paintHeroPlayPause(true); }).catch(function () { paintHeroPlayPause(false); });
+      else paintHeroPlayPause(true);
+      focusVideo(hero);
+    };
+
+    var pauseHero = function () {
+      if (!hero.paused) hero.pause();
+      blurVideo(hero);
+      paintHeroPlayPause(false);
+    };
+
+    if (heroPlayBtn) {
+      heroPlayBtn.addEventListener("click", function () {
+        if (hero.paused) { heroUserPaused = false; playHero(); }
+        else { heroUserPaused = true; pauseHero(); }
+      });
+    }
 
     var paintHero = function () {
       if (!heroScrub || !isFinite(hero.duration) || hero.duration <= 0) return;
@@ -356,15 +385,8 @@
       entries.forEach(function (entry) {
         heroInView = entry.isIntersecting && entry.intersectionRatio >= 0.5;
         if (reduceMotion.matches) return;
-        if (heroInView) {
-          heroLoad();
-          var pr = hero.play();
-          if (pr && pr.catch) pr.catch(function () {});
-          focusVideo(hero);
-        } else {
-          if (!hero.paused) hero.pause();
-          blurVideo(hero);
-        }
+        if (heroInView && !heroUserPaused) playHero();
+        else if (!heroInView) pauseHero();
       });
     }, { threshold: [0, 0.5] }) : null;
 
@@ -372,33 +394,27 @@
        el texto y las imagenes, y la pagina tarda en verse. */
     afterLoad(function () {
       if (heroObserver) heroObserver.observe(heroRoot);
-      else { heroLoad(); hero.play().catch(function () {}); }
+      else if (!heroUserPaused) playHero();
     });
 
     if (reduceMotion.matches) {
       hero.style.cursor = "pointer";
       hero.addEventListener("click", function () {
-        heroLoad();
-        if (hero.paused) { hero.play().catch(function () {}); focusVideo(hero); }
-        else { hero.pause(); blurVideo(hero); }
+        if (hero.paused) { heroUserPaused = false; playHero(); }
+        else { heroUserPaused = true; pauseHero(); }
       });
     }
 
     document.addEventListener("page:change", function (event) {
-      if (!event.detail.page.contains(hero)) {
-        if (!hero.paused) hero.pause();
-        blurVideo(hero);
-      }
+      if (!event.detail.page.contains(hero)) pauseHero();
     });
 
     document.addEventListener("visibilitychange", function () {
       if (reduceMotion.matches) return;
       if (document.hidden) {
         if (!hero.paused) hero.pause();
-      } else if (heroInView) {
-        var pr = hero.play();
-        if (pr && pr.catch) pr.catch(function () {});
-        focusVideo(hero);
+      } else if (heroInView && !heroUserPaused) {
+        playHero();
       }
     });
 

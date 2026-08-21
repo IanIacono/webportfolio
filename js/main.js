@@ -47,6 +47,7 @@
 
   function show(id, scrollTargetId, isFirstLoad) {
     var next = pageById(id) || pageById(homeId);
+    var wasAlreadyShown = !next.hidden;
 
     pages.forEach(function (page) {
       var active = page === next;
@@ -68,12 +69,24 @@
     if (scrollTargetId) {
       var target = document.getElementById(scrollTargetId);
       if (target) {
-        requestAnimationFrame(function () {
+        if (wasAlreadyShown) {
+          /* Ya estabas en esta pagina: es un link ancla comun, con scroll
+             suave (por ejemplo "Projects" del menu mientras mirás el reel). */
           target.scrollIntoView({
             behavior: reduceMotion.matches ? "auto" : "smooth",
             block: "start"
           });
-        });
+        } else {
+          /* Se acaba de mostrar esta pagina desde otra (por ejemplo "Back"
+             en un proyecto): saltar directo, sin pasar un instante por el
+             reel y sin animacion — si no, se alcanza a ver un flash del
+             reel antes de bajar. Se lee getBoundingClientRect() para forzar
+             el layout ahora mismo, antes de que el navegador pinte, y se
+             pide "instant" (no "auto") porque el sitio tiene scroll suave
+             por CSS: "auto" heredaria ese scroll-behavior y animaria igual. */
+          target.getBoundingClientRect();
+          target.scrollIntoView({ behavior: "instant", block: "start" });
+        }
         return;
       }
     }

@@ -578,6 +578,10 @@ p { text-wrap: pretty; }
   border-radius: var(--r-sm);
   overflow: hidden;
   background: #000;
+  /* El borde inferior se disuelve en vez de cortar de golpe: nada de
+     video/sombra/marco duro justo ahi, se desvanece a la pagina. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
 }
 .hero__frame [data-hero-main] {
   position: relative;
@@ -1174,7 +1178,6 @@ p { text-wrap: pretty; }
   align-items: center;
   gap: var(--sp-4);
   padding: var(--sp-5) var(--sp-5) var(--sp-4);
-  background: linear-gradient(to top, rgba(0,0,0,.82), rgba(0,0,0,.35) 55%, transparent);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity var(--dur-slow) var(--ease),
@@ -1340,7 +1343,7 @@ p { text-wrap: pretty; }
 @media (max-width: 640px) {
   :root { --nav-h: 4rem; }
 
-  .grid { grid-template-columns: minmax(0, 1fr); gap: var(--sp-7); }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
 
   .hero__frame { width: 100%; border-radius: 0; }
   .hero { min-height: 100svh; }
