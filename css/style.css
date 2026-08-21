@@ -47,8 +47,7 @@
   --c-accent:        #8b7cf6;   /* violeta: el acento principal              */
   --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover                 */
   --c-accent-deep:   #531e9e;   /* violeta profundo: sliders (linea de tiempo del reel, volumen) */
-  --c-bloom-orange:      #e0793f;   /* naranja: solo para el degrade pintado del final de la pagina */
-  --c-bloom-orange-soft: #f2a06a;   /* variante clara del naranja, para el mismo degrade          */
+  --c-bloom-violet:  #1f1433;   /* violeta muy oscuro y sutil: solo el degrade de Contact/footer */
 
   --c-line:          rgba(255,255,255,.10);  /* lineas finas                 */
   --c-line-strong:   rgba(255,255,255,.24);  /* lineas con enfasis           */
@@ -113,7 +112,7 @@
   --dur-slow:  250ms;
 
   /* --- Layout -------------------------------------------------------------- */
-  --maxw:    78rem;   /* 1248px — ancho maximo del contenido */
+  --maxw:    94rem;   /* 1504px — ancho maximo del contenido */
   --maxw-sm: 54rem;
   --gutter:  clamp(1.25rem, 4vw, 3.5rem);
   --nav-h:   4.5rem;
@@ -145,22 +144,7 @@ html {
 }
 
 body {
-  background-color: var(--c-bg);
-  /* El fondo es negro liso arriba (donde esta el reel) y, recien cerca del
-     final de la pagina, se pinta con un degrade violeta oscuro/naranja —
-     no es un solo degrade lineal: son varias manchas de color superpuestas,
-     ancladas siempre al final del documento (background-position:bottom),
-     sin importar cuanto mida la pagina. Asi el negro del reel se va yendo
-     de a poco hacia este degrade a medida que se scrollea hacia abajo. */
-  background-image:
-    radial-gradient(ellipse 65% 55% at 18% 25%, color-mix(in srgb, var(--c-bloom-orange) 60%, transparent), transparent 62%),
-    radial-gradient(ellipse 60% 55% at 88% 15%, color-mix(in srgb, var(--c-accent) 55%, transparent), transparent 64%),
-    radial-gradient(ellipse 75% 60% at 70% 90%, color-mix(in srgb, var(--c-bloom-orange-soft) 50%, transparent), transparent 62%),
-    radial-gradient(ellipse 85% 75% at 45% 100%, color-mix(in srgb, var(--c-accent-deep) 90%, transparent), transparent 68%),
-    linear-gradient(to top, #170a22 0%, transparent 80%);
-  background-repeat: no-repeat;
-  background-position: center bottom;
-  background-size: 100% 120vh;
+  background: var(--c-bg);
   color: var(--c-text);
   font-family: var(--font);
   font-size: var(--fs-base);
@@ -907,7 +891,17 @@ p { text-wrap: pretty; }
    ocultos, para que no aparezcan de golpe en celular.
    ========================================================================== */
 
-.works-title { display: none; }
+.works-title {
+  display: none;
+  text-align: center;
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  margin-bottom: var(--sp-9);
+}
+/* Para la variante "todos juntos" sin pestanas: el titulo no compite con
+   ningun selector, asi que se ve tambien en celular. */
+.works-title--always { display: block !important; }
 
 .works { display: block; }
 
@@ -1018,10 +1012,15 @@ p { text-wrap: pretty; }
    10b. FORMULARIO DE CONTACTO
    ========================================================================== */
 
-/* Un poco mas clara que --c-accent: este texto cae sobre el degrade del
-   final de la pagina (seccion 02, body), que varia de punto a punto, asi
-   que necesita mas margen de contraste que el mismo violeta sobre el
-   fondo liso de una pagina de proyecto. */
+/* El fondo pasa de negro (arriba, pegado a los proyectos) a un violeta muy
+   oscuro y sutil (abajo, contra el pie de pagina) — nunca al reves, y el
+   violeta no llega mas arriba que esta seccion porque el degrade esta
+   pintado aca mismo, no en el body. El pie de pagina (seccion 15) sigue
+   con el mismo violeta solido para que la union entre los dos sea pareja. */
+#contact {
+  background: linear-gradient(to bottom, transparent 0%, transparent 35%, var(--c-bloom-violet) 100%);
+}
+
 .contact-form__lead { color: var(--c-accent-soft); margin-top: var(--sp-2); }
 
 .contact-form {
@@ -1315,31 +1314,32 @@ p { text-wrap: pretty; }
 @media (min-width: 901px) {
   .portfolio-tabs { display: none; }
 
-  .works-title {
-    display: block;
-    text-align: center;
-    font-size: var(--fs-2xl);
-    font-weight: 700;
-    letter-spacing: var(--ls-tight);
-    margin-bottom: var(--sp-9);
-  }
+  .works-title { display: block; }
 
   .works {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 1px minmax(0, 2fr);
-    column-gap: var(--sp-9);
+    column-gap: var(--sp-7);
     align-items: start;
   }
 
+  /* Mismo look que tenian los botones Sound/Audiovisual Portfolio de
+     celular (seccion 09): pildora blanca, como si estuvieran "seleccionados"
+     los dos a la vez, ya que aca conviven sin alternar. */
   .works__label {
-    display: block;
+    display: inline-block;
     margin-bottom: var(--sp-5);
+    padding: var(--sp-2) var(--sp-5);
+    background: var(--c-text);
+    border-radius: var(--r-full);
+    box-shadow: 0 0 14px -2px rgba(255, 255, 255, .55),
+                0 0 3px rgba(255, 255, 255, .4);
+    font-family: var(--font-tabs);
     font-size: var(--fs-xs);
-    font-weight: 600;
-    letter-spacing: var(--ls-wide);
+    font-weight: 500;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--c-text-faint);
-    text-align: left;
+    color: #0a0910;
   }
 
   .works__divider {
@@ -1409,7 +1409,7 @@ p { text-wrap: pretty; }
 
 /* --- Pantallas grandes (1440px y mas) --- */
 @media (min-width: 1440px) {
-  :root { --maxw: 84rem; }
+  :root { --maxw: 104rem; }
 }
 
 /* --- "See Projects" es solo para celular: en desktop la grilla ya se ve
@@ -1434,6 +1434,9 @@ p { text-wrap: pretty; }
 
 .site-footer {
   padding-block: var(--sp-8);
+  /* Sigue el mismo violeta muy sutil en el que termina #contact (seccion
+     10b), asi la union entre ambos no se nota. */
+  background: var(--c-bloom-violet);
 }
 
 .site-footer__inner {
