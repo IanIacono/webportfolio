@@ -130,8 +130,10 @@
 
       <div class="wrap page__body page__body--after-hero" id="projects">
 
-        <!-- SELECTOR SOUND / AUDIOVISUAL. Los dos botones alternan cual
-             grilla de abajo se ve. No cambia de pagina. -->
+        <!-- SELECTOR SOUND / AUDIOVISUAL. Solo se ve en celular: ahi los
+             dos botones alternan cual grilla de abajo se ve, sin cambiar
+             de pagina. En desktop se oculta (las 2 conviven mas abajo,
+             en "Selected Works" — ver seccion 14, responsive). -->
         <div class="portfolio-tabs reveal" data-portfolio-tabs role="tablist" aria-label="Categoria de proyectos">
           <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
           <button type="button" class="portfolio-tab" data-portfolio-target="sound"
@@ -144,9 +146,103 @@
           </button>
         </div>
 
-        <!-- GRILLA: SOUND PORTFOLIO -->
-        <div class="grid" id="grid-sound" data-portfolio-panel="sound"
-             role="tabpanel" aria-labelledby="tab-sound">
+        <!-- "SELECTED WORKS": titulo centrado que solo se ve en desktop,
+             donde Audiovisual (1 columna) y Sound (2 columnas) conviven
+             lado a lado separadas por una linea. -->
+        <h2 class="works-title reveal">Selected Works</h2>
+
+        <div class="works">
+          <div class="works__col works__col--av">
+            <h3 class="works__label">Audiovisual</h3>
+            <!-- GRILLA: AUDIOVISUAL PORTFOLIO -->
+            <div class="grid grid--av" id="grid-audiovisual" data-portfolio-panel="audiovisual"
+                 role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
+                   srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
+                   srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="2">
+          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
+                   srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="983" height="593" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title visually-hidden">Ver proyecto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#juleriaque" aria-label="Ver proyecto: Juleriaque">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
+                   srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Juleriaque</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+            </div>
+          </div>
+
+          <div class="works__divider" aria-hidden="true"></div>
+
+          <div class="works__col works__col--sound">
+            <h3 class="works__label">Sound</h3>
+            <!-- GRILLA: SOUND PORTFOLIO -->
+            <div class="grid grid--sound" id="grid-sound" data-portfolio-panel="sound"
+                 role="tabpanel" aria-labelledby="tab-sound">
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case">
             <div class="tile__media">
@@ -242,109 +338,49 @@
             </div>
           </a>
         </article>
-        </div>
-
-        <!-- GRILLA: AUDIOVISUAL PORTFOLIO -->
-        <div class="grid" id="grid-audiovisual" data-portfolio-panel="audiovisual"
-             role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
-        <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
-                   srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="983" height="593" aria-hidden="true" tabindex="-1"></video>
             </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title visually-hidden">Ver proyecto</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
-                   srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Rèport Travel Media</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="2">
-          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
-                   srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Detras del Puesto</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
-                   srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Rèport Travel Media</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/detras-del-puesto-2-960.webp"
-                   srcset="/assets/img/detras-del-puesto-2-480.webp 480w, /assets/img/detras-del-puesto-2-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Detras del Puesto</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
+          </div>
         </div>
 
       </div>
+
+      <!-- CONTACTO. El formulario manda un mail con lo que se haya escrito
+           (atributo mailto: en el action) — funciona sin backend, pero abre
+           el cliente de correo de quien escribe en vez de mandarlo directo.
+           Para que se mande solo, sin abrir nada, hace falta conectar un
+           servicio como Formspree (tiene un plan gratis). Mientras tanto,
+           reemplaza TUMAIL@ejemplo.com, TUUSUARIO y el numero de WhatsApp
+           por los tuyos. -->
+      <div class="wrap wrap--narrow page__body" id="contact">
+        <div class="page__head reveal">
+          <h2 class="project__title">Contact</h2>
+          <p class="contact-form__lead">Tenes un proyecto en mente? Contame de que se trata.</p>
+        </div>
+
+        <form class="contact-form reveal" action="mailto:TUMAIL@ejemplo.com" method="post" enctype="text/plain">
+          <div class="contact-form__row">
+            <label class="contact-form__field">
+              <span class="label">Nombre</span>
+              <input type="text" name="nombre" autocomplete="name" required>
+            </label>
+            <label class="contact-form__field">
+              <span class="label">Email</span>
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+          </div>
+          <label class="contact-form__field">
+            <span class="label">Mensaje</span>
+            <textarea name="mensaje" rows="5" required></textarea>
+          </label>
+          <button type="submit" class="btn btn--primary">Enviar</button>
+        </form>
+
+        <div class="contact-form__links reveal">
+          <a class="btn" href="https://instagram.com/TUUSUARIO" target="_blank" rel="noopener">Instagram</a>
+          <a class="btn" href="https://wa.me/5491100000000" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+
     </section>
 
     <!-- ==========================================================================
@@ -371,11 +407,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
+              <p class="prose">La nueva producción de Helmi recorre Paraguay, Mozambique, Tailandia y Singapur para ver de cerca los mercados de carbono — y descubrir qué está funcionando, qué falta, y qué hace falta para escalarlos. Estuve a cargo del diseño sonoro, la remezcla y la masterización, construyendo una paleta sonora que acompaña a la película a través de cuatro países muy distintos, mientras mantiene cada voz, ambiente y entrevista clara y con base. El resultado es una mezcla que deja viajar a la historia sin perder pie en ningún momento.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
+              <p class="prose" lang="en">Helmi&#39;s new production travels through Paraguay, Mozambique, Thailand, and Singapore to see carbon markets on the ground — and find out what&#39;s working, what&#39;s missing, and what it takes to scale. I handled the sound design, re-recording mix, and mastering, building a sonic palette that moves with the film across four very different countries while keeping every voice, ambience, and interview clear and grounded. The result is a mix that lets the story travel without ever losing its footing.</p>
             </div>
           </div>
 
@@ -566,11 +602,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
+              <p class="prose">Detrás del Puesto es un podcast sobre carrera profesional en el que referentes del turismo, la tecnología, el marketing y el liderazgo corporativo cuentan cómo encontraron su camino — los obstáculos, los puntos de quiebre y lo que realmente hizo falta para llegar. Hice la animación del logo y toda la identidad sonora del programa, y produje la cortina musical que cierra los créditos de cada episodio.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
+              <p class="prose" lang="en">Detrás del Puesto is a career podcast where professionals from tourism, tech, marketing, and corporate leadership open up about how they found their path — the obstacles, the turning points, and what it actually took to get where they are. I created the show&#39;s logo animation and full sonic identity, and produced the closing musical sting that plays over the credits of every episode.</p>
             </div>
           </div>
 
@@ -671,6 +707,41 @@
             <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
+            <a class="btn" href="#juleriaque">
+              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECCION 9 de 11  —  PROYECTO: JULERIAQUE   (direccion: #juleriaque)
+         ========================================================================== -->
+    <!-- Para cambiar los textos de este proyecto edita: el <h1> (titulo),
+         el parrafo de abajo (el rol) y los dos parrafos ESP / ENG.          -->
+    <section class="page" id="juleriaque" data-title="Juleriaque" hidden>
+      <div class="wrap page__body">
+        <div class="project project--text">
+
+        <div class="project__info reveal" data-delay="1">
+          <h1 class="project__title">Juleriaque</h1>
+          <p class="project__role">Sound design</p>
+
+          <div class="project__text">
+            <div class="lang">
+              <p class="prose">Lorem ipsum dolor sit amet consectetur adipiscing elit magna integer, vitae proin aliquet tristique ridiculus suscipit sem mi aliquam, leo sed vel curabitur hendrerit auctor condimentum dui. Interdum nam tempor ultrices ac mattis mus id enim imperdiet erat ridiculus nec, vulputate vestibulum vitae senectus dis lobortis condimentum morbi risus purus tortor. Volutpat class semper sem cras et phasellus per bibendum aliquam metus, egestas lobortis vulputate suspendisse duis suscipit velit nam mattis, sagittis porta tellus curabitur in posuere condimentum torquent placerat.</p>
+            </div>
+          </div>
+
+          <div class="project__actions">
+            <!-- Vuelve directo a la grilla de proyectos, sin pasar por el
+                 reel/carrusel de arriba. -->
+            <a class="btn" href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
+                 al primero). -->
             <a class="btn" href="#koupe">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </a>
@@ -682,7 +753,7 @@
     </section>
 
     <!-- ==========================================================================
-         SECCION 9 de 11  —  PROYECTO: KOUPE   (direccion: #koupe)
+         SECCION 10 de 11  —  PROYECTO: KOUPE   (direccion: #koupe)
          ========================================================================== -->
     <!-- Para cambiar los textos de este proyecto edita: el <h1> (titulo),
          el parrafo de abajo (el rol) y los dos parrafos ESP / ENG.          -->
@@ -730,7 +801,7 @@
     </section>
 
     <!-- ==========================================================================
-         SECCION 10 de 11  —  PROYECTO: POLVORA PODCAST   (direccion: #section12)
+         SECCION 11 de 11  —  PROYECTO: POLVORA PODCAST   (direccion: #section12)
          ========================================================================== -->
     <!-- Para cambiar los textos de este proyecto edita: el <h1> (titulo),
          el parrafo de abajo (el rol) y los dos parrafos ESP / ENG.          -->
@@ -776,31 +847,21 @@
         </div>
       </div>
     </section>
-
-    <!-- ==========================================================================
-         SECCION 11 de 11  —  CONTACT   (direccion: #contact)
-         ========================================================================== -->
-    <!-- ATENCION: en el Carrd original esta seccion estaba VACIA.
-         Se dejo lista para que pegues tus datos. Para activarla, borra las
-         lineas que dicen COMENTARIO ABAJO y COMENTARIO ARRIBA, y reemplaza
-         el mail y el usuario de Instagram por los tuyos.                     -->
-    <section class="page" id="contact" data-title="Contact" hidden>
-      <div class="wrap wrap--narrow page__body">
-        <div class="page__head reveal">
-          <h1 class="project__title">Contact</h1>
-        </div>
-
-        <!-- COMENTARIO ABAJO
-        <div class="project__actions reveal">
-          <a class="btn btn--primary" href="mailto:TUMAIL@ejemplo.com">Escribime</a>
-          <a class="btn" href="https://instagram.com/TUUSUARIO" target="_blank" rel="noopener">Instagram</a>
-          <a class="btn" href="https://wa.me/5491100000000" target="_blank" rel="noopener">WhatsApp</a>
-        </div>
-        COMENTARIO ARRIBA -->
-
-      </div>
-    </section>
   </main>
+
+    <!-- ======================================================================
+         PIE DE PAGINA — igual en todas las paginas, no lo mueve el router
+         ====================================================================== -->
+    <footer class="site-footer">
+      <div class="wrap site-footer__inner">
+        <p class="site-footer__name">Ian Iacono</p>
+        <!-- Reemplaza TUUSUARIO por tu usuario real de Instagram -->
+        <a class="site-footer__social" href="https://instagram.com/TUUSUARIO"
+           target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg>
+        </a>
+      </div>
+    </footer>
 
     <!-- Scripts al final para que la pagina se vea antes de cargarlos -->
   <script src="/js/main.js" defer></script>

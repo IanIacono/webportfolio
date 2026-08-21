@@ -33,7 +33,8 @@
 
   /* Ids que no son paginas sino puntos de la pagina de inicio */
   var anchors = {
-    projects: { page: homeId, target: "projects" }
+    projects: { page: homeId, target: "projects" },
+    contact: { page: homeId, target: "contact" }
   };
 
   function pageById(id) {

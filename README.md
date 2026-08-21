@@ -271,33 +271,50 @@ es automático, no hay un color aparte para eso.
 En ese mismo bloque también están los tamaños de letra (`--fs-...`), los
 espacios (`--sp-...`), los redondeos (`--r-...`) y las sombras (`--sh-...`).
 
+**El degradado del final de la página** (violeta oscuro y naranja, cerca del
+pie de página) usa dos colores propios, `--c-bloom-orange` y
+`--c-bloom-orange-soft`, más `--c-accent` y `--c-accent-deep` — cambiá esos
+cuatro si querés otra combinación. Está armado con varias manchas de color
+superpuestas sobre `body` (buscá el comentario que dice "no es un solo
+degrade lineal" en `css/style.css`), no con una imagen, así que también se
+edita solo ahí.
+
 ---
 
 ## 6. Completar la sección Contact
 
-En el Carrd original esta sección **estaba vacía** y el menú "Contact" llevaba
-a una página en blanco. Te la dejé lista para completar.
+En el Carrd original esta sección **estaba vacía**. Ahora vive al final del
+home (abajo de los proyectos) con un formulario y dos links, pero todavía
+apuntan a datos de ejemplo.
 
-Buscá en el HTML el cartel `SECCION 11 de 11 — CONTACT` y vas a ver esto:
+Buscá en el HTML el comentario que dice `CONTACTO` y vas a ver esto:
 
 ```html
-<!-- COMENTARIO ABAJO
-<div class="project__actions reveal">
-  <a class="btn btn--primary" href="mailto:TUMAIL@ejemplo.com">Escribime</a>
+<form class="contact-form reveal" action="mailto:TUMAIL@ejemplo.com" ...>
+  ...
+</form>
+<div class="contact-form__links reveal">
   <a class="btn" href="https://instagram.com/TUUSUARIO" ...>Instagram</a>
   <a class="btn" href="https://wa.me/5491100000000" ...>WhatsApp</a>
 </div>
-COMENTARIO ARRIBA -->
 ```
 
-Para activarlo:
+Para activarlo con tus datos:
 
-1. **Borrá** la línea que dice `<!-- COMENTARIO ABAJO`
-2. **Borrá** la línea que dice `COMENTARIO ARRIBA -->`
-3. Reemplazá `TUMAIL@ejemplo.com`, `TUUSUARIO` y el número de WhatsApp
-   (`5491100000000` = código de país 54 + 9 + característica sin el 0 + número
-   sin el 15).
-4. Borrá los botones que no quieras usar.
+1. Reemplazá `TUMAIL@ejemplo.com` (en el `action` del `<form>`) por tu mail.
+2. Reemplazá `TUUSUARIO` por tu usuario de Instagram (aparece dos veces: acá
+   y en el pie de página, al final del todo).
+3. Reemplazá el número de WhatsApp (`5491100000000` = código de país 54 + 9
+   + característica sin el 0 + número sin el 15).
+4. Borrá el botón que no quieras usar.
+
+**Importante sobre el formulario:** al enviarlo, `action="mailto:..."` abre
+el cliente de correo de quien lo llena, con lo escrito ya cargado — no lo
+manda solo. Es la única forma de tener un formulario que funcione en un
+sitio estático, sin servidor propio. Si más adelante preferís que se mande
+directo sin abrir nada, hace falta conectar un servicio como
+[Formspree](https://formspree.io) (tiene un plan gratis) — cambia el
+`action` del formulario por la URL que te den, y listo.
 
 ---
 
@@ -597,16 +614,92 @@ el punto 1. El logo del reel también cambia de color para acompañar
 versiones nuevas**, porque son arreglos de verdad — no dependen de qué
 paleta elijas.
 
+**31. Elegiste la Versión Z: quedó como el sitio real, y todo lo que sigue se
+construyó sobre ella.**
+Las paletas "Daily Bloom" (simplificada y radical) y "Philippe" quedan
+descartadas — si mas adelante las queres retomar, siguen en el historial
+de git.
+
+**32. Saqué la sombra que se veía debajo del reel; solo queda el difuminado
+alpha del borde inferior.**
+Era un `box-shadow` grande (el mismo que usan las tarjetas de proyecto),
+pensado para superficies planas — abajo del reel se leía como una mancha
+oscura de más. El difuminado del borde (que ya existía) es el único efecto
+que queda ahí. También hice que el fondo borroso detrás del reel se
+apague por completo (alpha 0) en vez de terminar en un color plano — así
+no hay un corte duro entre el reel y lo que sigue.
+
+**33. El fondo de la página deja de ser negro liso cerca del final: ahí
+aparece un degradado pintado a mano, violeta oscuro y naranja.**
+No es un degradado lineal de dos puntas — son varias manchas de color
+superpuestas (el mismo recurso de la "Versión radical" que habías visto,
+pero con esta paleta nueva). Queda anclado siempre al final de la página
+(`background-position: bottom`), así que no importa cuánto mida — arriba
+sigue siendo negro (donde está el reel) y recién cerca del pie de página
+se pinta. Usé el violeta que ya tenían los subtítulos de cada proyecto
+(`#8b7cf6`) como uno de los colores del degradado, para que tenga sentido
+con el resto de la página en vez de ser un agregado suelto.
+
+**34. En desktop, Sound y Audiovisual ya no se alternan con botones: conviven
+bajo un título "Selected Works".**
+Audiovisual queda a la izquierda (1 columna) y Sound a la derecha (2
+columnas), separadas por una línea fina y un poco más de aire que el
+espacio interno de cada grilla. En celular no cambié nada: ahí siguen los
+dos botones de siempre, alternando una grilla a la vez (no entran 3
+columnas de tarjetas en una pantalla chica).
+
+**35. Reorganicé qué va en Audiovisual y qué en Sound, y de paso corregí las
+tarjetas repetidas.**
+Audiovisual ahora es, en este orden: Rèport Travel Media, Detras del
+Puesto, Te Lo Aseguro y Juleriaque. Sound se quedó igual (Carbon Case,
+Lumia, Red Bull Batallas, La Llamada Fatal, Koupe). De paso: Detras del
+Puesto aparecía dos veces — dejé una sola. Y la tarjeta que decía "Rèport
+Travel Media" pero mostraba el logo de *Juleriaque* (y llevaba a la página
+de Rèport) ahora es una tarjeta y una página propias de Juleriaque — la
+imagen ya existía en el sitio, solo estaba mal etiquetada. Como nunca tuve
+el texto real de Juleriaque, por ahora tiene Lorem ipsum, igual que "Te Lo
+Aseguro" (ver la lista de pendientes más abajo).
+
+**36. Escribí el texto real de The Carbon Case y de Detras del Puesto (en
+inglés y en español) — antes ambos tenían el texto de relleno de "la
+creación del cosmos".**
+Para The Carbon Case usé el resumen que me pasaste (la producción de Helmi
+sobre mercados de carbono en Paraguay, Mozambique, Tailandia y Singapur) y
+lo extendí un poco, agregando una oración sobre tu trabajo de sonido —
+mezcla y masterización — para que quede parejo en longitud con los demás
+textos del sitio. Para Detras del Puesto investigué de qué trata el
+podcast (entrevistas de carrera profesional con referentes de turismo,
+tecnología, marketing y liderazgo corporativo) y escribí una descripción
+breve, mencionando la animación del logo, la identidad sonora y la
+cortina musical de los créditos que me dijiste que hiciste. Revisalos
+igual — es texto nuevo, no una traducción de algo que ya hubieras escrito.
+
+**37. Contact ya no es una página aparte: vive al final del home, con un
+formulario de verdad.**
+El link "Contact" del header ahora hace scroll hasta esa sección en vez de
+cambiar de página (igual que "Projects"). El formulario (nombre, email,
+mensaje) manda un mail con lo escrito — funciona sin backend, pero abre el
+cliente de correo de quien escribe en vez de mandarlo directo. Si más
+adelante preferís que se mande solo, sin abrir nada, hace falta conectar
+un servicio como Formspree (tiene plan gratis) — avisame y lo armamos.
+Mientras tanto hay que reemplazar `TUMAIL@ejemplo.com`, el usuario de
+Instagram y el número de WhatsApp por los tuyos — el comentario arriba del
+formulario, en `index.html`, dice exactamente dónde.
+
+**38. Agregué un pie de página con el ícono de Instagram, igual en todas las
+páginas.**
+Por ahora linkea a un usuario de ejemplo (`TUUSUARIO`) — reemplazalo por
+el tuyo cuando quieras.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
-- Siete proyectos comparten el mismo texto (*"Cortometraje sobre la creación
-  del cosmos…"*), copiado del de The Carbon Case.
+- Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
+  sobre la creación del cosmos…"*): Lumia, Rèport Travel Media, Koupe y
+  Polvora Podcast.
 - **Te Lo Aseguro | Analipsis** tiene Lorem ipsum y el subtítulo dice `V`.
-- **Contact** está vacía (ver el punto 7 de arriba).
+- **Juleriaque** también tiene Lorem ipsum (ver el punto 35) — nunca tuve
+  su texto real ni un video para esa página.
 - **Polvora Podcast** existe en `#section12` pero **no hay ningún link que
   lleve ahí**. Se entra solo escribiendo la dirección.
-- En **Audiovisual Portfolio**, Rèport y Detras del Puesto aparecen **dos veces
-  cada uno**. Además, la segunda tarjeta de "Rèport Travel Media" muestra la
-  imagen de *Juleriaque*.
 - La primera tarjeta de Audiovisual Portfolio (*"Las cenizas no se apagan"*)
   **no tiene título** debajo.

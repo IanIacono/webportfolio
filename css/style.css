@@ -12,11 +12,14 @@
    07. Hero / reel
    08. Tarjetas de proyecto (tiles): la grilla de la home
    09. Selector Sound / Audiovisual
+   09b. Selected Works (solo desktop)
    10. Pagina de proyecto
+   10b. Formulario de contacto
    11. Botones y links
    12. Reproductor de video (controles compartidos)
    13. Animaciones de entrada
    14. Responsive
+   15. Pie de pagina
    ========================================================================== */
 
 
@@ -44,6 +47,8 @@
   --c-accent:        #8b7cf6;   /* violeta: el acento principal              */
   --c-accent-soft:   #b3a8fa;   /* violeta claro, para hover                 */
   --c-accent-deep:   #531e9e;   /* violeta profundo: sliders (linea de tiempo del reel, volumen) */
+  --c-bloom-orange:      #e0793f;   /* naranja: solo para el degrade pintado del final de la pagina */
+  --c-bloom-orange-soft: #f2a06a;   /* variante clara del naranja, para el mismo degrade          */
 
   --c-line:          rgba(255,255,255,.10);  /* lineas finas                 */
   --c-line-strong:   rgba(255,255,255,.24);  /* lineas con enfasis           */
@@ -140,7 +145,22 @@ html {
 }
 
 body {
-  background: var(--c-bg);
+  background-color: var(--c-bg);
+  /* El fondo es negro liso arriba (donde esta el reel) y, recien cerca del
+     final de la pagina, se pinta con un degrade violeta oscuro/naranja —
+     no es un solo degrade lineal: son varias manchas de color superpuestas,
+     ancladas siempre al final del documento (background-position:bottom),
+     sin importar cuanto mida la pagina. Asi el negro del reel se va yendo
+     de a poco hacia este degrade a medida que se scrollea hacia abajo. */
+  background-image:
+    radial-gradient(ellipse 65% 55% at 18% 25%, color-mix(in srgb, var(--c-bloom-orange) 60%, transparent), transparent 62%),
+    radial-gradient(ellipse 60% 55% at 88% 15%, color-mix(in srgb, var(--c-accent) 55%, transparent), transparent 64%),
+    radial-gradient(ellipse 75% 60% at 70% 90%, color-mix(in srgb, var(--c-bloom-orange-soft) 50%, transparent), transparent 62%),
+    radial-gradient(ellipse 85% 75% at 45% 100%, color-mix(in srgb, var(--c-accent-deep) 90%, transparent), transparent 68%),
+    linear-gradient(to top, #170a22 0%, transparent 80%);
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% 120vh;
   color: var(--c-text);
   font-family: var(--font);
   font-size: var(--fs-base);
@@ -607,7 +627,7 @@ p { text-wrap: pretty; }
   inset: 0;
   background:
     radial-gradient(120% 90% at 50% 45%, transparent 30%, rgba(0,0,0,.55) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,.5), transparent 22%, transparent 68%, var(--c-bg) 100%);
+    linear-gradient(to bottom, rgba(0,0,0,.5), transparent 22%, transparent 68%, transparent 100%);
 }
 
 /* Se disuelve en el fondo de la pagina: sin esto, el final del hero se veria
@@ -627,7 +647,6 @@ p { text-wrap: pretty; }
   z-index: 1;
   width: min(94vw, calc((100svh - var(--nav-h) - var(--sp-8)) * 16 / 9));
   aspect-ratio: 16 / 9;
-  box-shadow: var(--sh-3);
   border-radius: var(--r-sm);
   overflow: hidden;
   background: #000;
@@ -880,6 +899,24 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
+   09b. SELECTED WORKS (solo desktop)
+   En celular, Sound y Audiovisual se ven de a una segun la pestana de
+   arriba (seccion 09). En desktop conviven lado a lado bajo un titulo
+   centrado, sin pestanas — la activacion real esta en la seccion 14
+   (RESPONSIVE, @media min-width:901px). Aca solo van los valores base,
+   ocultos, para que no aparezcan de golpe en celular.
+   ========================================================================== */
+
+.works-title { display: none; }
+
+.works { display: block; }
+
+.works__label { display: none; }
+
+.works__divider { display: none; }
+
+
+/* ==========================================================================
    10. PAGINA DE PROYECTO
    Dos columnas: el material (video/audio) a la izquierda, el texto a la derecha.
    ========================================================================== */
@@ -974,6 +1011,65 @@ p { text-wrap: pretty; }
   justify-content: space-between;
   gap: var(--sp-3);
   flex-wrap: wrap;
+}
+
+
+/* ==========================================================================
+   10b. FORMULARIO DE CONTACTO
+   ========================================================================== */
+
+/* Un poco mas clara que --c-accent: este texto cae sobre el degrade del
+   final de la pagina (seccion 02, body), que varia de punto a punto, asi
+   que necesita mas margen de contraste que el mismo violeta sobre el
+   fondo liso de una pagina de proyecto. */
+.contact-form__lead { color: var(--c-accent-soft); margin-top: var(--sp-2); }
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+  max-width: 34rem;
+}
+
+.contact-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-5);
+}
+
+.contact-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--c-bg-raised);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  color: var(--c-text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  resize: vertical;
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.contact-form input::placeholder,
+.contact-form textarea::placeholder { color: var(--c-text-faint); }
+.contact-form input:focus-visible,
+.contact-form textarea:focus-visible {
+  outline: none;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 30%, transparent);
+}
+
+.contact-form__links {
+  margin-top: var(--sp-6);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
 }
 
 
@@ -1212,6 +1308,57 @@ p { text-wrap: pretty; }
    Se diseno primero para celular; aca se ajusta lo que hace falta.
    ========================================================================== */
 
+/* --- Desktop (901px y mas): "Selected Works" reemplaza las pestanas.
+   Audiovisual (1 columna) queda a la izquierda, Sound (2 columnas) a la
+   derecha, separadas por una linea fina y un poco mas de aire que el gap
+   interno de cada grilla. --- */
+@media (min-width: 901px) {
+  .portfolio-tabs { display: none; }
+
+  .works-title {
+    display: block;
+    text-align: center;
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    letter-spacing: var(--ls-tight);
+    margin-bottom: var(--sp-9);
+  }
+
+  .works {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 1px minmax(0, 2fr);
+    column-gap: var(--sp-9);
+    align-items: start;
+  }
+
+  .works__label {
+    display: block;
+    margin-bottom: var(--sp-5);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--c-text-faint);
+    text-align: left;
+  }
+
+  .works__divider {
+    display: block;
+    align-self: stretch;
+    width: 1px;
+    background: var(--c-line);
+  }
+
+  /* Las 2 categorias quedan siempre visibles: el atributo "hidden" que usa
+     JS para las pestanas de celular no debe aplicar aca. Necesita
+     !important porque la seccion 02 ya fuerza [hidden] con !important
+     (a proposito, para que le gane a .grid{display:grid} en celular). */
+  .works .grid[hidden] { display: grid !important; }
+
+  .grid--av { grid-template-columns: minmax(0, 1fr); }
+  .grid--sound { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
@@ -1248,6 +1395,8 @@ p { text-wrap: pretty; }
   .page__body { padding-top: calc(var(--nav-h) + var(--sp-6)); }
   .portfolio-tabs { width: 100%; }
   .portfolio-tab { flex: 1 1 0; padding-inline: var(--sp-2); }
+
+  .contact-form__row { grid-template-columns: 1fr; }
 }
 
 /* --- Pantallas muy angostas (360px y menos) --- */
@@ -1274,4 +1423,46 @@ p { text-wrap: pretty; }
   .nav, .player__controls { display: none !important; }
   body { background: #fff; color: #000; }
   .page[hidden] { display: block !important; }
+}
+
+
+/* ==========================================================================
+   15. PIE DE PAGINA
+   Igual en todas las paginas — vive afuera de <main>, el router no lo toca.
+   Se apoya sobre el degrade del final de la pagina (seccion 02, body).
+   ========================================================================== */
+
+.site-footer {
+  padding-block: var(--sp-8);
+}
+
+.site-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--c-line);
+}
+
+.site-footer__name {
+  font-size: var(--fs-xs);
+  color: var(--c-text-muted);
+}
+
+.site-footer__social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-full);
+  color: var(--c-text-muted);
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.site-footer__social svg { width: 20px; height: 20px; }
+.site-footer__social:hover,
+.site-footer__social:focus-visible {
+  color: var(--c-text);
+  background: var(--c-bg-hover);
 }
