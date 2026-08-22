@@ -692,7 +692,7 @@ p { text-wrap: pretty; }
      entrecortada en vez de fluida. */
   transform: translate(-50%, -50%) translateZ(0);
   object-fit: cover;
-  filter: blur(44px) brightness(.42) saturate(1.5);
+  filter: blur(64px) brightness(.42) saturate(1.5);
   will-change: filter;
 }
 
@@ -717,11 +717,14 @@ p { text-wrap: pretty; }
   /* Los bordes de arriba y abajo se disuelven en vez de cortar de golpe —
      nada de video/sombra/marco duro justo ahi, se desvanecen hacia la
      pagina. Arriba separa el reel del nombre/header; abajo, de la
-     grilla de proyectos. Los costados se dejan tal cual. Distancia
-     generosa (72px, no 22px) para que sea un difuminado suave de
-     verdad y no una franja que se note. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 72px, #000 calc(100% - 72px), transparent);
-          mask-image: linear-gradient(to bottom, transparent, #000 72px, #000 calc(100% - 72px), transparent);
+     grilla de proyectos. Los costados se dejan tal cual.
+     OJO: esta distancia (--hero-fade) todavia esta en revision -- 22px
+     se sintio muy brusco, 72px comia demasiado video. Ver el
+     comparativo que se le mando al cliente antes de tocar este numero
+     de nuevo a ciegas. */
+  --hero-fade: 28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--hero-fade), #000 calc(100% - var(--hero-fade)), transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 var(--hero-fade), #000 calc(100% - var(--hero-fade)), transparent);
 }
 /* Pantalla completa: llena toda la pantalla, sin marco ni difuminado —
    esas son decisiones de diseno para cuando esta encajado en la pagina,

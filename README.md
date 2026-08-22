@@ -933,6 +933,15 @@ gradual — la distancia del degradé pasó de 22px a 72px.**
 **68. Saqué el cartel violeta "VISTA PREVIA..." que aparecía abajo de
 todo en el archivo que te mando cada ronda.**
 
+**69. Aumenté el desenfoque del fondo borroso detrás del reel (de 44px
+a 64px de blur).**
+
+**70. El difuminado del punto 67 se había ido al otro extremo: 72px
+comía demasiado video. En vez de adivinar un cuarto número, te mando
+una comparación real (mismo reel, distintas distancias) para que
+elijas vos — quedó en 28px mientras tanto, ni el original (22px, muy
+brusco) ni el de la ronda pasada (72px).**
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
