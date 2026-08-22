@@ -942,6 +942,18 @@ una comparación real (mismo reel, distintas distancias) para que
 elijas vos — quedó en 28px mientras tanto, ni el original (22px, muy
 brusco) ni el de la ronda pasada (72px).**
 
+**71. El punto 69 fue un malentendido mío: no pedías más blur, pedías
+que el fondo borroso tuviera un degradé alpha en su borde de abajo,
+para que se funda con el fondo de la página en vez de cortar en seco
+contra la sección que sigue. Volví el blur a 44px (como estaba antes
+del punto 69) y agregué ese degradé.**
+No revivé el `.hero::after` del punto 53 (ese fue el que causaba el
+aura negra) — en cambio extendí `.hero__bg::after`, que ya vive bien
+atrás de todo (detrás del reel, nunca se le superpone), agregándole
+`var(--c-bg)` como último color del degradé. Así el fondo borroso se
+disuelve hacia el mismo color exacto del resto de la página según vas
+bajando, sin repetir el bug viejo.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
