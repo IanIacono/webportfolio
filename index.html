@@ -172,9 +172,14 @@
           </div>
         </div>
 
-        <!-- GRILLA: SOUND PORTFOLIO -->
-        <div class="grid" id="grid-sound" data-portfolio-panel="sound"
-             role="tabpanel" aria-labelledby="tab-sound">
+        <!-- Las dos grillas comparten esta celda (ver .portfolio-panels
+             en css/style.css) para poder superponerse un instante durante
+             el slide+fade al cambiar de pestana -- ver "4. SELECTOR
+             SOUND / AUDIOVISUAL" en js/main.js. -->
+        <div class="portfolio-panels">
+          <!-- GRILLA: SOUND PORTFOLIO -->
+          <div class="grid" id="grid-sound" data-portfolio-panel="sound"
+               role="tabpanel" aria-labelledby="tab-sound">
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case">
             <div class="tile__media">
@@ -270,13 +275,13 @@
             </div>
           </a>
         </article>
-        </div>
+          </div>
 
-        <!-- GRILLA: AUDIOVISUAL PORTFOLIO. Misma grilla que Sound (ver
-             .grid en css/style.css): las dos tienen 5 proyectos y se ven
-             con la misma cantidad de tarjetas por fila y por columna. -->
-        <div class="grid" id="grid-audiovisual" data-portfolio-panel="audiovisual"
-             role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
+          <!-- GRILLA: AUDIOVISUAL PORTFOLIO. Misma grilla que Sound (ver
+               .grid en css/style.css): las dos tienen 5 proyectos y se ven
+               con la misma cantidad de tarjetas por fila y por columna. -->
+          <div class="grid" id="grid-audiovisual" data-portfolio-panel="audiovisual"
+               role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
             <div class="tile__media">
@@ -372,6 +377,7 @@
             </div>
           </a>
         </article>
+          </div>
         </div>
 
       </div>
@@ -893,6 +899,13 @@
       </div>
     </section>
   </main>
+
+    <!-- Bordes clickeables (solo desktop, solo paginas de proyecto): ver
+         "5. NAVEGACION POR LOS BORDES" en js/main.js -->
+    <a class="project-edge project-edge--back" href="#projects"
+       aria-label="Volver a proyectos" data-edge-back hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+    <a class="project-edge project-edge--next" href="#projects"
+       aria-label="Siguiente proyecto" data-edge-next hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
 
   <footer class="site-footer">
     <div class="site-footer__inner">

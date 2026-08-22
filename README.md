@@ -980,6 +980,29 @@ Como portada le puse la misma miniatura que ya tenía su video de
 YouTube — el sitio original tampoco tenía una imagen de tapa propia
 para este proyecto, así que no había otra de donde sacarla.
 
+**75. Entendí mal el punto 74: "3 filas horizontalmente" era pedirme 3
+tarjetas POR fila (3 columnas), no 3 filas en total — hice justo lo
+contrario. Ya está: las dos grillas (Sound y Audiovisual) volvieron a
+3 tarjetas por fila, 2 filas cada una. Polvora Podcast se queda donde
+quedó en el punto 74, en la grilla de Audiovisual.**
+
+**76. En desktop saqué los botones Back/Next de las páginas de
+proyecto — con textos largos quedaban muy abajo para llegar sin
+scrollear. Ahora, en cualquier momento, tocar el borde izquierdo de
+la pantalla vuelve a proyectos y el borde derecho lleva al siguiente.
+Se iluminan apenas al pasar el mouse, para que se note que están ahí
+sin competir visualmente con el resto. En celular sigue el botón de
+siempre — ahí los bordes ya los usan los dedos para el gesto de
+"volver" del sistema.**
+
+**77. Al cambiar entre Sound y Audiovisual ya no es un salto seco: la
+grilla vieja se desliza y se desvanece hacia un lado, la nueva entra
+deslizándose desde el otro — hacia la izquierda al pasar a
+Audiovisual, hacia la derecha al volver a Sound.**
+
+**78. Subí un poco tu nombre y el subtítulo (con todo lo que va
+alineado a eso), así queda un poco más separado del reel de abajo.**
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje

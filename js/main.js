@@ -224,7 +224,9 @@
   if (portfolioTabs) {
     var tabs = Array.prototype.slice.call(portfolioTabs.querySelectorAll(".portfolio-tab"));
     var thumb = portfolioTabs.querySelector("[data-portfolio-thumb]");
+    var panelsWrap = document.querySelector(".portfolio-panels");
     var activeTab = tabs[0];
+    var TRANSITION_MS = 250; /* debe coincidir con --dur-slow en css/style.css */
 
     function positionThumb(tab, skipTransition) {
       if (!thumb || !tab) return;
@@ -237,19 +239,66 @@
       }
     }
 
-    function selectPortfolio(name) {
+    /* Cambia que grilla se ve. En vez de un salto seco, la que entra
+       viene con un slide+fade desde un lado y la que sale se va para el
+       otro -- la direccion depende de si la pestana nueva esta a la
+       derecha o a la izquierda de la que estaba activa, asi que "Sound
+       -> Audiovisual" y "Audiovisual -> Sound" van cada uno para su lado.
+       skipAnim se usa solo en la carga inicial de la pagina, donde no
+       hay "de donde" venir todavia. */
+    function selectPortfolio(name, skipAnim) {
+      var targetTab = tabs.filter(function (t) { return t.dataset.portfolioTarget === name; })[0];
+      if (!targetTab || (targetTab === activeTab && !skipAnim)) return;
+
+      var oldTab = activeTab;
+      var oldPanel = document.getElementById(oldTab.getAttribute("aria-controls"));
+      var forward = tabs.indexOf(targetTab) > tabs.indexOf(oldTab);
+
       tabs.forEach(function (tab) {
-        var active = tab.dataset.portfolioTarget === name;
+        var active = tab === targetTab;
         tab.setAttribute("aria-selected", String(active));
         tab.tabIndex = active ? 0 : -1;
-        if (active) activeTab = tab;
-        var panel = document.getElementById(tab.getAttribute("aria-controls"));
-        if (panel) {
-          panel.hidden = !active;
-          if (active) observeReveals(panel);
-        }
       });
-      positionThumb(activeTab, false);
+      activeTab = targetTab;
+      positionThumb(activeTab, skipAnim);
+
+      var newPanel = document.getElementById(targetTab.getAttribute("aria-controls"));
+      if (!newPanel) return;
+
+      if (skipAnim || !panelsWrap || reduceMotion.matches) {
+        if (oldPanel && oldPanel !== newPanel) oldPanel.hidden = true;
+        newPanel.hidden = false;
+        observeReveals(newPanel);
+        return;
+      }
+
+      if (oldPanel === newPanel) return;
+
+      /* Arranca la grilla nueva ya visible pero corrida hacia el lado de
+         "entrada" y transparente, sin transicion todavia (asi no anima
+         este primer salto) -- forzar el reflow confirma ese punto de
+         partida antes de que, un frame despues, se le saque el
+         corrimiento CON la transicion prendida: ahi es donde se ve el
+         slide+fade. A la vieja se le hace lo mismo pero al lado opuesto. */
+      panelsWrap.classList.add("is-transitioning");
+      newPanel.hidden = false;
+      newPanel.classList.add(forward ? "is-offset-r" : "is-offset-l");
+      void newPanel.offsetWidth;
+
+      requestAnimationFrame(function () {
+        newPanel.classList.remove("is-offset-r", "is-offset-l");
+        if (oldPanel) oldPanel.classList.add(forward ? "is-offset-l" : "is-offset-r");
+      });
+
+      observeReveals(newPanel);
+
+      window.setTimeout(function () {
+        if (oldPanel) {
+          oldPanel.hidden = true;
+          oldPanel.classList.remove("is-offset-l", "is-offset-r");
+        }
+        panelsWrap.classList.remove("is-transitioning");
+      }, TRANSITION_MS);
     }
 
     tabs.forEach(function (tab) {
@@ -258,7 +307,7 @@
 
     /* Un link viejo a #audiovisual (por ejemplo, de un buscador) abre
        directo en esa pestana en vez de la de Sound. */
-    if (currentHash() === "audiovisual") selectPortfolio("audiovisual");
+    if (currentHash() === "audiovisual") selectPortfolio("audiovisual", true);
     else positionThumb(activeTab, true);
 
     /* Reubica la bolita sin animar si cambia el ancho de las pestanas
@@ -268,6 +317,32 @@
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () { positionThumb(activeTab, true); });
     }
+  }
+
+
+  /* ======================================================================
+     5. NAVEGACION POR LOS BORDES (solo desktop, ver css/style.css)
+     En vez de tener que bajar hasta un boton Back/Next -- que con textos
+     largos quedaba muy abajo para llegar sin scrollear -- tocar el borde
+     izquierdo o derecho de la pantalla, en cualquier momento, hace lo
+     mismo. Reutiliza el mismo orden de paginas que ya arma el router de
+     arriba (1), asi que "siguiente" es siempre el mismo proyecto al que
+     ya llevaba el viejo boton Next (con el ultimo volviendo al primero).
+     ====================================================================== */
+
+  var edgeBack = document.querySelector("[data-edge-back]");
+  var edgeNext = document.querySelector("[data-edge-next]");
+  if (edgeBack && edgeNext) {
+    var projectPages = pages.slice(1); /* todas las .page menos home */
+    document.addEventListener("page:change", function (e) {
+      var isProject = e.detail.id !== homeId;
+      edgeBack.hidden = !isProject;
+      edgeNext.hidden = !isProject;
+      if (!isProject) return;
+      var idx = projectPages.indexOf(e.detail.page);
+      var next = projectPages[(idx + 1) % projectPages.length];
+      edgeNext.href = "#" + next.id;
+    });
   }
 
 

@@ -370,8 +370,11 @@ p { text-wrap: pretty; }
   z-index: 100;
   min-height: var(--nav-h);
   /* Un toque mas que --sp-7 (3rem): con eso solo, el nombre quedaba
-     pegado contra el borde de arriba de todo. */
-  padding-block: 3.5rem;
+     pegado contra el borde de arriba de todo. .nav es "fixed" (no
+     empuja al reel, que se posiciona solo con --hero-top-clearance),
+     asi que bajar este valor sube el nombre Y de paso separa mas el
+     nombre del reel, las dos cosas a la vez. */
+  padding-block: 2.75rem;
   display: flex;
   align-items: center;
   background: transparent;
@@ -806,14 +809,38 @@ p { text-wrap: pretty; }
    para que el brillo de una tarjeta no se meta con las de al lado.
    ========================================================================== */
 
+/* Envoltorio de las dos grillas (Sound/Audiovisual): las superpone en la
+   misma celda para que el cambio de pestana pueda ser un slide+fade en
+   vez de un salto -- ver "4. SELECTOR SOUND / AUDIOVISUAL" en js/main.js.
+   El alto de la celda lo pone la grilla mas alta de las dos (auto), asi
+   que no hace falta fijarlo a mano. */
+.portfolio-panels {
+  display: grid;
+}
+.portfolio-panels > .grid {
+  grid-area: 1 / 1;
+}
+/* Solo mientras dura el cambio de pestana: recorta el slide para que no
+   agregue una barra de scroll horizontal, y prende la transicion (si
+   estuviera prendida siempre, el primer "hidden -> visible" de cada
+   grilla al cargar la pagina se animaria tambien, y no queremos eso). */
+.portfolio-panels.is-transitioning {
+  overflow: hidden;
+}
+.portfolio-panels.is-transitioning > .grid {
+  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
+}
+.portfolio-panels > .grid.is-offset-r { opacity: 0; transform: translateX(28px); }
+.portfolio-panels > .grid.is-offset-l { opacity: 0; transform: translateX(-28px); }
+
 .grid {
   display: grid;
-  /* 2 por fila en las dos pestanas (Sound y Audiovisual tienen 5
+  /* 3 por fila en las dos pestanas (Sound y Audiovisual tienen 5
      proyectos cada una): asi las dos grillas quedan con la misma forma
-     -- 2 columnas x 3 filas, la ultima con una sola tarjeta -- en vez
-     de que cada pestana muestre una cantidad distinta de tarjetas por
-     fila. Ya era asi de por si abajo de 900px (ver responsive). */
-  grid-template-columns: repeat(2, 1fr);
+     -- 3 columnas x 2 filas, la ultima con dos tarjetas -- en vez de
+     que cada pestana muestre una cantidad distinta de tarjetas por
+     fila. */
+  grid-template-columns: repeat(3, 1fr);
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
 }
@@ -1005,16 +1032,7 @@ p { text-wrap: pretty; }
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: var(--sp-8) var(--sp-9);
-  /* "stretch" (no "start") + el min-height de aca abajo le dan a esta
-     fila un piso de altura fijo. Sin esto, cada pagina medía lo que
-     medía su propio texto (un video 16:9 es mas bajo, ~366px, que dos
-     parrafos ESP/ENG) y el boton Back/Next quedaba a una altura
-     distinta en cada proyecto. Con el piso, todas las paginas usan la
-     misma altura de base (el texto mas largo que tenemos, The Carbon
-     Case, la necesita entera) y el boton (ver .project__actions) se
-     ancla siempre ahi, texto corto o largo. */
-  align-items: stretch;
-  min-height: 52rem;
+  align-items: start;
 }
 
 .project__media { display: grid; gap: var(--sp-5); }
@@ -1077,11 +1095,6 @@ p { text-wrap: pretty; }
 
 .project__text { margin-top: var(--sp-8); }
 
-/* Columna de texto en flex: asi .project__actions (mas abajo) se puede
-   empujar al fondo con margin-top:auto en vez de quedar pegado justo
-   despues del texto, sea cual sea su largo. */
-.project__info { display: flex; flex-direction: column; }
-
 /* Bloque de idioma: la etiqueta ESP/ENG arriba y el parrafo debajo */
 .lang + .lang { margin-top: var(--sp-6); }
 .lang__label {
@@ -1097,19 +1110,50 @@ p { text-wrap: pretty; }
   background: var(--c-line-strong);
 }
 
-/* Back a la izquierda, Next a la derecha (misma altura entre si). El
-   margin-top:auto los empuja al fondo de .project__info -- que ahora
-   se estira a la altura del video/audio de al lado (ver .project) --
-   asi quedan a la misma altura en TODAS las paginas de proyecto, sin
-   importar si el texto es corto o largo. */
+/* Back a la izquierda, Next a la derecha (misma altura entre si). Solo
+   se ve en celular -- en desktop los bordes de la pantalla cumplen la
+   misma funcion (ver .project-edge, mas abajo, y "5. NAVEGACION POR
+   LOS BORDES" en js/main.js) sin depender de cuanto texto haya arriba,
+   asi que ahi el boton se oculta. */
 .project__actions {
-  margin-top: auto;
-  padding-top: var(--sp-8);
+  display: none;
+}
+
+/* Bordes clickeables de la pagina (desktop): franja fija a todo lo alto,
+   pegada a cada borde, debajo de la barra de arriba. Arranca casi
+   invisible y se ilumina al pasar el mouse o enfocarla con el teclado --
+   asi no compite visualmente con el resto, pero se nota que esta ahi.
+   js/main.js las muestra solo en paginas de proyecto y les arma el link
+   (ver "5. NAVEGACION POR LOS BORDES"). */
+.project-edge {
+  position: fixed;
+  top: var(--nav-h);
+  bottom: 0;
+  z-index: 40;
+  width: clamp(3.5rem, 5vw, 5.5rem);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  flex-wrap: wrap;
+  color: var(--c-text-faint);
+  opacity: .32;
+  transition: opacity var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.project-edge svg { width: 22px; height: 22px; flex: none; }
+.project-edge:hover,
+.project-edge:focus-visible {
+  opacity: 1;
+  color: var(--c-text);
+}
+.project-edge--back {
+  left: 0;
+  justify-content: flex-start;
+  padding-left: var(--sp-4);
+  background: linear-gradient(to right, var(--c-bg) 0%, transparent 100%);
+}
+.project-edge--next {
+  right: 0;
+  justify-content: flex-end;
+  padding-right: var(--sp-4);
+  background: linear-gradient(to left, var(--c-bg) 0%, transparent 100%);
 }
 
 
@@ -1437,18 +1481,26 @@ p { text-wrap: pretty; }
      quedar pegado contra ellos. */
   :root { --hero-top-clearance: 11rem; }
 
-  .grid { gap: var(--sp-7) var(--sp-5); }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
 
   .project {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-7);
-    /* El piso de altura de arriba es para alinear el boton entre
-       columnas lado a lado -- en celular todo se apila y se scrollea,
-       asi que no hace falta (y dejaria un hueco vacio feo en las
-       paginas con poco texto). */
-    min-height: auto;
   }
   .project__text { margin-top: 0; }
+
+  /* En celular no hay bordes clickeables (ver .project-edge): los dedos
+     ya usan esos bordes para el gesto de "volver" del sistema, y ahi se
+     scrollea con normalidad. Vuelve el boton Back/Next de siempre. */
+  .project-edge { display: none; }
+  .project__actions {
+    display: flex;
+    margin-top: var(--sp-8);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
 
   /* No entran el nombre grande, los links y el volumen juntos en una
      pantalla angosta -- se superponen. Ahi los links+volumen se quedan
@@ -1477,7 +1529,7 @@ p { text-wrap: pretty; }
   .nav__brand { max-width: calc(100vw - var(--sp-8)); }
   .nav__brand-role { white-space: normal; }
 
-  .grid { gap: var(--sp-6) var(--sp-4); }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
 
   /* En celular el marco ocupa todo el ancho, pegado al video: el
      difuminado del borde inferior no tiene el mismo lugar para "respirar"
