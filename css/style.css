@@ -808,15 +808,15 @@ p { text-wrap: pretty; }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* 2 por fila en las dos pestanas (Sound y Audiovisual tienen 5
+     proyectos cada una): asi las dos grillas quedan con la misma forma
+     -- 2 columnas x 3 filas, la ultima con una sola tarjeta -- en vez
+     de que cada pestana muestre una cantidad distinta de tarjetas por
+     fila. Ya era asi de por si abajo de 900px (ver responsive). */
+  grid-template-columns: repeat(2, 1fr);
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
 }
-/* Audiovisual tiene solo 4 proyectos: con 3 por fila queda una tarjeta
-   sola y las demas se ven chicas. 2 por fila se ve mas equilibrado y de
-   paso las tarjetas quedan mas grandes. (Abajo de 900px ya son 2 por
-   fila de por si, ver responsive, asi que esto no cambia nada ahi.) */
-.grid--av { grid-template-columns: repeat(2, 1fr); }
 
 .tile { position: relative; }
 
@@ -1005,7 +1005,16 @@ p { text-wrap: pretty; }
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: var(--sp-8) var(--sp-9);
-  align-items: start;
+  /* "stretch" (no "start") + el min-height de aca abajo le dan a esta
+     fila un piso de altura fijo. Sin esto, cada pagina medía lo que
+     medía su propio texto (un video 16:9 es mas bajo, ~366px, que dos
+     parrafos ESP/ENG) y el boton Back/Next quedaba a una altura
+     distinta en cada proyecto. Con el piso, todas las paginas usan la
+     misma altura de base (el texto mas largo que tenemos, The Carbon
+     Case, la necesita entera) y el boton (ver .project__actions) se
+     ancla siempre ahi, texto corto o largo. */
+  align-items: stretch;
+  min-height: 52rem;
 }
 
 .project__media { display: grid; gap: var(--sp-5); }
@@ -1068,6 +1077,11 @@ p { text-wrap: pretty; }
 
 .project__text { margin-top: var(--sp-8); }
 
+/* Columna de texto en flex: asi .project__actions (mas abajo) se puede
+   empujar al fondo con margin-top:auto en vez de quedar pegado justo
+   despues del texto, sea cual sea su largo. */
+.project__info { display: flex; flex-direction: column; }
+
 /* Bloque de idioma: la etiqueta ESP/ENG arriba y el parrafo debajo */
 .lang + .lang { margin-top: var(--sp-6); }
 .lang__label {
@@ -1083,9 +1097,14 @@ p { text-wrap: pretty; }
   background: var(--c-line-strong);
 }
 
-/* Back a la izquierda, Next a la derecha (misma altura) */
+/* Back a la izquierda, Next a la derecha (misma altura entre si). El
+   margin-top:auto los empuja al fondo de .project__info -- que ahora
+   se estira a la altura del video/audio de al lado (ver .project) --
+   asi quedan a la misma altura en TODAS las paginas de proyecto, sin
+   importar si el texto es corto o largo. */
 .project__actions {
-  margin-top: var(--sp-8);
+  margin-top: auto;
+  padding-top: var(--sp-8);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1418,11 +1437,16 @@ p { text-wrap: pretty; }
      quedar pegado contra ellos. */
   :root { --hero-top-clearance: 11rem; }
 
-  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
+  .grid { gap: var(--sp-7) var(--sp-5); }
 
   .project {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-7);
+    /* El piso de altura de arriba es para alinear el boton entre
+       columnas lado a lado -- en celular todo se apila y se scrollea,
+       asi que no hace falta (y dejaria un hueco vacio feo en las
+       paginas con poco texto). */
+    min-height: auto;
   }
   .project__text { margin-top: 0; }
 
@@ -1453,7 +1477,7 @@ p { text-wrap: pretty; }
   .nav__brand { max-width: calc(100vw - var(--sp-8)); }
   .nav__brand-role { white-space: normal; }
 
-  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
+  .grid { gap: var(--sp-6) var(--sp-4); }
 
   /* En celular el marco ocupa todo el ancho, pegado al video: el
      difuminado del borde inferior no tiene el mismo lugar para "respirar"

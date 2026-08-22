@@ -954,6 +954,32 @@ atrás de todo (detrás del reel, nunca se le superpone), agregándole
 disuelve hacia el mismo color exacto del resto de la página según vas
 bajando, sin repetir el bug viejo.
 
+**72. El botón Back/Next de las páginas de proyecto quedaba a una
+altura distinta en cada página, según cuánto texto tuviera esa página
+en particular — ahora queda siempre a la misma altura, en todas.**
+La fila de video+texto ahora tiene un piso de altura fijo (52rem) y el
+botón se ancla siempre abajo de ese piso, en vez de quedar pegado justo
+después del último párrafo (antes, un texto corto lo dejaba mucho más
+arriba que uno largo). En celular esto no aplica — ahí todo se apila y
+se scrollea, así que no hacía falta.
+_(Nota: esto es preciso en pantallas grandes. En anchos intermedios
+tipo tablet, si el texto de un proyecto es mucho más largo que el
+resto — como The Carbon Case — puede que su botón quede un poco más
+abajo que en los demás, porque el texto en ese ancho ocupa más líneas.
+Avisame si se nota y lo afino.)_
+
+**73. Le agregué a "La Llamada Fatal" el tercer episodio de Spotify
+que me pasaste.**
+
+**74. "Polvora Podcast" existía como página pero no estaba en ninguna
+grilla — solo se llegaba ahí apretando "Next" desde otro proyecto.
+Ahora está en la grilla de Audiovisual. De paso, emparejé las dos
+grillas (Sound y Audiovisual) para que se vean igual: 2 tarjetas por
+fila, 3 filas, en las dos.**
+Como portada le puse la misma miniatura que ya tenía su video de
+YouTube — el sitio original tampoco tenía una imagen de tapa propia
+para este proyecto, así que no había otra de donde sacarla.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
@@ -962,7 +988,5 @@ bajando, sin repetir el bug viejo.
 - **Te Lo Aseguro | Analipsis** tiene Lorem ipsum y el subtítulo dice `V`.
 - **Juleriaque** también tiene Lorem ipsum (ver el punto 35) — nunca tuve
   su texto real ni un video para esa página.
-- **Polvora Podcast** existe en `#section12` pero **no hay ningún link que
-  lleve ahí**. Se entra solo escribiendo la dirección.
 - La primera tarjeta de Audiovisual Portfolio (*"Las cenizas no se apagan"*)
   **no tiene título** debajo.

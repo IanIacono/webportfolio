@@ -272,10 +272,10 @@
         </article>
         </div>
 
-        <!-- GRILLA: AUDIOVISUAL PORTFOLIO. Solo 4 proyectos: 2 por fila en
-             vez de 3 se ve mas equilibrado (con 3 queda una tarjeta sola
-             en la segunda fila) y de paso las tarjetas se ven mas grandes. -->
-        <div class="grid grid--av" id="grid-audiovisual" data-portfolio-panel="audiovisual"
+        <!-- GRILLA: AUDIOVISUAL PORTFOLIO. Misma grilla que Sound (ver
+             .grid en css/style.css): las dos tienen 5 proyectos y se ven
+             con la misma cantidad de tarjetas por fila y por columna. -->
+        <div class="grid" id="grid-audiovisual" data-portfolio-panel="audiovisual"
              role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
@@ -347,6 +347,25 @@
             <div class="tile__meta">
               <div>
                 <h2 class="tile__title">Juleriaque</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#section12" aria-label="Ver proyecto: Polvora Podcast">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/polvora-podcast-960.webp"
+                   srcset="/assets/img/polvora-podcast-480.webp 480w, /assets/img/polvora-podcast-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1280" height="720" alt="Miniatura de Polvora Podcast: dos invitadas conversando frente a los microfonos" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1280" height="720" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Polvora Podcast</h2>
                 
               </div>
               <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
@@ -572,6 +591,11 @@
           <div class="embed embed--audio">
             <iframe src="https://open.spotify.com/embed/episode/5DJchpRlyf3DZMsiWbYLJX?utm_source=generator&amp;theme=0"
                     title="La Llamada Fatal — segundo episodio en Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+          </div>
+          <div class="embed embed--audio">
+            <iframe src="https://open.spotify.com/embed/episode/6qlD3El6SVTRuBnmR348g3?utm_source=generator&amp;theme=0"
+                    title="La Llamada Fatal — tercer episodio en Spotify" loading="lazy" width="100%" height="352" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
         </div>
