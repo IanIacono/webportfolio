@@ -889,6 +889,23 @@ publicada en Vercel, que todavía no tiene ninguno de los cambios de
 hoy ni de la ronda anterior — solo el archivo que te mando en cada
 ronda los tiene.
 
+**61. Tu nombre estaba pegado contra el borde de arriba de todo: le di
+un poco más de aire (y todo lo que va con él — el volumen, los links —
+bajó con él, ya que se mueven juntos).**
+
+**62. El reel ahora tiene las esquinas redondeadas.**
+
+**63. Reemplacé el video de fondo de Sound Portfolio por el que me
+pasaste (la onda de sonido) y le puse fusión "add" (`plus-lighter` en
+CSS) — el negro del video desaparece solo (sumarle negro a algo no lo
+cambia) y queda prendida únicamente la onda blanca sobre lo que sea que
+haya atrás. De paso corregí un bug real que encontré al probarlo: sin
+un ajuste de apilado, ese brillo se filtraba por encima de las
+tarjetas de proyecto en vez de quedar atrás — ahora se queda atrás,
+como corresponde, y solo se ve en los espacios vacíos alrededor.**
+También comprimí el archivo que me pasaste (era 4K y pesaba 16MB) a
+1080p, que para un fondo alcanza de sobra — quedó en 3MB.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje

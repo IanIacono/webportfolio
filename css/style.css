@@ -123,7 +123,7 @@
      grande Y separarse mas del nombre a la vez -- antes, con el mismo
      margen arriba y abajo, agrandar el reel comia el espacio libre de
      los dos lados por igual. */
-  --hero-top-clearance:    9rem;
+  --hero-top-clearance:    9.5rem;
   --hero-bottom-clearance:  0.75rem;
 
   /* Area minima clickeable (accesibilidad) */
@@ -369,7 +369,9 @@ p { text-wrap: pretty; }
   inset: 0 0 auto 0;
   z-index: 100;
   min-height: var(--nav-h);
-  padding-block: var(--sp-7);
+  /* Un toque mas que --sp-7 (3rem): con eso solo, el nombre quedaba
+     pegado contra el borde de arriba de todo. */
+  padding-block: 3.5rem;
   display: flex;
   align-items: center;
   background: transparent;
@@ -696,7 +698,7 @@ p { text-wrap: pretty; }
   z-index: 1;
   width: min(94vw, calc((100svh - var(--hero-top-clearance) - var(--hero-bottom-clearance)) * 16 / 9));
   aspect-ratio: 16 / 9;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-lg);
   overflow: hidden;
   background: #000;
   /* Los bordes de arriba y abajo se disuelven en vez de cortar de golpe —
@@ -785,6 +787,12 @@ p { text-wrap: pretty; }
   grid-template-columns: repeat(3, 1fr);
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
+  /* z-index propio: sin esto, el fondo con mix-blend-mode de .works-bg
+     (z-index:-1) se filtraba por encima de las tarjetas en vez de
+     quedar atras -- el blend-mode no respetaba el orden de pintado
+     "de punta a punta" de la manera esperada. */
+  position: relative;
+  z-index: 0;
 }
 /* Audiovisual tiene solo 4 proyectos: con 3 por fila queda una tarjeta
    sola y las demas se ven chicas. 2 por fila se ve mas equilibrado y de
@@ -913,6 +921,10 @@ p { text-wrap: pretty; }
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  /* Contiene el mix-blend-mode del video de Sound: sin esto, "con que
+     se funde" deja de ser solo lo que esta detras suyo aca adentro y
+     pasa a depender de que mas haya pintado en el resto de la pagina. */
+  isolation: isolate;
 }
 .works-bg__video {
   position: absolute;
@@ -921,18 +933,25 @@ p { text-wrap: pretty; }
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  filter: brightness(.5) saturate(.85);
   transition: opacity 600ms var(--ease);
 }
 .works-bg__video.is-active { opacity: 1; }
 
-/* Sound: ancla a la izquierda, se disuelve hacia la derecha.
-   Audiovisual: exactamente al reves (espejado). */
+/* Sound: ancla a la izquierda, se disuelve hacia la derecha. Es una
+   onda de sonido blanca sobre negro -- fusion "add" (plus-lighter) para
+   que el negro no se vea (sumar negro no cambia nada) y solo quede la
+   onda, blanca, prendida sobre lo que sea que haya atras. Sin el
+   oscurecido de --av: atenuarla la volveria gris en vez de blanca. */
 .works-bg__video--sound {
+  mix-blend-mode: plus-lighter;
   -webkit-mask-image: linear-gradient(to right, #000 0%, #000 30%, transparent 82%);
           mask-image: linear-gradient(to right, #000 0%, #000 30%, transparent 82%);
 }
+/* Audiovisual: exactamente al reves (espejado), con el tratamiento
+   original -- video de verdad, oscurecido para no competir con las
+   tarjetas. */
 .works-bg__video--av {
+  filter: brightness(.5) saturate(.85);
   -webkit-mask-image: linear-gradient(to left, #000 0%, #000 30%, transparent 82%);
           mask-image: linear-gradient(to left, #000 0%, #000 30%, transparent 82%);
 }
@@ -958,6 +977,10 @@ p { text-wrap: pretty; }
   justify-content: center;
   gap: var(--sp-5);
   margin-bottom: var(--sp-8);
+  /* Mismo motivo que en .grid: mantiene el fondo con mix-blend-mode
+     realmente atras del titulo y el selector. */
+  position: relative;
+  z-index: 0;
 }
 
 .portfolio-tabs-row__title {
