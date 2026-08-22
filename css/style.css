@@ -322,23 +322,32 @@ p { text-wrap: pretty; }
    derecha.
    ========================================================================== */
 
+/* La barra tiene 2 estados. Arriba de todo del home: transparente, con el
+   nombre y el subtitulo grandes y centrados (marca), sin links ni volumen
+   -- es una bienvenida, no todavia una barra de navegacion. Al scrollear
+   (o en cualquier otra pagina, donde no hay "arriba del todo" que valga):
+   se encoge, se oscurece, y muestra los links + el volumen -- ese cambio
+   lo maneja .is-stuck (ver "3. BARRA DE ARRIBA" en js/main.js). */
 .nav {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 100;
-  height: var(--nav-h);
+  min-height: var(--nav-h);
+  padding-block: var(--sp-7);
   display: flex;
   align-items: center;
-  background: rgba(10,9,16,.7);
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  background: transparent;
   border-bottom: 1px solid transparent;
-  transition: background var(--dur-slow) var(--ease),
+  transition: padding-block var(--dur-slow) var(--ease),
+              background var(--dur-slow) var(--ease),
               border-color var(--dur-slow) var(--ease);
 }
 
 .nav.is-stuck {
+  padding-block: 0;
   background: rgba(10,9,16,.86);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
   border-bottom-color: var(--c-line);
 }
 
@@ -350,28 +359,58 @@ p { text-wrap: pretty; }
   padding-inline: var(--gutter);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--sp-5);
 }
 
-.nav__name {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--c-text);
-  text-decoration: none;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--tap);
-  transition: color var(--dur) var(--ease);
+.nav__brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
 }
-.nav__name:hover { color: var(--c-accent); }
+.nav.is-stuck .nav__brand {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
+}
+
+.nav__brand-name {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  line-height: 1.1;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+
+.nav__brand-role {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  white-space: nowrap;
+}
 
 .nav__right {
   display: flex;
   align-items: center;
   gap: var(--sp-4);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
+}
+.nav.is-stuck .nav__right {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
 }
 
 .nav__links {
@@ -408,6 +447,9 @@ p { text-wrap: pretty; }
 }
 .nav__link:hover { color: var(--c-text); }
 .nav__link:hover::after { transform: scaleX(1); }
+/* Seccion actual al scrollear (ver el IntersectionObserver en main.js) */
+.nav__link.is-active { color: var(--c-text); }
+.nav__link.is-active::after { transform: scaleX(1); }
 
 /* --- Control global de sonido ---------------------------------------------
    El unico control de audio de todo el sitio. En reposo es blanco/gris
@@ -462,7 +504,7 @@ p { text-wrap: pretty; }
   display: none;
   -webkit-appearance: none;
   appearance: none;
-  width: 240px;                 /* larga: comoda de agarrar y de leer el nivel */
+  width: 120px;
   height: var(--tap);
   background: transparent;
   cursor: pointer;
@@ -1013,11 +1055,11 @@ p { text-wrap: pretty; }
    ========================================================================== */
 
 /* El fondo pasa de negro (arriba, pegado a los proyectos) a un violeta muy
-   oscuro y sutil (abajo, contra el pie de pagina) — nunca al reves, y el
-   violeta no llega mas arriba que esta seccion porque el degrade esta
-   pintado aca mismo, no en el body. El pie de pagina (seccion 15) sigue
-   con el mismo violeta solido para que la union entre los dos sea pareja. */
-#contact {
+   oscuro y sutil (abajo) — nunca al reves, y el violeta no llega mas
+   arriba que esta seccion. Va en la franja de ancho completo (.contact-band)
+   y no en el .wrap de adentro (angosto), para que ocupe todo el ancho de
+   la pagina en vez de verse como una caja recortada. */
+.contact-band {
   background: linear-gradient(to bottom, transparent 0%, transparent 35%, var(--c-bloom-violet) 100%);
 }
 
@@ -1069,6 +1111,25 @@ p { text-wrap: pretty; }
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-3);
+}
+
+.contact-form__social {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--r-full);
+  color: var(--c-text-muted);
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.contact-form__social svg { width: 20px; height: 20px; }
+.contact-form__social:hover,
+.contact-form__social:focus-visible {
+  color: var(--c-text);
+  background: var(--c-bg-hover);
+  border-color: var(--c-text);
 }
 
 
@@ -1374,6 +1435,12 @@ p { text-wrap: pretty; }
 @media (max-width: 640px) {
   :root { --nav-h: 4rem; }
 
+  /* "Sound Designer // Multimedia Post Production" no entra en una linea
+     en un celular angosto -- se corta contra los bordes. Se lo deja
+     envolver en 2 lineas en vez de forzarlo a una sola. */
+  .nav__brand { max-width: calc(100vw - var(--sp-8)); }
+  .nav__brand-role { white-space: normal; }
+
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
 
   /* En celular el marco ocupa todo el ancho, pegado al video: el
@@ -1428,44 +1495,6 @@ p { text-wrap: pretty; }
 
 /* ==========================================================================
    15. PIE DE PAGINA
-   Igual en todas las paginas — vive afuera de <main>, el router no lo toca.
-   Se apoya sobre el degrade del final de la pagina (seccion 02, body).
+   Sacado por ahora (ver README, punto 40) — si lo volves a pedir, esta en
+   el historial de git (commit "Rediseña Selected Works...").
    ========================================================================== */
-
-.site-footer {
-  padding-block: var(--sp-8);
-  /* Sigue el mismo violeta muy sutil en el que termina #contact (seccion
-     10b), asi la union entre ambos no se nota. */
-  background: var(--c-bloom-violet);
-}
-
-.site-footer__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  padding-top: var(--sp-6);
-  border-top: 1px solid var(--c-line);
-}
-
-.site-footer__name {
-  font-size: var(--fs-xs);
-  color: var(--c-text-muted);
-}
-
-.site-footer__social {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-full);
-  color: var(--c-text-muted);
-  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
-}
-.site-footer__social svg { width: 20px; height: 20px; }
-.site-footer__social:hover,
-.site-footer__social:focus-visible {
-  color: var(--c-text);
-  background: var(--c-bg-hover);
-}

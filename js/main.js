@@ -155,22 +155,59 @@
 
 
   /* ======================================================================
-     3. BARRA DE ARRIBA — se vuelve solida al bajar
+     3. BARRA DE ARRIBA
+     La marca grande (nombre + subtitulo) solo tiene sentido arriba de
+     todo del home -- ahi es una bienvenida, no una barra de navegacion
+     todavia. Se encoge a la version chica (links + volumen) apenas se
+     scrollea, y tambien en cualquier otra pagina (ahi nunca hay "arriba
+     de todo" que valga, asi que arranca encogida directamente).
      ====================================================================== */
 
   var nav = document.querySelector(".nav");
   if (nav) {
+    var navCurrentPage = homeId;
+    document.addEventListener("page:change", function (e) {
+      navCurrentPage = e.detail.id;
+      updateNavMode();
+    });
+
     var ticking = false;
-    var onScroll = function () {
+    function updateNavMode() {
+      var compact = navCurrentPage !== homeId || window.scrollY > 80;
+      nav.classList.toggle("is-stuck", compact);
+    }
+    function onScroll() {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(function () {
-        nav.classList.toggle("is-stuck", window.scrollY > 24);
+        updateNavMode();
         ticking = false;
       });
-    };
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    updateNavMode();
+
+    /* Que seccion esta "activa": el link correspondiente (Projects o
+       Contact) se subraya solo cuando esa seccion cruza el centro de la
+       pantalla -- no apenas asoma un borde, para que no titile entre
+       las dos si estan cerca. */
+    var spyLinks = Array.prototype.slice.call(nav.querySelectorAll(".nav__link"));
+    var spyTargets = spyLinks
+      .map(function (link) {
+        var id = (link.getAttribute("href") || "").replace(/^#/, "");
+        return { link: link, el: id ? document.getElementById(id) : null };
+      })
+      .filter(function (t) { return t.el; });
+
+    if (spyTargets.length && "IntersectionObserver" in window) {
+      var spyObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          var match = spyTargets.filter(function (t) { return t.el === entry.target; })[0];
+          if (match) match.link.classList.toggle("is-active", entry.isIntersecting);
+        });
+      }, { rootMargin: "-40% 0px -40% 0px" });
+      spyTargets.forEach(function (t) { spyObserver.observe(t.el); });
+    }
   }
 
 

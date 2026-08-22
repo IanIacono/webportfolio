@@ -707,6 +707,37 @@ archivos para comparar: uno con Sound y Audiovisual separados (el que
 quedó en el sitio real) y otro con "Selected Works" mostrando **todos**
 los proyectos juntos, sin distinción — decime cuál te gusta más.
 
+**40. Rediseñé la barra de arriba: arranca como una bienvenida (tu nombre y
+subtítulo, grandes y centrados) y se convierte en la barra chica de
+siempre al scrollear — basado en el header de jeffmoberg.tv/films que me
+pasaste.**
+Arriba de todo del home vas a ver "Ian Iacono" grande y centrado, con el
+subtítulo "Sound Designer // Multimedia Post Production" debajo — ahí no
+hay links ni control de volumen todavía, es más una bienvenida que una
+barra de navegación. Apenas empezás a scrollear (o en cualquier otra
+página, donde no hay "arriba de todo" que valga) se desvanece y aparece la
+barra chica con Projects, Contact y el volumen, como antes. Además, el
+link de la sección que estás mirando (Projects o Contact) ahora se
+subraya solo, seteado con un observer que mira qué sección cruza el medio
+de la pantalla.
+
+**41. Achiqué el control de volumen del header (de 240px a 120px).**
+
+**42. Corregí el degradado de Contact: estaba mal (te diste cuenta) —
+quedaba como una caja angosta en vez de ocupar todo el ancho de la
+página.**
+El problema era que lo había puesto en el `<div>` del formulario, que es
+angosto a propósito (para que el texto no estire de punta a punta). Ahora
+el color va en una franja nueva, de ancho completo, que envuelve a ese
+mismo div angosto — así el degradado sí ocupa toda la página de lado a
+lado, pero el violeta sigue sin subir más arriba de Contact (eso no
+cambió).
+
+**43. Saqué el pie de página por ahora (el que agregué en el punto 38) y
+en Contact dejé solo el ícono de Instagram, sin el botón de WhatsApp.**
+Si más adelante lo volvés a querer, avisame — quedó en el historial de
+git, no hay que rehacerlo de cero.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
