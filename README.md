@@ -919,6 +919,20 @@ con el nombre al scrollear, momento en el que la barra chica (con sus
 propios links) ya está visible. Le di un poco más de aire al reel para
 que le entre esta fila nueva sin quedar pegados.
 
+**65. Volví atrás con los videos de fondo de Selected Works (puntos
+57 y 63): saqué los dos, la sección quedó con el fondo normal de
+antes.**
+
+**66. Saqué las esquinas redondeadas del reel — vuelve a ser en
+escuadra.**
+
+**67. El difuminado de arriba y abajo del reel era muy brusco (se
+notaba como una línea en vez de una disolución). Lo hice bastante más
+gradual — la distancia del degradé pasó de 22px a 72px.**
+
+**68. Saqué el cartel violeta "VISTA PREVIA..." que aparecía abajo de
+todo en el archivo que te mando cada ronda.**
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje

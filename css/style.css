@@ -711,15 +711,17 @@ p { text-wrap: pretty; }
   z-index: 1;
   width: min(94vw, calc((100svh - var(--hero-top-clearance) - var(--hero-bottom-clearance)) * 16 / 9));
   aspect-ratio: 16 / 9;
-  border-radius: var(--r-lg);
+  border-radius: 0;
   overflow: hidden;
   background: #000;
   /* Los bordes de arriba y abajo se disuelven en vez de cortar de golpe —
      nada de video/sombra/marco duro justo ahi, se desvanecen hacia la
      pagina. Arriba separa el reel del nombre/header; abajo, de la
-     grilla de proyectos. Los costados se dejan tal cual. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22px, #000 calc(100% - 22px), transparent);
-          mask-image: linear-gradient(to bottom, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+     grilla de proyectos. Los costados se dejan tal cual. Distancia
+     generosa (72px, no 22px) para que sea un difuminado suave de
+     verdad y no una franja que se note. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 72px, #000 calc(100% - 72px), transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 72px, #000 calc(100% - 72px), transparent);
 }
 /* Pantalla completa: llena toda la pantalla, sin marco ni difuminado —
    esas son decisiones de diseno para cuando esta encajado en la pagina,
@@ -800,12 +802,6 @@ p { text-wrap: pretty; }
   grid-template-columns: repeat(3, 1fr);
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
-  /* z-index propio: sin esto, el fondo con mix-blend-mode de .works-bg
-     (z-index:-1) se filtraba por encima de las tarjetas en vez de
-     quedar atras -- el blend-mode no respetaba el orden de pintado
-     "de punta a punta" de la manera esperada. */
-  position: relative;
-  z-index: 0;
 }
 /* Audiovisual tiene solo 4 proyectos: con 3 por fila queda una tarjeta
    sola y las demas se ven chicas. 2 por fila se ve mas equilibrado y de
@@ -920,69 +916,7 @@ p { text-wrap: pretty; }
    Dos botones: alternan que grilla se ve, sin cambiar de pagina.
    ========================================================================== */
 
-/* Fila que junta el titulo "Selected Works" con el selector de pestanas,
-   compartiendo el mismo borde inferior (align-items:flex-end) en vez de
-   centrarse uno contra el otro -- se ve como una sola unidad. */
-/* Fondo ambiente detras del titulo, el selector y la grilla: un video
-   propio por pestana (Sound / Audiovisual), que se cruza con el otro al
-   cambiar de pestana. Ancla al lado de la pestana que representa y se
-   disuelve hacia el centro -- deja de leerse como un rectangulo de
-   video y pasa a sentirse como una luz de fondo. */
-.works-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  /* Contiene el mix-blend-mode del video de Sound: sin esto, "con que
-     se funde" deja de ser solo lo que esta detras suyo aca adentro y
-     pasa a depender de que mas haya pintado en el resto de la pagina. */
-  isolation: isolate;
-}
-.works-bg__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 600ms var(--ease);
-}
-.works-bg__video.is-active { opacity: 1; }
-
-/* Sound: ancla a la izquierda, se disuelve hacia la derecha. Es una
-   onda de sonido blanca sobre negro -- fusion "add" (plus-lighter) para
-   que el negro no se vea (sumar negro no cambia nada) y solo quede la
-   onda, blanca, prendida sobre lo que sea que haya atras. Sin el
-   oscurecido de --av: atenuarla la volveria gris en vez de blanca. */
-.works-bg__video--sound {
-  mix-blend-mode: plus-lighter;
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 30%, transparent 82%);
-          mask-image: linear-gradient(to right, #000 0%, #000 30%, transparent 82%);
-}
-/* Audiovisual: exactamente al reves (espejado), con el tratamiento
-   original -- video de verdad, oscurecido para no competir con las
-   tarjetas. */
-.works-bg__video--av {
-  filter: brightness(.5) saturate(.85);
-  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 30%, transparent 82%);
-          mask-image: linear-gradient(to left, #000 0%, #000 30%, transparent 82%);
-}
-
-/* Difuminado de arriba y abajo: se pinta encima con el color real de
-   fondo de la pagina, no con una segunda mascara combinada (eso pide
-   mask-composite, que no se comporta igual en todos los navegadores).
-   Con esto alcanza para que las cuatro esquinas del video queden
-   redondeadas en vez de en escuadra -- sin bordes duros que se noten
-   como una sombra. */
-.works-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(to bottom, var(--c-bg), transparent 42px, transparent calc(100% - 42px), var(--c-bg));
-}
-
+/* Fila que junta el titulo "Selected Works" con el selector de pestanas. */
 .portfolio-tabs-row {
   display: flex;
   flex-direction: column;
@@ -990,10 +924,6 @@ p { text-wrap: pretty; }
   justify-content: center;
   gap: var(--sp-5);
   margin-bottom: var(--sp-8);
-  /* Mismo motivo que en .grid: mantiene el fondo con mix-blend-mode
-     realmente atras del titulo y el selector. */
-  position: relative;
-  z-index: 0;
 }
 
 .portfolio-tabs-row__title {
@@ -1533,10 +1463,6 @@ p { text-wrap: pretty; }
   .embed--audio > iframe { height: 232px; }
 
   .page__body { padding-top: calc(var(--nav-h) + var(--sp-6)); }
-  /* En celular las tarjetas ocupan casi todo el ancho: casi no queda
-     "aire" donde el fondo ambiente se pueda ver, y no vale la pena
-     bajar 2 videos mas solo para eso. */
-  .works-bg { display: none; }
   .portfolio-tabs { width: 100%; }
   /* min-width:0 + white-space:normal -- si no, "Audiovisual Portfolio"
      (una sola palabra larga entre las dos, y de por si en una sola linea
