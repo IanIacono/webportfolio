@@ -321,32 +321,6 @@
 
 
   /* ======================================================================
-     5. NAVEGACION POR LOS BORDES (solo desktop, ver css/style.css)
-     En vez de tener que bajar hasta un boton Back/Next -- que con textos
-     largos quedaba muy abajo para llegar sin scrollear -- tocar el borde
-     izquierdo o derecho de la pantalla, en cualquier momento, hace lo
-     mismo. Reutiliza el mismo orden de paginas que ya arma el router de
-     arriba (1), asi que "siguiente" es siempre el mismo proyecto al que
-     ya llevaba el viejo boton Next (con el ultimo volviendo al primero).
-     ====================================================================== */
-
-  var edgeBack = document.querySelector("[data-edge-back]");
-  var edgeNext = document.querySelector("[data-edge-next]");
-  if (edgeBack && edgeNext) {
-    var projectPages = pages.slice(1); /* todas las .page menos home */
-    document.addEventListener("page:change", function (e) {
-      var isProject = e.detail.id !== homeId;
-      edgeBack.hidden = !isProject;
-      edgeNext.hidden = !isProject;
-      if (!isProject) return;
-      var idx = projectPages.indexOf(e.detail.page);
-      var next = projectPages[(idx + 1) % projectPages.length];
-      edgeNext.href = "#" + next.id;
-    });
-  }
-
-
-  /* ======================================================================
      Arranque
      ====================================================================== */
 

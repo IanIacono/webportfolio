@@ -123,7 +123,7 @@
      grande Y separarse mas del nombre a la vez -- antes, con el mismo
      margen arriba y abajo, agrandar el reel comia el espacio libre de
      los dos lados por igual. */
-  --hero-top-clearance:    9.5rem;
+  --hero-top-clearance:    8.75rem;
   --hero-bottom-clearance:  0.75rem;
 
   /* Area minima clickeable (accesibilidad) */
@@ -1110,50 +1110,17 @@ p { text-wrap: pretty; }
   background: var(--c-line-strong);
 }
 
-/* Back a la izquierda, Next a la derecha (misma altura entre si). Solo
-   se ve en celular -- en desktop los bordes de la pantalla cumplen la
-   misma funcion (ver .project-edge, mas abajo, y "5. NAVEGACION POR
-   LOS BORDES" en js/main.js) sin depender de cuanto texto haya arriba,
-   asi que ahi el boton se oculta. */
+/* Back a la izquierda, Next a la derecha (misma altura entre si).
+   Va justo debajo del texto, con el mismo margen que separa a los
+   demas bloques -- nada de pisos de altura artificiales que la manden
+   mas abajo de lo que su propio contenido necesita. */
 .project__actions {
-  display: none;
-}
-
-/* Bordes clickeables de la pagina (desktop): franja fija a todo lo alto,
-   pegada a cada borde, debajo de la barra de arriba. Arranca casi
-   invisible y se ilumina al pasar el mouse o enfocarla con el teclado --
-   asi no compite visualmente con el resto, pero se nota que esta ahi.
-   js/main.js las muestra solo en paginas de proyecto y les arma el link
-   (ver "5. NAVEGACION POR LOS BORDES"). */
-.project-edge {
-  position: fixed;
-  top: var(--nav-h);
-  bottom: 0;
-  z-index: 40;
-  width: clamp(3.5rem, 5vw, 5.5rem);
+  margin-top: var(--sp-8);
   display: flex;
   align-items: center;
-  color: var(--c-text-faint);
-  opacity: .32;
-  transition: opacity var(--dur) var(--ease), color var(--dur) var(--ease);
-}
-.project-edge svg { width: 22px; height: 22px; flex: none; }
-.project-edge:hover,
-.project-edge:focus-visible {
-  opacity: 1;
-  color: var(--c-text);
-}
-.project-edge--back {
-  left: 0;
-  justify-content: flex-start;
-  padding-left: var(--sp-4);
-  background: linear-gradient(to right, var(--c-bg) 0%, transparent 100%);
-}
-.project-edge--next {
-  right: 0;
-  justify-content: flex-end;
-  padding-right: var(--sp-4);
-  background: linear-gradient(to left, var(--c-bg) 0%, transparent 100%);
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
 }
 
 
@@ -1488,19 +1455,6 @@ p { text-wrap: pretty; }
     gap: var(--sp-7);
   }
   .project__text { margin-top: 0; }
-
-  /* En celular no hay bordes clickeables (ver .project-edge): los dedos
-     ya usan esos bordes para el gesto de "volver" del sistema, y ahi se
-     scrollea con normalidad. Vuelve el boton Back/Next de siempre. */
-  .project-edge { display: none; }
-  .project__actions {
-    display: flex;
-    margin-top: var(--sp-8);
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--sp-3);
-    flex-wrap: wrap;
-  }
 
   /* No entran el nombre grande, los links y el volumen juntos en una
      pantalla angosta -- se superponen. Ahi los links+volumen se quedan

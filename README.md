@@ -1013,3 +1013,21 @@ alineado a eso), así queda un poco más separado del reel de abajo.**
   su texto real ni un video para esa página.
 - La primera tarjeta de Audiovisual Portfolio (*"Las cenizas no se apagan"*)
   **no tiene título** debajo.
+
+**79. Volví atrás con lo del punto 76 (los bordes clickeables): saqué
+esa navegación y volvieron los botones Back/Next de siempre — visibles
+en desktop y celular por igual.**
+Esta vez, sin el piso de altura artificial que le había puesto antes
+(punto 72): el botón va pegado justo debajo del último párrafo, con el
+mismo margen que separa a los demás bloques — ni "recontra abajo" para
+todos como cuando forzaba la misma altura en cada página, ni escondido
+atrás de un borde invisible. En la mayoría de las páginas ya queda
+visible sin scrollear apenas entrás; la única excepción real es The
+Carbon Case, que tiene bastante más texto que el resto — ahí sí hace
+falta bajar un poco para verlo, porque el texto en sí ya no entra
+entero en una pantalla.
+
+**80. Subí un poco el reel y lo agrandé apenas — bajé
+`--hero-top-clearance` de 9.5rem a 8.75rem.** Volví a chequear que
+siga entrando entero en la pantalla al cargar la página, en alturas
+de 568px a 1080px — sigue entrando en todas.
