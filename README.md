@@ -1042,3 +1042,9 @@ antes y después del cambio y quedó exactamente en el mismo lugar
 (937.98px con la ventana en 1920×950, por si querés el número). Volví
 a chequear que el reel entre entero en la pantalla al cargar, de
 568px a 1080px de alto — sigue entrando en todas.
+
+**82. Punto medio entre el tamaño del punto 80 y el del punto 81:
+`--hero-top-clearance` quedó en 8.125rem (exactamente entre 8.75rem
+y 7.5rem).** Mismo mecanismo de siempre: el borde de abajo no se
+movió (sigue en 937.98px), sólo el de arriba. Volví a chequear que
+entre entero en pantalla de 568px a 1080px de alto.
