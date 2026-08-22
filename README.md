@@ -1048,3 +1048,10 @@ a chequear que el reel entre entero en la pantalla al cargar, de
 y 7.5rem).** Mismo mecanismo de siempre: el borde de abajo no se
 movió (sigue en 937.98px), sólo el de arriba. Volví a chequear que
 entre entero en pantalla de 568px a 1080px de alto.
+
+**83. Volvimos al tamaño del reel de antes de que empezara a
+pedirte que lo agrandara — me mandaste el archivo de esa ronda como
+referencia, así que `--hero-top-clearance` volvió a 8.75rem (el del
+punto 80) en vez del punto medio del 82.** Todo lo demás en ese
+archivo (botones Back/Next, grillas de 3 por fila, etc.) ya coincidía
+con lo que hay ahora, así que no hubo que tocar nada más.

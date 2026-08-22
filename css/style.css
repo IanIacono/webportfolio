@@ -123,7 +123,7 @@
      grande Y separarse mas del nombre a la vez -- antes, con el mismo
      margen arriba y abajo, agrandar el reel comia el espacio libre de
      los dos lados por igual. */
-  --hero-top-clearance:    8.125rem;
+  --hero-top-clearance:    8.75rem;
   --hero-bottom-clearance:  0.75rem;
 
   /* Area minima clickeable (accesibilidad) */
