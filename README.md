@@ -271,20 +271,20 @@ es automático, no hay un color aparte para eso.
 En ese mismo bloque también están los tamaños de letra (`--fs-...`), los
 espacios (`--sp-...`), los redondeos (`--r-...`) y las sombras (`--sh-...`).
 
-**El degradado del final de la página** (negro arriba, violeta muy oscuro y
-sutil abajo, solo en Contact y el pie de página) usa un color propio,
-`--c-bloom-violet` — cambialo si querés otro tono. Es un `linear-gradient`
-simple en `#contact` y `.site-footer` (buscalos en `css/style.css`, sección
-"10b. FORMULARIO DE CONTACTO" y "15. PIE DE PAGINA"), no una imagen, así
-que también se edita solo ahí.
+**El degradado violeta muy sutil sobre negro, cerca del final de la
+página** (solo en la sección Contact — el pie de página es negro sólido,
+sin degradado) usa un color propio, `--c-bloom-violet` — cambialo si
+querés otro tono. Es un `linear-gradient` simple en `.contact-band`
+(buscalo en `css/style.css`, sección "10b. FORMULARIO DE CONTACTO"), no
+una imagen, así que también se edita solo ahí.
 
 ---
 
 ## 6. Completar la sección Contact
 
 En el Carrd original esta sección **estaba vacía**. Ahora vive al final del
-home (abajo de los proyectos) con un formulario y dos links, pero todavía
-apuntan a datos de ejemplo.
+home (abajo de los proyectos) con un formulario y un link a Instagram, pero
+todavía apuntan a datos de ejemplo.
 
 Buscá en el HTML el comentario que dice `CONTACTO` y vas a ver esto:
 
@@ -293,19 +293,16 @@ Buscá en el HTML el comentario que dice `CONTACTO` y vas a ver esto:
   ...
 </form>
 <div class="contact-form__links reveal">
-  <a class="btn" href="https://instagram.com/TUUSUARIO" ...>Instagram</a>
-  <a class="btn" href="https://wa.me/5491100000000" ...>WhatsApp</a>
+  <a class="contact-form__social" href="https://instagram.com/TUUSUARIO" ...>
+    ...
+  </a>
 </div>
 ```
 
 Para activarlo con tus datos:
 
 1. Reemplazá `TUMAIL@ejemplo.com` (en el `action` del `<form>`) por tu mail.
-2. Reemplazá `TUUSUARIO` por tu usuario de Instagram (aparece dos veces: acá
-   y en el pie de página, al final del todo).
-3. Reemplazá el número de WhatsApp (`5491100000000` = código de país 54 + 9
-   + característica sin el 0 + número sin el 15).
-4. Borrá el botón que no quieras usar.
+2. Reemplazá `TUUSUARIO` por tu usuario real de Instagram.
 
 **Importante sobre el formulario:** al enviarlo, `action="mailto:..."` abre
 el cliente de correo de quien lo llena, con lo escrito ya cargado — no lo
@@ -771,6 +768,34 @@ pegado contra ese texto. Le di más aire arriba (el reel es un poco más
 chico para que siempre entre completo en pantalla, sin scrollear) y el
 borde superior del video ahora se disuelve igual que el de abajo, en vez
 de cortar en seco contra el header.
+
+**48. El reel: más grande y bastante más separado de tu nombre — el
+punto 47 se había quedado corto.**
+El margen libre alrededor del reel antes se repartía igual arriba y
+abajo, así que agrandar el reel comía espacio de los dos lados por
+igual y el margen de arriba nunca crecía solo. Ahora ese reparto es
+al revés: casi todo el margen quedó arriba (separando el reel de tu
+nombre) y abajo quedó lo mínimo, lo que además deja lugar para que el
+reel sea un poco más grande. Sigue entrando completo en pantalla al
+cargar la página, sin necesidad de scrollear, en todos los tamaños que
+probé (celular incluido).
+
+**49. Volvió el pie de página (lo había sacado en el punto 43): tu
+nombre, el subtítulo y el © 2026, en negro sólido.**
+Repite la misma marca del header — mismo nombre, mismo trazo
+tipográfico — para que abrir y cerrar el sitio se sientan parte del
+mismo diseño. A diferencia del header, que es transparente y flota
+sobre el reel, el pie de página tiene fondo negro sólido: ahí abajo no
+hay ningún video atrás sobre el que flotar.
+
+**50. El video de fondo borroso (el que se agranda detrás del reel)
+ahora sigue al reel también en play/pausa, no solo en qué momento del
+video muestra.**
+Antes, si pausabas el reel con su botón, el de fondo seguía
+reproduciéndose solo — quedaban desincronizados. Ahora se pausa junto
+con el reel, y si el reel llega al final, también — van a estar
+pegados todo el tiempo, tanto en el momento del video como en si está
+sonando o quieto.
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 

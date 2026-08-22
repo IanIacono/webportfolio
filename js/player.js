@@ -324,9 +324,12 @@
         rafId = null;
       }
 
+      /* El fondo tiene que seguir al reel 1:1, no solo en la posicion: si
+         el reel se pausa (o termina), el fondo se pausa tambien y se queda
+         quieto ahi -- nunca solo, reproduciendose de fondo por su cuenta. */
       hero.addEventListener("play", function () { bg.play().catch(function () {}); align(true); startSync(); });
-      hero.addEventListener("pause", stopSync);
-      hero.addEventListener("ended", stopSync);
+      hero.addEventListener("pause", function () { bg.pause(); stopSync(); });
+      hero.addEventListener("ended", function () { bg.pause(); stopSync(); });
       hero.addEventListener("seeked", function () { align(true); });
       hero.addEventListener("loadeddata", function () { bg.load(); });
     })();

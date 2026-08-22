@@ -12,7 +12,6 @@
    07. Hero / reel
    08. Tarjetas de proyecto (tiles): la grilla de la home
    09. Selector Sound / Audiovisual
-   09b. Selected Works (solo desktop)
    10. Pagina de proyecto
    10b. Formulario de contacto
    11. Botones y links
@@ -118,9 +117,14 @@
   --gutter:  clamp(1.25rem, 4vw, 3.5rem);
   --nav-h:   4.5rem;
   /* Arriba de todo del home la barra es mas alta (nombre + subtitulo +
-     links), no --nav-h -- el reel deja este otro margen libre para no
-     quedar pegado a ese texto. */
-  --hero-clearance: 14rem;
+     links), no --nav-h -- el reel deja estos otros margenes libres para
+     no quedar pegado a ese texto. Arriba hace falta mucho mas que abajo
+     (ahi abajo no hay nada de que despegarse), asi el reel puede ser mas
+     grande Y separarse mas del nombre a la vez -- antes, con el mismo
+     margen arriba y abajo, agrandar el reel comia el espacio libre de
+     los dos lados por igual. */
+  --hero-top-clearance:    12rem;
+  --hero-bottom-clearance:  0.75rem;
 
   /* Area minima clickeable (accesibilidad) */
   --tap: 44px;
@@ -640,8 +644,12 @@ p { text-wrap: pretty; }
   width: 100%;
   min-height: 100svh;
   display: flex;
-  align-items: center;
+  /* flex-start (no center): el padding-top de abajo es quien decide la
+     distancia al nombre, no un reparto automatico y parejo arriba/abajo. */
+  align-items: flex-start;
   justify-content: center;
+  padding-top: var(--hero-top-clearance);
+  padding-bottom: var(--hero-bottom-clearance);
   background: #000;
   overflow: hidden;
   isolation: isolate;
@@ -698,7 +706,7 @@ p { text-wrap: pretty; }
 .hero__frame {
   position: relative;
   z-index: 1;
-  width: min(94vw, calc((100svh - var(--hero-clearance)) * 16 / 9));
+  width: min(94vw, calc((100svh - var(--hero-top-clearance) - var(--hero-bottom-clearance)) * 16 / 9));
   aspect-ratio: 16 / 9;
   border-radius: var(--r-sm);
   overflow: hidden;
@@ -1463,6 +1471,38 @@ p { text-wrap: pretty; }
 
 /* ==========================================================================
    15. PIE DE PAGINA
-   Sacado por ahora (ver README, punto 40) — si lo volves a pedir, esta en
-   el historial de git (commit "Rediseña Selected Works...").
+   Cierra la pagina repitiendo la marca del header (mismo nombre,
+   mismo subtitulo) para que abrir y cerrar el sitio se sientan parte
+   del mismo diseno. A diferencia del header -- transparente, flotando
+   sobre el reel -- aca no hay video atras: el fondo es negro solido.
    ========================================================================== */
+
+.site-footer {
+  background: var(--c-bg);
+  border-top: 1px solid var(--c-line);
+  padding-block: var(--sp-8);
+  text-align: center;
+}
+
+.site-footer__name {
+  font-family: var(--font-name);
+  font-size: clamp(1.75rem, 3vw + 1rem, 2.75rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--c-text);
+}
+
+.site-footer__role {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.site-footer__copy {
+  margin-top: var(--sp-5);
+  font-size: var(--fs-2xs);
+  color: var(--c-text-faint);
+}
