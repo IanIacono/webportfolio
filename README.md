@@ -906,6 +906,19 @@ como corresponde, y solo se ve en los espacios vacíos alrededor.**
 También comprimí el archivo que me pasaste (era 4K y pesaba 16MB) a
 1080p, que para un fondo alcanza de sobra — quedó en 3MB.
 
+**64. En celular, arriba de todo de la página, ahora se ven los links
+(Showreel, Projects, Contact) debajo de tu nombre y subtítulo — antes
+quedaban escondidos hasta que scrolleabas.**
+Antes de esta ronda, en pantallas angostas el nombre grande y los
+links no entraban juntos en la misma fila (se superponían), así que
+los links se ocultaban hasta que aparecía la barra chica al scrollear
+— quedaba un rato, arriba de todo, sin ninguna forma de navegar salvo
+scrollear a mano. Ahora hay una segunda fila, solo en celular/tablet,
+debajo del subtítulo, con los mismos tres links — se desvanece junto
+con el nombre al scrollear, momento en el que la barra chica (con sus
+propios links) ya está visible. Le di un poco más de aire al reel para
+que le entre esta fila nueva sin quedar pegados.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje

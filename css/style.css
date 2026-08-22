@@ -452,6 +452,19 @@ p { text-wrap: pretty; }
   gap: var(--sp-2);
 }
 
+/* Copia movil de .nav__links, debajo del nombre y el subtitulo -- ver
+   el comentario en build.py. Oculta en desktop, .nav__right ya la
+   tiene ahi. */
+.nav__brand-links {
+  display: none;
+  width: fit-content;
+  margin-block-start: var(--sp-4);
+  margin-inline: auto;
+}
+@media (max-width: 900px) {
+  .nav__brand-links { display: flex; }
+}
+
 .nav__link {
   position: relative;
   display: inline-flex;
@@ -1461,6 +1474,11 @@ p { text-wrap: pretty; }
 
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
+  /* Con los links de .nav__brand-links ahora ahi abajo, el reel
+     necesita un poco mas de margen arriba que en desktop para no
+     quedar pegado contra ellos. */
+  :root { --hero-top-clearance: 11rem; }
+
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
 
   .project {

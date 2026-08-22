@@ -69,6 +69,19 @@
       <div class="nav__brand">
         <p class="nav__brand-name">Ian Iacono</p>
         <p class="nav__brand-role">Sound Designer // Multimedia Post Production</p>
+
+        <!-- Repite los mismos links de aca abajo, pero solo se ve en
+             celular/tablet (ver .nav__brand-links en css/style.css):
+             ahi .nav__right se queda oculto hasta que se scrollea, asi
+             que sin esto no habia forma de navegar arriba de todo. Se
+             desvanece junto con el resto de .nav__brand al scrollear
+             (hereda su visibility), momento en el que .nav__right ya
+             se hizo visible y toma la posta. -->
+        <div class="nav__links nav__brand-links">
+          <a class="nav__link" href="#home">Showreel</a>
+          <a class="nav__link" href="#projects">Projects</a>
+          <a class="nav__link" href="#contact">Contact</a>
+        </div>
       </div>
 
       <div class="nav__right">
