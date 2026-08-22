@@ -86,6 +86,9 @@
         </div>
 
         <nav class="nav__links" aria-label="Navegacion principal">
+          <!-- #home ya hace scroll instantaneo al toque del reel (ver el
+               router en main.js) — no hace falta un ancla nueva. -->
+          <a class="nav__link" href="#home">Showreel</a>
           <a class="nav__link" href="#projects">Projects</a>
           <a class="nav__link" href="#contact">Contact</a>
         </nav>
@@ -138,10 +141,8 @@
 
       <div class="wrap page__body page__body--after-hero" id="projects">
 
-        <!-- SELECTOR SOUND / AUDIOVISUAL. Solo se ve en celular: ahi los
-             dos botones alternan cual grilla de abajo se ve, sin cambiar
-             de pagina. En desktop se oculta (las 2 conviven mas abajo,
-             en "Selected Works" — ver seccion 14, responsive). -->
+        <!-- SELECTOR SOUND / AUDIOVISUAL. Los dos botones alternan cual
+             grilla de abajo se ve, sin cambiar de pagina. -->
         <div class="portfolio-tabs reveal" data-portfolio-tabs role="tablist" aria-label="Categoria de proyectos">
           <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
           <button type="button" class="portfolio-tab" data-portfolio-target="sound"
@@ -154,103 +155,9 @@
           </button>
         </div>
 
-        <!-- "SELECTED WORKS": titulo centrado que solo se ve en desktop,
-             donde Audiovisual (1 columna) y Sound (2 columnas) conviven
-             lado a lado separadas por una linea. -->
-        <h2 class="works-title reveal">Selected Works</h2>
-
-        <div class="works">
-          <div class="works__col works__col--av">
-            <h3 class="works__label">Audiovisual</h3>
-            <!-- GRILLA: AUDIOVISUAL PORTFOLIO -->
-            <div class="grid grid--av" id="grid-audiovisual" data-portfolio-panel="audiovisual"
-                 role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
-        <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
-                   srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Rèport Travel Media</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
-                   srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Detras del Puesto</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="2">
-          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
-                   srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="983" height="593" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title visually-hidden">Ver proyecto</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#juleriaque" aria-label="Ver proyecto: Juleriaque">
-            <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
-                   srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Juleriaque</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-            </div>
-          </div>
-
-          <div class="works__divider" aria-hidden="true"></div>
-
-          <div class="works__col works__col--sound">
-            <h3 class="works__label">Sound</h3>
-            <!-- GRILLA: SOUND PORTFOLIO -->
-            <div class="grid grid--sound" id="grid-sound" data-portfolio-panel="sound"
-                 role="tabpanel" aria-labelledby="tab-sound">
+        <!-- GRILLA: SOUND PORTFOLIO -->
+        <div class="grid" id="grid-sound" data-portfolio-panel="sound"
+             role="tabpanel" aria-labelledby="tab-sound">
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case">
             <div class="tile__media">
@@ -346,8 +253,89 @@
             </div>
           </a>
         </article>
+        </div>
+
+        <!-- GRILLA: AUDIOVISUAL PORTFOLIO. Solo 4 proyectos: 2 por fila en
+             vez de 3 se ve mas equilibrado (con 3 queda una tarjeta sola
+             en la segunda fila) y de paso las tarjetas se ven mas grandes. -->
+        <div class="grid grid--av" id="grid-audiovisual" data-portfolio-panel="audiovisual"
+             role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
+                   srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
             </div>
-          </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="1">
+          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
+                   srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="2">
+          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
+                   srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="983" height="593" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title visually-hidden">Ver proyecto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="0">
+          <a class="tile__link" href="#juleriaque" aria-label="Ver proyecto: Juleriaque">
+            <div class="tile__media">
+              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
+                   srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Juleriaque</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
         </div>
 
       </div>

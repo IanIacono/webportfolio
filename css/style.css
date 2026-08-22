@@ -57,6 +57,7 @@
           "Helvetica Neue", Arial, sans-serif;
   --font-tabs: "Alexandria", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;   /* solo para el selector Sound/Audiovisual */
+  --font-name: "Instrument Serif", Georgia, "Times New Roman", serif;   /* solo para el nombre del header */
 
   /* Escala tipografica fluida: crece sola entre celular y desktop */
   --fs-2xs:  0.6875rem;                          /* 11px — etiquetas         */
@@ -116,6 +117,10 @@
   --maxw-sm: 54rem;
   --gutter:  clamp(1.25rem, 4vw, 3.5rem);
   --nav-h:   4.5rem;
+  /* Arriba de todo del home la barra es mas alta (nombre + subtitulo +
+     links), no --nav-h -- el reel deja este otro margen libre para no
+     quedar pegado a ese texto. */
+  --hero-clearance: 14rem;
 
   /* Area minima clickeable (accesibilidad) */
   --tap: 44px;
@@ -265,6 +270,32 @@ ul, ol { list-style: none; }
                  U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
+/* Instrument Serif Italic: solo para el nombre grande del header
+   (.nav__brand-name) — una tipografia distinta a proposito, para que
+   funcione como firma/logotipo en vez de mezclarse con el resto. */
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/assets/fonts/instrumentserif-italic-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+                 U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+                 U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+                 U+FFFD;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/assets/fonts/instrumentserif-italic-latin-ext.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+                 U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+                 U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+                 U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 h1, h2, h3, h4 {
   font-weight: 700;
   line-height: var(--lh-tight);
@@ -380,10 +411,14 @@ p { text-wrap: pretty; }
 }
 
 .nav__brand-name {
-  font-size: var(--fs-2xl);
-  font-weight: 700;
-  letter-spacing: var(--ls-tight);
-  line-height: 1.1;
+  font-family: var(--font-name);
+  font-style: italic;
+  /* Un clamp propio, no --fs-4xl: ese tope (6.5rem) choca contra los
+     links a la derecha en pantallas medianas (~1366px). */
+  font-size: clamp(2.25rem, 5vw + 1rem, 4.5rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
   color: var(--c-text);
   white-space: nowrap;
 }
@@ -397,20 +432,12 @@ p { text-wrap: pretty; }
   white-space: nowrap;
 }
 
+/* Links + volumen: se ven siempre, arriba de todo del home (junto a la
+   marca grande) y tambien al scrollear (ahi la marca ya se desvanecio). */
 .nav__right {
   display: flex;
   align-items: center;
   gap: var(--sp-4);
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
-}
-.nav.is-stuck .nav__right {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
 }
 
 .nav__links {
@@ -671,16 +698,17 @@ p { text-wrap: pretty; }
 .hero__frame {
   position: relative;
   z-index: 1;
-  width: min(94vw, calc((100svh - var(--nav-h) - var(--sp-8)) * 16 / 9));
+  width: min(94vw, calc((100svh - var(--hero-clearance)) * 16 / 9));
   aspect-ratio: 16 / 9;
   border-radius: var(--r-sm);
   overflow: hidden;
   background: #000;
-  /* Solo el borde inferior se disuelve en vez de cortar de golpe — nada
-     de video/sombra/marco duro justo ahi, se desvanece hacia la pagina.
-     Los costados y el borde de arriba se dejan tal cual. */
-  -webkit-mask-image: linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
-          mask-image: linear-gradient(to bottom, #000, #000 calc(100% - 22px), transparent);
+  /* Los bordes de arriba y abajo se disuelven en vez de cortar de golpe —
+     nada de video/sombra/marco duro justo ahi, se desvanecen hacia la
+     pagina. Arriba separa el reel del nombre/header; abajo, de la
+     grilla de proyectos. Los costados se dejan tal cual. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22px, #000 calc(100% - 22px), transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 22px, #000 calc(100% - 22px), transparent);
 }
 /* Pantalla completa: llena toda la pantalla, sin marco ni difuminado —
    esas son decisiones de diseno para cuando esta encajado en la pagina,
@@ -762,6 +790,11 @@ p { text-wrap: pretty; }
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
 }
+/* Audiovisual tiene solo 4 proyectos: con 3 por fila queda una tarjeta
+   sola y las demas se ven chicas. 2 por fila se ve mas equilibrado y de
+   paso las tarjetas quedan mas grandes. (Abajo de 900px ya son 2 por
+   fila de por si, ver responsive, asi que esto no cambia nada ahi.) */
+.grid--av { grid-template-columns: repeat(2, 1fr); }
 
 .tile { position: relative; }
 
@@ -925,34 +958,6 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
-   09b. SELECTED WORKS (solo desktop)
-   En celular, Sound y Audiovisual se ven de a una segun la pestana de
-   arriba (seccion 09). En desktop conviven lado a lado bajo un titulo
-   centrado, sin pestanas — la activacion real esta en la seccion 14
-   (RESPONSIVE, @media min-width:901px). Aca solo van los valores base,
-   ocultos, para que no aparezcan de golpe en celular.
-   ========================================================================== */
-
-.works-title {
-  display: none;
-  text-align: center;
-  font-size: var(--fs-2xl);
-  font-weight: 700;
-  letter-spacing: var(--ls-tight);
-  margin-bottom: var(--sp-9);
-}
-/* Para la variante "todos juntos" sin pestanas: el titulo no compite con
-   ningun selector, asi que se ve tambien en celular. */
-.works-title--always { display: block !important; }
-
-.works { display: block; }
-
-.works__label { display: none; }
-
-.works__divider { display: none; }
-
-
-/* ==========================================================================
    10. PAGINA DE PROYECTO
    Dos columnas: el material (video/audio) a la izquierda, el texto a la derecha.
    ========================================================================== */
@@ -1069,7 +1074,6 @@ p { text-wrap: pretty; }
   display: flex;
   flex-direction: column;
   gap: var(--sp-5);
-  max-width: 34rem;
 }
 
 .contact-form__row {
@@ -1368,58 +1372,6 @@ p { text-wrap: pretty; }
    Se diseno primero para celular; aca se ajusta lo que hace falta.
    ========================================================================== */
 
-/* --- Desktop (901px y mas): "Selected Works" reemplaza las pestanas.
-   Audiovisual (1 columna) queda a la izquierda, Sound (2 columnas) a la
-   derecha, separadas por una linea fina y un poco mas de aire que el gap
-   interno de cada grilla. --- */
-@media (min-width: 901px) {
-  .portfolio-tabs { display: none; }
-
-  .works-title { display: block; }
-
-  .works {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 1px minmax(0, 2fr);
-    column-gap: var(--sp-7);
-    align-items: start;
-  }
-
-  /* Mismo look que tenian los botones Sound/Audiovisual Portfolio de
-     celular (seccion 09): pildora blanca, como si estuvieran "seleccionados"
-     los dos a la vez, ya que aca conviven sin alternar. */
-  .works__label {
-    display: inline-block;
-    margin-bottom: var(--sp-5);
-    padding: var(--sp-2) var(--sp-5);
-    background: var(--c-text);
-    border-radius: var(--r-full);
-    box-shadow: 0 0 14px -2px rgba(255, 255, 255, .55),
-                0 0 3px rgba(255, 255, 255, .4);
-    font-family: var(--font-tabs);
-    font-size: var(--fs-xs);
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: #0a0910;
-  }
-
-  .works__divider {
-    display: block;
-    align-self: stretch;
-    width: 1px;
-    background: var(--c-line);
-  }
-
-  /* Las 2 categorias quedan siempre visibles: el atributo "hidden" que usa
-     JS para las pestanas de celular no debe aplicar aca. Necesita
-     !important porque la seccion 02 ya fuerza [hidden] con !important
-     (a proposito, para que le gane a .grid{display:grid} en celular). */
-  .works .grid[hidden] { display: grid !important; }
-
-  .grid--av { grid-template-columns: minmax(0, 1fr); }
-  .grid--sound { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
@@ -1429,6 +1381,22 @@ p { text-wrap: pretty; }
     gap: var(--sp-7);
   }
   .project__text { margin-top: 0; }
+
+  /* No entran el nombre grande, los links y el volumen juntos en una
+     pantalla angosta -- se superponen. Ahi los links+volumen se quedan
+     ocultos hasta que se scrollea (como antes), igual que en celular. */
+  .nav__right {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
+  }
+  .nav.is-stuck .nav__right {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
+  }
 }
 
 /* --- Celular (hasta 640px) --- */

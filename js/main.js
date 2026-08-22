@@ -195,7 +195,10 @@
     var spyTargets = spyLinks
       .map(function (link) {
         var id = (link.getAttribute("href") || "").replace(/^#/, "");
-        return { link: link, el: id ? document.getElementById(id) : null };
+        /* "Showreel" apunta a #home, que es la pagina entera -- no una
+           seccion puntual -- asi que no tiene sentido marcarlo "activo"
+           segun el scroll. Se lo deja afuera del observer. */
+        return { link: link, el: (id && id !== homeId) ? document.getElementById(id) : null };
       })
       .filter(function (t) { return t.el; });
 

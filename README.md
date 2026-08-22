@@ -738,6 +738,40 @@ en Contact dejé solo el ícono de Instagram, sin el botón de WhatsApp.**
 Si más adelante lo volvés a querer, avisame — quedó en el historial de
 git, no hay que rehacerlo de cero.
 
+**44. Corregí que Contact no se veía centrado — tenías razón.**
+El formulario tenía su propio ancho máximo, más angosto que el título de
+arriba, y sin nada que lo centrara — quedaba pegado a la izquierda de su
+propia sección en vez de alinearse con el título. Ahora comparte el mismo
+ancho que el título "Contact" y el ícono de Instagram de abajo.
+
+**45. Volví atrás en Selected Works: Sound y Audiovisual alternan con el
+selector de pestañas, como antes de esa idea — en todos los tamaños de
+pantalla, no solo en celular.**
+La versión con las dos categorías lado a lado no te convenció, así que
+saqué esa parte y dejé el selector original (con la bolita blanca que
+desliza). Audiovisual ahora se ve en 2 columnas en vez de 3 — con 4
+proyectos nomás, 3 por fila dejaba una tarjeta sola y todo se veía chico;
+en 2 quedan parejas y más grandes.
+
+**46. Rediseñé el header de arriba de todo: ahora el nombre y subtítulo
+conviven con Showreel, Projects, Contact y el volumen — no aparecen
+recién al scrollear.**
+Agregué "Showreel" como tercer link, al lado de Projects y Contact —
+lleva de vuelta al reel del principio. Tu nombre ahora usa una tipografía
+distinta a la del resto del sitio (Instrument Serif, itálica) para que
+funcione como firma, y está más grande. En pantallas angostas (celular y
+tablet) los links y el volumen se ocultan hasta que se scrollea, igual
+que antes — si los dejaba siempre visibles ahí, se superponían con el
+nombre grande.
+
+**47. Separé el reel del header: más espacio arriba, y sumé un difuminado
+también en el borde superior del video (antes solo estaba abajo).**
+Con el nombre y los links ahora conviviendo arriba, el reel quedaba
+pegado contra ese texto. Le di más aire arriba (el reel es un poco más
+chico para que siempre entre completo en pantalla, sin scrollear) y el
+borde superior del video ahora se disuelve igual que el de abajo, en vez
+de cortar en seco contra el header.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
