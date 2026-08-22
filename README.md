@@ -876,6 +876,19 @@ se note el efecto, y no vale la pena bajar 2 videos más solo para eso.
 **58. El reel: lo subí un poco más — te había quedado con un poco de
 aire de más respecto al punto 53.**
 
+**59. Achiqué el pie de página (menos alto).**
+
+**60. Subí el reel de nuevo y esta vez probé que el borde de abajo
+entre en pantalla sin scrollear en un rango grande de altos de
+ventana, incluso chicos (desde 568px) — en todos entra.**
+Si en tu pantalla lo seguís viendo cortado, decime el ancho y el alto
+de tu ventana del navegador (no de la pantalla completa) para
+probarlo exacto. Y una posibilidad real: como el push a GitHub sigue
+fallando toda la sesión, es probable que estés mirando la versión
+publicada en Vercel, que todavía no tiene ninguno de los cambios de
+hoy ni de la ronda anterior — solo el archivo que te mando en cada
+ronda los tiene.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
