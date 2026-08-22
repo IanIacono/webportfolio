@@ -123,7 +123,7 @@
      grande Y separarse mas del nombre a la vez -- antes, con el mismo
      margen arriba y abajo, agrandar el reel comia el espacio libre de
      los dos lados por igual. */
-  --hero-top-clearance:    11rem;
+  --hero-top-clearance:    10.5rem;
   --hero-bottom-clearance:  0.75rem;
 
   /* Area minima clickeable (accesibilidad) */
@@ -627,7 +627,7 @@ p { text-wrap: pretty; }
 
 /* Cuando el bloque viene justo despues del reel o del carrusel, la barra
    fija ya no lo tapa, asi que hace falta menos aire arriba. */
-.page__body--after-hero { padding-top: var(--sp-9); }
+.page__body--after-hero { padding-top: var(--sp-9); position: relative; }
 
 /* Encabezado de pagina interna: etiqueta + titulo grande */
 .page__head { margin-bottom: var(--sp-8); }
@@ -902,11 +902,61 @@ p { text-wrap: pretty; }
 /* Fila que junta el titulo "Selected Works" con el selector de pestanas,
    compartiendo el mismo borde inferior (align-items:flex-end) en vez de
    centrarse uno contra el otro -- se ve como una sola unidad. */
+/* Fondo ambiente detras del titulo, el selector y la grilla: un video
+   propio por pestana (Sound / Audiovisual), que se cruza con el otro al
+   cambiar de pestana. Ancla al lado de la pestana que representa y se
+   disuelve hacia el centro -- deja de leerse como un rectangulo de
+   video y pasa a sentirse como una luz de fondo. */
+.works-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.works-bg__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: brightness(.5) saturate(.85);
+  transition: opacity 600ms var(--ease);
+}
+.works-bg__video.is-active { opacity: 1; }
+
+/* Sound: ancla a la izquierda, se disuelve hacia la derecha.
+   Audiovisual: exactamente al reves (espejado). */
+.works-bg__video--sound {
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 30%, transparent 82%);
+          mask-image: linear-gradient(to right, #000 0%, #000 30%, transparent 82%);
+}
+.works-bg__video--av {
+  -webkit-mask-image: linear-gradient(to left, #000 0%, #000 30%, transparent 82%);
+          mask-image: linear-gradient(to left, #000 0%, #000 30%, transparent 82%);
+}
+
+/* Difuminado de arriba y abajo: se pinta encima con el color real de
+   fondo de la pagina, no con una segunda mascara combinada (eso pide
+   mask-composite, que no se comporta igual en todos los navegadores).
+   Con esto alcanza para que las cuatro esquinas del video queden
+   redondeadas en vez de en escuadra -- sin bordes duros que se noten
+   como una sombra. */
+.works-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, var(--c-bg), transparent 42px, transparent calc(100% - 42px), var(--c-bg));
+}
+
 .portfolio-tabs-row {
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: var(--sp-6);
+  gap: var(--sp-5);
   margin-bottom: var(--sp-8);
 }
 
@@ -953,10 +1003,10 @@ p { text-wrap: pretty; }
   background: transparent;
   cursor: pointer;
   min-height: var(--tap);
-  padding-inline: clamp(var(--sp-4), 3vw, var(--sp-6));
+  padding-inline: clamp(var(--sp-3), 2vw, var(--sp-5));
   border-radius: var(--r-full);
   font-family: var(--font-tabs);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-2xs);
   font-weight: 400;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1442,7 +1492,10 @@ p { text-wrap: pretty; }
   .embed--audio > iframe { height: 232px; }
 
   .page__body { padding-top: calc(var(--nav-h) + var(--sp-6)); }
-  .portfolio-tabs-row { flex-direction: column; align-items: center; gap: var(--sp-5); }
+  /* En celular las tarjetas ocupan casi todo el ancho: casi no queda
+     "aire" donde el fondo ambiente se pueda ver, y no vale la pena
+     bajar 2 videos mas solo para eso. */
+  .works-bg { display: none; }
   .portfolio-tabs { width: 100%; }
   /* min-width:0 + white-space:normal -- si no, "Audiovisual Portfolio"
      (una sola palabra larga entre las dos, y de por si en una sola linea

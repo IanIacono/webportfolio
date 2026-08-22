@@ -852,6 +852,30 @@ acomodarse. Ahora "Audiovisual Portfolio" se parte en dos líneas
 ("Audiovisual" / "Portfolio") cuando hace falta, centrado dentro de su
 pestaña.
 
+**56. "Selected Works" pasó a estar arriba del selector Sound /
+Audiovisual (antes estaban lado a lado) y el selector en sí es un poco
+más chico.**
+Los dos quedan apilados y centrados, en todos los tamaños de pantalla
+(antes solo se apilaba en celular).
+
+**57. Sumé un video de fondo, propio de cada pestaña, detrás del
+título, el selector y la grilla — con los dos videos que me pasaste.**
+Con Sound Portfolio elegido se ve tu video "8319438" anclado a la
+izquierda, disolviéndose hacia la derecha; con Audiovisual Portfolio,
+el otro video ("15315hd"), espejado — anclado a la derecha,
+disolviéndose hacia la izquierda. Los dos en baja exposición (más
+oscuros, para no competir con las tarjetas de proyecto) y disueltos
+también arriba y abajo, sin bordes en escuadra. Al cambiar de pestaña
+los dos videos se cruzan con una transición suave. Los autohospedé
+igual que el resto de los videos del sitio — de paso les corregí un
+detalle técnico del archivo (cómo está ordenado por dentro) para que
+se reproduzcan bien en el navegador. En celular no aparecen: las
+tarjetas ocupan casi todo el ancho ahí, así que no queda lugar donde
+se note el efecto, y no vale la pena bajar 2 videos más solo para eso.
+
+**58. El reel: lo subí un poco más — te había quedado con un poco de
+aire de más respecto al punto 53.**
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
