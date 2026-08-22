@@ -797,6 +797,61 @@ con el reel, y si el reel llega al final, también — van a estar
 pegados todo el tiempo, tanto en el momento del video como en si está
 sonando o quieto.
 
+**51. Rediseñé el pie de página otra vez (el del punto 49 no era lo que
+buscabas): ahora copia el estilo del footer de jorgeserrano.com.ar que
+me pasaste.**
+Antes era una versión chica del header (nombre grande, todo apilado y
+centrado). Ahora es una sola fila discreta — nombre, subtítulo y
+copyright repartidos de punta a punta, separados del resto de la
+página solo por una línea fina arriba, sin caja ni fondo propio (se
+mezcla con el fondo de la página, como en el sitio de referencia). En
+celular esa fila pasa a apilarse. El sitio de referencia también tiene
+un "dock" flotante con íconos (GitHub, Twitch, LinkedIn, CV) que se
+queda pegado en un costado al scrollear — eso es un elemento aparte
+del footer ahí, no lo agregué porque no lo pediste y el ícono de
+Instagram ya vive en Contact.
+
+**52. Sumé el título "Selected Works" al lado del selector de Sound /
+Audiovisual, centrado y compartiendo el mismo borde inferior que las
+pestañas.**
+Los dos comparten una fila: el título más grande a la izquierda, las
+pestañas a la derecha, alineados por abajo (no por el medio) para que
+se vean como una sola unidad. En celular se apilan, título arriba y
+pestañas abajo, ambos centrados.
+
+**53. El reel: lo subí un poco más, y encontré y corregí el "aura
+negra" que se veía en el borde de abajo.**
+La separación con el nombre del punto 48 se quedó, achicada apenas un
+poco. Lo del aura era un elemento viejo (una franja con degradado,
+`.hero::after`) que quedó de una versión anterior a que el reel tuviera
+su propio difuminado arriba y abajo — hacía el mismo trabajo por su
+cuenta, pero ahora se superponía con el difuminado del reel y se veía
+como un halo oscuro extra solo abajo (arriba nunca existió ese
+elemento, por eso ahí se veía bien). Lo saqué: el difuminado propio del
+reel ya alcanza solo.
+
+**54. Cambié la tipografía del nombre de Instrument Serif itálica a
+Unbounded Black — por ahora, mientras seguís decidiendo.**
+Me dijiste que no te terminaba de cerrar ninguna opción de la primera
+ronda del todo, así que dejé aplicada Unbounded (la que habías
+elegido) y armé una segunda ronda de opciones inspiradas en el header
+de jeffmoberg.tv que me pasaste — ese sitio usa una tipografía con
+licencia (Adobe Typekit) que no se puede autohospedar directo, así que
+busqué alternativas libres parecidas a las dos que encontré ahí
+(Source Code Pro para el nombre chico de la barra, Abel para el título
+grande de portada). Están en el mismo link de antes, actualizado.
+
+**55. De paso, probando el punto 52 en celular, encontré y corregí un
+error: el texto "Audiovisual Portfolio" se salía de la pantalla en vez
+de entrar en su pestaña.**
+Era un problema de flexbox ya viejo (no algo que rompí yo esta ronda,
+simplemente nunca se había visto en una captura de celular con las
+pestañas a la vista): el texto tenía prohibido partirse en dos líneas,
+así que cuando no entraba en una sola, se salía del botón en vez de
+acomodarse. Ahora "Audiovisual Portfolio" se parte en dos líneas
+("Audiovisual" / "Portfolio") cuando hace falta, centrado dentro de su
+pestaña.
+
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
 - Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje

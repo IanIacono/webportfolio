@@ -141,18 +141,22 @@
 
       <div class="wrap page__body page__body--after-hero" id="projects">
 
-        <!-- SELECTOR SOUND / AUDIOVISUAL. Los dos botones alternan cual
-             grilla de abajo se ve, sin cambiar de pagina. -->
-        <div class="portfolio-tabs reveal" data-portfolio-tabs role="tablist" aria-label="Categoria de proyectos">
-          <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
-          <button type="button" class="portfolio-tab" data-portfolio-target="sound"
-                  role="tab" aria-selected="true" aria-controls="grid-sound" id="tab-sound">
-            Sound Portfolio
-          </button>
-          <button type="button" class="portfolio-tab" data-portfolio-target="audiovisual"
-                  role="tab" aria-selected="false" aria-controls="grid-audiovisual" id="tab-audiovisual" tabindex="-1">
-            Audiovisual Portfolio
-          </button>
+        <!-- "Selected Works" + SELECTOR SOUND / AUDIOVISUAL, compartiendo
+             el mismo borde inferior. Los dos botones alternan cual grilla
+             de abajo se ve, sin cambiar de pagina. -->
+        <div class="portfolio-tabs-row reveal">
+          <h2 class="portfolio-tabs-row__title">Selected Works</h2>
+          <div class="portfolio-tabs" data-portfolio-tabs role="tablist" aria-label="Categoria de proyectos">
+            <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
+            <button type="button" class="portfolio-tab" data-portfolio-target="sound"
+                    role="tab" aria-selected="true" aria-controls="grid-sound" id="tab-sound">
+              Sound Portfolio
+            </button>
+            <button type="button" class="portfolio-tab" data-portfolio-target="audiovisual"
+                    role="tab" aria-selected="false" aria-controls="grid-audiovisual" id="tab-audiovisual" tabindex="-1">
+              Audiovisual Portfolio
+            </button>
+          </div>
         </div>
 
         <!-- GRILLA: SOUND PORTFOLIO -->
@@ -854,9 +858,11 @@
   </main>
 
   <footer class="site-footer">
-    <p class="site-footer__name">Ian Iacono</p>
-    <p class="site-footer__role">Sound Designer // Multimedia Post Production</p>
-    <p class="site-footer__copy">&copy; 2026</p>
+    <div class="site-footer__inner">
+      <span class="site-footer__name">Ian Iacono</span>
+      <span class="site-footer__role">Sound Designer // Multimedia Post Production</span>
+      <span class="site-footer__copy">&copy; 2026</span>
+    </div>
   </footer>
 
     <!-- Scripts al final para que la pagina se vea antes de cargarlos -->

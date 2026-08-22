@@ -56,7 +56,7 @@
           "Helvetica Neue", Arial, sans-serif;
   --font-tabs: "Alexandria", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           "Helvetica Neue", Arial, sans-serif;   /* solo para el selector Sound/Audiovisual */
-  --font-name: "Instrument Serif", Georgia, "Times New Roman", serif;   /* solo para el nombre del header */
+  --font-name: "Unbounded", "Arial Black", sans-serif;   /* solo para el nombre del header */
 
   /* Escala tipografica fluida: crece sola entre celular y desktop */
   --fs-2xs:  0.6875rem;                          /* 11px — etiquetas         */
@@ -123,7 +123,7 @@
      grande Y separarse mas del nombre a la vez -- antes, con el mismo
      margen arriba y abajo, agrandar el reel comia el espacio libre de
      los dos lados por igual. */
-  --hero-top-clearance:    12rem;
+  --hero-top-clearance:    11rem;
   --hero-bottom-clearance:  0.75rem;
 
   /* Area minima clickeable (accesibilidad) */
@@ -274,14 +274,15 @@ ul, ol { list-style: none; }
                  U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* Instrument Serif Italic: solo para el nombre grande del header
-   (.nav__brand-name) — una tipografia distinta a proposito, para que
-   funcione como firma/logotipo en vez de mezclarse con el resto. */
+/* Unbounded Black: solo para el nombre grande del header (.nav__brand-name)
+   y el pie de pagina -- una tipografia distinta a proposito, para que
+   funcione como firma/logotipo en vez de mezclarse con el resto. Eleccion
+   provisoria, todavia en revision. */
 @font-face {
-  font-family: "Instrument Serif";
-  src: url("/assets/fonts/instrumentserif-italic-latin.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
+  font-family: "Unbounded";
+  src: url("/assets/fonts/unbounded-black-latin.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
                  U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
@@ -289,10 +290,10 @@ ul, ol { list-style: none; }
                  U+FFFD;
 }
 @font-face {
-  font-family: "Instrument Serif";
-  src: url("/assets/fonts/instrumentserif-italic-latin-ext.woff2") format("woff2");
-  font-weight: 400;
-  font-style: italic;
+  font-family: "Unbounded";
+  src: url("/assets/fonts/unbounded-black-latin-ext.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
   font-display: swap;
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
                  U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
@@ -416,11 +417,10 @@ p { text-wrap: pretty; }
 
 .nav__brand-name {
   font-family: var(--font-name);
-  font-style: italic;
   /* Un clamp propio, no --fs-4xl: ese tope (6.5rem) choca contra los
      links a la derecha en pantallas medianas (~1366px). */
   font-size: clamp(2.25rem, 5vw + 1rem, 4.5rem);
-  font-weight: 400;
+  font-weight: 900;
   letter-spacing: 0;
   line-height: 1;
   color: var(--c-text);
@@ -691,18 +691,6 @@ p { text-wrap: pretty; }
     linear-gradient(to bottom, rgba(0,0,0,.5), transparent 22%, transparent 68%, transparent 100%);
 }
 
-/* Se disuelve en el fondo de la pagina: sin esto, el final del hero se veria
-   como un corte duro contra la grilla de abajo. */
-.hero::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  z-index: 2;
-  height: clamp(5rem, 20vh, 11rem);
-  background: linear-gradient(to bottom, transparent, var(--c-bg));
-  pointer-events: none;
-}
-
 .hero__frame {
   position: relative;
   z-index: 1;
@@ -911,6 +899,25 @@ p { text-wrap: pretty; }
    Dos botones: alternan que grilla se ve, sin cambiar de pagina.
    ========================================================================== */
 
+/* Fila que junta el titulo "Selected Works" con el selector de pestanas,
+   compartiendo el mismo borde inferior (align-items:flex-end) en vez de
+   centrarse uno contra el otro -- se ve como una sola unidad. */
+.portfolio-tabs-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-8);
+}
+
+.portfolio-tabs-row__title {
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  letter-spacing: var(--ls-tight);
+  line-height: 1;
+  color: var(--c-text);
+}
+
 .portfolio-tabs {
   position: relative;
   display: inline-flex;
@@ -919,7 +926,6 @@ p { text-wrap: pretty; }
   background: var(--c-bg-raised);
   border: 1px solid var(--c-line);
   border-radius: var(--r-full);
-  margin-bottom: var(--sp-8);
 }
 
 /* Bolita blanca que desliza detras de la pestana activa */
@@ -1436,8 +1442,20 @@ p { text-wrap: pretty; }
   .embed--audio > iframe { height: 232px; }
 
   .page__body { padding-top: calc(var(--nav-h) + var(--sp-6)); }
+  .portfolio-tabs-row { flex-direction: column; align-items: center; gap: var(--sp-5); }
   .portfolio-tabs { width: 100%; }
-  .portfolio-tab { flex: 1 1 0; padding-inline: var(--sp-2); }
+  /* min-width:0 + white-space:normal -- si no, "Audiovisual Portfolio"
+     (una sola palabra larga entre las dos, y de por si en una sola linea
+     -- ver white-space:nowrap de la regla base) le pone un piso al boton
+     mas ancho que lo que el flex-shrink de arriba deja disponible, y se
+     sale de la pantalla en vez de partirse en dos lineas. */
+  .portfolio-tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding-inline: var(--sp-2);
+    text-align: center;
+    white-space: normal;
+  }
 
   .contact-form__row { grid-template-columns: 1fr; }
 }
@@ -1478,31 +1496,30 @@ p { text-wrap: pretty; }
    ========================================================================== */
 
 .site-footer {
-  background: var(--c-bg);
   border-top: 1px solid var(--c-line);
-  padding-block: var(--sp-8);
-  text-align: center;
+  padding-block: 2.5rem;
+}
+
+.site-footer__inner {
+  max-width: var(--maxw-sm);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--c-text-faint);
 }
 
 .site-footer__name {
-  font-family: var(--font-name);
-  font-size: clamp(1.75rem, 3vw + 1rem, 2.75rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1;
-  color: var(--c-text);
-}
-
-.site-footer__role {
-  margin-top: var(--sp-2);
-  font-size: var(--fs-xs);
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
+  font-weight: 500;
   color: var(--c-text-muted);
 }
 
-.site-footer__copy {
-  margin-top: var(--sp-5);
-  font-size: var(--fs-2xs);
-  color: var(--c-text-faint);
+@media (max-width: 640px) {
+  .site-footer__inner {
+    flex-direction: column;
+    text-align: center;
+  }
 }
