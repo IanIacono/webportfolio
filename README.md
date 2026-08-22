@@ -1031,3 +1031,14 @@ entero en una pantalla.
 `--hero-top-clearance` de 9.5rem a 8.75rem.** Volví a chequear que
 siga entrando entero en la pantalla al cargar la página, en alturas
 de 568px a 1080px — sigue entrando en todas.
+
+**81. Me mandaste una captura marcando con una línea roja hasta dónde
+querías que llegara el reel, agrandándolo pero sin mover el borde de
+abajo. Bajé `--hero-top-clearance` de 8.75rem a 7.5rem para eso.**
+El borde de abajo del reel depende únicamente de
+`--hero-bottom-clearance` (no toqué ese) — por eso pude agrandarlo
+solo hacia arriba sin que el de abajo se corra ni un pixel: lo medí
+antes y después del cambio y quedó exactamente en el mismo lugar
+(937.98px con la ventana en 1920×950, por si querés el número). Volví
+a chequear que el reel entre entero en la pantalla al cargar, de
+568px a 1080px de alto — sigue entrando en todas.
