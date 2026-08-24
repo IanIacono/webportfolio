@@ -155,6 +155,7 @@
     var heroPlayBtn = heroRoot.querySelector("[data-hero-playpause]");
     var heroScrub = heroRoot.querySelector(".player__scrub");
     var heroTime = heroRoot.querySelector(".player__time");
+    var heroLoading = heroRoot.querySelector("[data-hero-loading]");
     var heroLoaded = false;
     var heroInView = false;
     var heroUserPaused = false;
@@ -168,6 +169,18 @@
       heroLoaded = true;
       loadEl(hero);
     };
+
+    if (heroLoading) {
+      var hideHeroLoading = function () { heroLoading.classList.add("is-hidden"); };
+      hero.addEventListener("canplay", hideHeroLoading);
+      hero.addEventListener("error", hideHeroLoading);
+    }
+
+    /* A diferencia del resto de la pagina (que espera a "afterLoad" para no
+       competir con el texto y las imagenes), este video arranca a
+       descargarse ya mismo: es el contenido principal de arriba de todo, y
+       cuanto antes empiece, antes deja de verse el spinner de carga. */
+    heroLoad();
 
     var paintHeroPlayPause = function (playing) {
       if (!heroPlayBtn) return;

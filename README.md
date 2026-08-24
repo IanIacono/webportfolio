@@ -1301,3 +1301,21 @@ página ya existe y se llega apretando "Next" desde Polvora Podcast.
 **108. Saqué el proyecto Koupe por completo** (página, tarjeta de la
 grilla de Sound y todo) — quedan 9 proyectos más Playbook, 10 en
 total.
+
+**109. Esa imagen fija de "Sound Design Demo Reel" que aparecía
+apenas se abría la página, hasta que el video terminaba de cargar, ya
+no existe más.** Antes, el video del reel tenía puesto un "poster"
+(una imagen que se ve mientras el video no cargó) con ese texto y el
+ícono — la saqué del todo y en su lugar puse un spinner de carga
+chico, centrado, que desaparece solo apenas el video puede arrancar.
+Además, el video ya no espera a que termine de cargar toda la página
+para empezar a bajarse (antes esperaba a propósito, para no competirle
+ancho de banda al texto y las imágenes) — ahora arranca a descargarse
+apenas corre el script, así el spinner se ve durante bastante menos
+tiempo. También agregué una pista de precarga (`<link rel="preload"
+as="video">`) para que el navegador la priorice desde el principio.
+Lo probé de punta a punta con el video real (no simulado): confirmé
+que el spinner se ve mientras no hay datos, y que desaparece solo en
+cuanto el video puede reproducirse — nunca más la imagen esa. Borré
+también el archivo de esa imagen (`reel-poster.webp`), que ya no lo
+usa nadie.

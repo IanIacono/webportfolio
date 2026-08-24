@@ -783,6 +783,34 @@ p { text-wrap: pretty; }
   object-fit: cover;
 }
 
+/* Reemplaza el poster fijo: mientras el video no junto suficientes datos
+   para arrancar, esto es lo unico que se ve (el video de atras es negro
+   hasta entonces) -- visible de entrada por CSS, sin esperar al JS. El JS
+   solo le agrega esta clase cuando el video ya puede arrancar. */
+.player__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity var(--dur-slow) var(--ease);
+}
+.player__loading.is-hidden { opacity: 0; pointer-events: none; }
+.player__loading svg {
+  width: 34px;
+  height: 34px;
+  color: var(--c-accent-soft);
+  animation: spin 900ms linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .player__loading svg { animation: none; }
+}
+
 /* "See Projects": solo tiene sentido en celular, donde no se ve la grilla
    de entrada. En desktop la grilla ya asoma debajo del reel, asi que se
    oculta (ver seccion 17, responsive). */

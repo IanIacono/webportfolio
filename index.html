@@ -46,8 +46,11 @@
   <!-- Las tipografias estan en este mismo sitio: no dependemos de nadie -->
   <link rel="preload" href="assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- El poster del reel se pide con prioridad: es lo primero grande que se ve. -->
-  <link rel="preload" href="assets/img/reel-poster.webp" as="image" fetchpriority="high">
+  <!-- El video del reel se pide con prioridad desde ya, para que este listo
+       lo antes posible -- ya no usa una imagen "poster" de relleno mientras
+       carga (ver README): mejor que arranque rapido a que haya algo lindo
+       para mostrar mientras se espera. -->
+  <link rel="preload" href="assets/video/reel.mp4" as="video" fetchpriority="high">
 
   <!-- Rutas relativas (sin "/" adelante) a proposito: asi el sitio funciona
        tal cual este en la raiz de un dominio (Vercel, dominio propio) o en
@@ -130,9 +133,18 @@
         <div class="hero__frame">
           <div class="player" data-hero-main>
             <video class="hero__video" data-src="assets/video/reel.mp4" preload="none" loop playsinline muted
-                   poster="assets/img/reel-poster.webp"
                    width="1280" height="720"
                    aria-label="Sound design demo reel by Ian Iacono"></video>
+
+            <!-- Reemplaza el poster de relleno: mientras el video no tiene
+                 datos suficientes para arrancar, se ve esto en vez de una
+                 imagen fija que despues cambia de golpe por el video real. -->
+            <div class="player__loading" data-hero-loading aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-opacity="0.2" stroke-width="2"/>
+                <path d="M21.5 12a9.5 9.5 0 0 0-9.5-9.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
 
             <!-- El sonido de este video lo maneja el control del header:
                  aca solo queda pausar/reanudar y la linea de tiempo. -->
