@@ -1187,6 +1187,15 @@ p { text-wrap: pretty; }
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-accent) 30%, transparent);
 }
 
+.contact-form__status {
+  margin-top: var(--sp-3);
+  min-height: 1.2em;
+  font-size: var(--fs-sm);
+  text-align: center;
+  color: var(--c-accent-soft);
+}
+.contact-form__status--error { color: var(--c-text); }
+
 .contact-form__links {
   margin-top: var(--sp-6);
   display: flex;

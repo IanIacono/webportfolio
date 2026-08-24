@@ -1005,10 +1005,13 @@ alineado a eso), así queda un poco más separado del reel de abajo.**
 
 ### Y estas siguen tal cual estaban, esperando decisión tuya
 
-- Cuatro proyectos todavía comparten el texto de relleno (*"Cortometraje
-  sobre la creación del cosmos…"*): Lumia, Rèport Travel Media, Koupe y
-  Polvora Podcast.
-- **Te Lo Aseguro | Analipsis** tiene Lorem ipsum y el subtítulo dice `V`.
+- **Koupe** todavía comparte el texto de relleno de Lumia (*"Cortometraje
+  sobre la creación del cosmos…"*) — no me lo pediste esta vez, así que no
+  lo toqué (Rèport Travel Media y Polvora Podcast, que también lo
+  compartían, ya tienen su texto propio desde el punto 93).
+- **Te Lo Aseguro | Analipsis** ya tiene texto real (punto 93), pero el
+  subtítulo/rol de esa página todavía dice `V` — no sé cuál es tu rol real
+  ahí, así que lo dejé sin tocar.
 - **Juleriaque** también tiene Lorem ipsum (ver el punto 35) — nunca tuve
   su texto real ni un video para esa página.
 - La primera tarjeta de Audiovisual Portfolio (*"Las cenizas no se apagan"*)
@@ -1135,3 +1138,55 @@ directo, sin que la persona que escribe note nada raro. Te recomiendo
 probarlo vos mismo apenas esté publicado (mandate un mensaje de
 prueba) para activarlo de una — desde donde yo trabajo no tengo forma
 de mandarte ese mail de prueba ni de confirmarlo por vos.
+
+**91. El formulario de Contact te mandaba a la pestaña de FormSubmit
+al apretar Send — arreglado, ahora no se mueve de la página.** El
+`action="https://formsubmit.co/..."` del punto 90 hacía justo eso: al
+enviar, el navegador navega de verdad hasta formsubmit.co, que
+procesa el mail y te redirige de vuelta. Funciona, pero se nota
+mucho. Ahora el JS intercepta el envío y lo manda por atrás (con
+`fetch()`) al endpoint especial `/ajax/` de FormSubmit, que en vez de
+redirigir devuelve una respuesta simple diciendo si salió bien o mal
+— así la persona nunca sale de la página. El botón dice "Sending…"
+mientras se manda, y después aparece un mensajito abajo ("Message
+sent. Thanks for reaching out.") o, si algo falla, uno pidiendo que
+reintente o te escriba directo por mail. El `action` y el `_next`
+viejos se quedan como respaldo por si el JS no llega a correr (por
+ejemplo con JavaScript desactivado), pero en el uso normal ya no se
+ven para nada.
+
+**92. Las tapas de los proyectos se veían pixeladas en pantallas
+grandes — arreglado, era un techo de resolución que no alcanzaba.**
+Cada imagen se pedía en dos tamaños (480px y 960px de ancho), y el
+navegador elige el que mejor le sirve según el tamaño real en el que
+se muestra la tarjeta y la densidad de píxeles de tu pantalla. El
+problema: en un monitor grande, o en cualquier pantalla Retina/de
+alta densidad, ese cálculo puede pedir más de 960px reales — y como
+no había ninguna opción más grande, el navegador terminaba estirando
+la de 960px, que es lo que se ve borroso/pixelado. La solución fue
+agregar como tercera opción la imagen a su tamaño completo (que ya
+estaba guardada en el repo, no tuve que crear nada nuevo) — ahora el
+navegador la usa sola cuando la necesita. Ojo: esto ayuda de verdad en
+los proyectos donde la imagen original es grande (The Carbon Case,
+Lumia, Red Bull Batallas, Rèport Travel Media), pero unos pocos ya
+tenían una imagen fuente chica de entrada (La Llamada Fatal, Koupe,
+Detras del Puesto) — ahí no hay más detalle para sacar sin que me
+mandes una imagen más grande, así que van a seguir viéndose un poco
+más suaves que el resto en pantallas muy grandes.
+
+**93. Reescribí varios copys de proyecto.** Agrandé el de Red Bull
+Batallas para que cuente qué es la competencia (la batalla de
+freestyle más importante del mundo hispanohablante), no solo tu
+trabajo en ella, calibrado a un largo parecido al de Lumia. Achiqué el
+de Detrás del Puesto. Y le escribí texto nuevo de cero a tres
+proyectos que todavía tenían contenido de relleno (Lorem ipsum o el
+texto de Lumia reciclado sin que correspondiera): Rèport Travel Media
+(ahí sumé también tu rol real que me contaste: grabación, setup de
+mics y cámaras, y posproducción de sonido y video — cambié el campo de
+rol de la página para reflejarlo), Polvora Podcast y Te Lo Aseguro |
+Analipsis (investigué que es el podcast de Analipsis para AAPAS, y que
+"Las cenizas no se apagan" es su segunda temporada). Ninguno de estos
+textos nuevos tiene guiones "—", como pediste. El rol de Te Lo Aseguro
+sigue diciendo solo "V" — no lo toqué porque no tengo de dónde sacar
+cuál es tu rol real ahí, y prefiero dejarlo pendiente antes que
+inventarlo.

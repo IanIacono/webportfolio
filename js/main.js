@@ -335,16 +335,57 @@
   /* ======================================================================
      5. FORMULARIO DE CONTACTO
      ====================================================================== */
-  /* FormSubmit necesita una URL absoluta para el redirect de despues de
-     enviar (el campo oculto "_next") -- no alcanza con una ruta relativa
-     porque el redirect lo arma su servidor, no el navegador. Se completa
-     en base a la ubicacion actual (origin + pathname) para que funcione
-     igual sin hardcodear si el sitio termina viviendo en Vercel, GitHub
-     Pages o un dominio propio: siempre vuelve a la pagina desde la que
-     se mando el formulario. */
-  var contactNext = document.querySelector('.contact-form input[name="_next"]');
-  if (contactNext) {
-    contactNext.value = location.origin + location.pathname + "#contact";
+  var contactForm = document.querySelector(".contact-form");
+  if (contactForm) {
+    /* Respaldo para cuando el fetch de mas abajo no llega a correr (JS
+       desactivado, o falla por algun motivo raro): FormSubmit necesita
+       una URL absoluta para el redirect de "gracias" (el campo oculto
+       "_next") -- no alcanza con una ruta relativa porque el redirect lo
+       arma su servidor, no el navegador. Se completa en base a la
+       ubicacion actual (origin + pathname) para que funcione igual sin
+       hardcodear si el sitio termina viviendo en Vercel, GitHub Pages o
+       un dominio propio. */
+    var contactNext = contactForm.querySelector('input[name="_next"]');
+    if (contactNext) contactNext.value = location.origin + location.pathname + "#contact";
+
+    /* El caso normal: se intercepta el envio y se manda por fetch() al
+       endpoint /ajax/ de FormSubmit, que devuelve JSON en vez de
+       redirigir -- asi la persona nunca sale de la pagina ni ve
+       formsubmit.co, solo el mensajito de data-contact-status. */
+    var submitBtn = contactForm.querySelector('button[type="submit"]');
+    var status = contactForm.querySelector("[data-contact-status]");
+    var btnDefaultText = submitBtn ? submitBtn.textContent : "";
+
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (submitBtn && submitBtn.disabled) return;
+
+      var ajaxAction = contactForm.action.replace("formsubmit.co/", "formsubmit.co/ajax/");
+      var payload = Object.fromEntries(new FormData(contactForm));
+
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
+      if (status) { status.textContent = ""; status.classList.remove("contact-form__status--error"); }
+
+      fetch(ajaxAction, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) { if (!res.ok) throw new Error("bad status"); return res.json(); })
+        .then(function () {
+          if (status) status.textContent = "Message sent. Thanks for reaching out.";
+          contactForm.reset();
+        })
+        .catch(function () {
+          if (status) {
+            status.textContent = "Something went wrong. Please try again, or email iaconoian1@gmail.com directly.";
+            status.classList.add("contact-form__status--error");
+          }
+        })
+        .finally(function () {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = btnDefaultText; }
+        });
+    });
   }
 
 
