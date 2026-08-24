@@ -1290,13 +1290,9 @@ Figueiredo y Sebastián Paschmann, para que otros marketers repiensen
 su trabajo con estrategia) y escribí el texto en base a eso. Le
 adjunté el video de YouTube que me pasaste arriba del embed del
 programa completo de Spotify, y sumé que hiciste la edición de video
-usando los elementos gráficos propios del programa. **Ojo: todavía no
-aparece en la grilla de Audiovisual** — me falta la imagen de tapa
-que me describiste (fondo negro, "x Anita y Sebas" / "Playbook" /
-"marketing para marketers") y no tengo forma de bajarla yo mismo
-desde acá, no tengo acceso real a internet en este entorno. Mandame
-ese archivo de imagen y lo agrego a la grilla. Mientras tanto, la
-página ya existe y se llega apretando "Next" desde Polvora Podcast.
+usando los elementos gráficos propios del programa. (La imagen de
+tapa para la grilla de Audiovisual llegó después — ver la entrada
+110 más abajo.)
 
 **108. Saqué el proyecto Koupe por completo** (página, tarjeta de la
 grilla de Sound y todo) — quedan 9 proyectos más Playbook, 10 en
@@ -1319,3 +1315,60 @@ que el spinner se ve mientras no hay datos, y que desaparece solo en
 cuanto el video puede reproducirse — nunca más la imagen esa. Borré
 también el archivo de esa imagen (`reel-poster.webp`), que ya no lo
 usa nadie.
+
+**110. Playbook ya aparece en la grilla de Audiovisual.** Me mandaste
+la imagen de tapa (fondo negro, "Anita & Sebas" en la etiqueta
+amarilla, "PLAYBOOK" en blanco, "Presentado por Proteína." abajo) y
+la sumé al sitio en los tres tamaños de siempre (480 / 960 / tamaño
+completo). Ya no hace falta entrar por "Next" desde Polvora
+Podcast — está en su lugar en la grilla, como los demás proyectos.
+
+**111. Polvora Podcast: el segundo video de YouTube ahora es su show
+de Spotify.** Busqué su perfil real (lo conduce Julieta Kemble,
+confirmado) y en vez de dejar un episodio suelto al azar, embebí el
+show completo — así se puede ver y elegir entre todos los episodios
+sin salir de tu página, igual que en Detrás del Puesto y Playbook.
+También sumé el crédito que pediste, tanto en el rol de arriba como
+en el texto: el setup de cámaras y micrófonos, y el encuadre de cada
+toma.
+
+**112. Detrás del Puesto y Playbook: confirmado, ninguno de los dos
+apunta a un episodio al azar de Spotify.** Los dos ya usaban el
+embed del show completo desde la vez pasada, no un episodio
+puntual — no hacía falta tocar nada ahí, quedan como estaban.
+
+**113. La Llamada Fatal: los embeds de Spotify vuelven a ocupar todo
+el ancho y alto normal del contenedor.** La vez pasada los había
+achicado (152px de alto, 70% del ancho) porque son 3 y la página se
+hacía muy larga — ahora, a pedido tuyo, los agrandé de nuevo al
+tamaño normal (352px, ancho completo), aunque eso haga la página más
+larga otra vez. El resto de los proyectos con más de 2 videos/embeds
+se sigue achicando automático como antes (esa regla general sigue
+funcionando); le agregué al código una excepción puntual para este
+proyecto nada más.
+
+**114. El botón "Back" en la página de un proyecto ahora te lleva al
+proyecto anterior, no a la grilla.** Antes, sin importar en qué
+proyecto estuvieras, "Back" te mandaba siempre a la sección de todos
+los proyectos. Ahora hace lo mismo que "Next" pero al revés: te
+lleva al proyecto anterior de la lista (y el primero de todos vuelve
+al último, dando toda la vuelta). Si en algún momento preferís que
+vuelva a ir directo a la grilla, decime y lo cambio de nuevo.
+
+**115. Sobre las thumbnails de YouTube "pixeladas de vuelta": encontré
+una y la mejoré, la otra ya está al máximo posible.** Investigué las
+dos tarjetas de la grilla que parecen sacadas de un video real (no un
+logo diseñado): "Te Lo Aseguro" y "Polvora Podcast".
+- **Te Lo Aseguro** sí tenía margen de mejora: la imagen que estaba
+  usando era una versión recortada y de menor resolución (983×593)
+  de la miniatura real del episodio. La reemplacé por la miniatura
+  oficial de YouTube en su resolución máxima (1280×720, la misma
+  imagen pero completa y más nítida) — ya se ve mejor, sobre todo en
+  pantallas grandes o de alta densidad de píxeles.
+- **Polvora Podcast** ya estaba usando exactamente esa misma
+  miniatura oficial, también al máximo que ofrece YouTube para ese
+  video (1280×720) — no existe una versión de mayor resolución para
+  sacar de ahí, así que no hay margen para mejorarla desde el código.
+  Si en algún momento conseguís una foto de mayor calidad (por
+  ejemplo la que hayan usado internamente antes de subirla a
+  YouTube), mandámela y la reemplazo.
