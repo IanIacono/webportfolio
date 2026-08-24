@@ -333,6 +333,22 @@
 
 
   /* ======================================================================
+     5. FORMULARIO DE CONTACTO
+     ====================================================================== */
+  /* FormSubmit necesita una URL absoluta para el redirect de despues de
+     enviar (el campo oculto "_next") -- no alcanza con una ruta relativa
+     porque el redirect lo arma su servidor, no el navegador. Se completa
+     en base a la ubicacion actual (origin + pathname) para que funcione
+     igual sin hardcodear si el sitio termina viviendo en Vercel, GitHub
+     Pages o un dominio propio: siempre vuelve a la pagina desde la que
+     se mando el formulario. */
+  var contactNext = document.querySelector('.contact-form input[name="_next"]');
+  if (contactNext) {
+    contactNext.value = location.origin + location.pathname + "#contact";
+  }
+
+
+  /* ======================================================================
      Arranque
      ====================================================================== */
 

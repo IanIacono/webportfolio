@@ -1115,3 +1115,23 @@ español — ahora es al revés: el `<html>` pasa a `lang="en"` y es el
 bloque en español el que se marca como la excepción). Esto es más que
 estética: le dice correctamente a los lectores de pantalla y a Google
 en qué idioma está cada párrafo.
+
+**90. El formulario de Contact no andaba: Chrome (y Google en general)
+lo marcaban como "no seguro" y bloqueaban el envío — arreglado, era el
+método `mailto:` que usaba.** `action="mailto:..."` no es una conexión
+verificable como HTTPS, así que los navegadores modernos directamente
+frenan el envío con una advertencia en vez de dejarlo pasar. La
+solución es mandar el formulario a un servicio que sí reciba un POST
+HTTPS de verdad y te lo reenvíe por mail — usé
+[FormSubmit](https://formsubmit.co) porque no pide cuenta ni backend
+propio, es gratis y anda con un cambio de una línea en el `action`.
+Quedó mandando a `iaconoian1@gmail.com`. **Ojo con esto:** la primera
+vez que alguien mande el formulario en el sitio ya publicado,
+FormSubmit te va a mandar un mail pidiendo que confirmes esa
+dirección (es su forma de evitar que cualquiera mande correo en tu
+nombre a direcciones ajenas) — tenés que entrar a ese mail y confirmar
+una sola vez; después de eso los envíos siguientes te llegan
+directo, sin que la persona que escribe note nada raro. Te recomiendo
+probarlo vos mismo apenas esté publicado (mandate un mensaje de
+prueba) para activarlo de una — desde donde yo trabajo no tengo forma
+de mandarte ese mail de prueba ni de confirmarlo por vos.

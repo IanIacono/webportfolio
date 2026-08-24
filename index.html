@@ -386,11 +386,22 @@
 
       </div>
 
-      <!-- CONTACTO. El formulario manda un mail con lo que se haya escrito
-           (atributo mailto: en el action) — funciona sin backend, pero abre
-           el cliente de correo de quien escribe en vez de mandarlo directo.
-           Para que se mande solo, sin abrir nada, hace falta conectar un
-           servicio como Formspree (tiene un plan gratis).
+      <!-- CONTACTO. El formulario usa FormSubmit.co (sin cuenta, sin backend
+           propio) para mandar un mail de verdad a iaconoian1@gmail.com.
+           Antes usaba action="mailto:...", pero Chrome (y otros navegadores)
+           marcan esos formularios como "no seguros" y bloquean el envio con
+           una advertencia -- mailto: no es una conexion verificable como
+           HTTPS. FormSubmit resuelve eso: el envio es un POST HTTPS real.
+           OJO: la primera vez que alguien mande el formulario en el sitio
+           ya publicado, FormSubmit le manda un mail a iaconoian1@gmail.com
+           pidiendo confirmar (asi evitan que cualquiera mande mails en tu
+           nombre a direcciones ajenas) -- hay que abrir ese mail y confirmar
+           una sola vez, despues los envios siguientes llegan directo.
+           El campo oculto _next se completa solo por JS (ver main.js,
+           seccion "5. FORMULARIO DE CONTACTO") con la URL de la pagina
+           actual, para que FormSubmit te devuelva a este mismo sitio
+           despues de enviar, sin importar si estas en Vercel, GitHub Pages
+           o tu propio dominio.
            El degrade de fondo (negro a violeta muy sutil) va aca, en la
            franja de ancho completo -- no en el .wrap de adentro, que es
            angosto: si el color se pintara ahi, quedaria como una caja
@@ -401,11 +412,14 @@
             <h2 class="project__title">Contact</h2>
           </div>
 
-          <form class="contact-form reveal" action="mailto:iaconoian1@gmail.com" method="post" enctype="text/plain">
+          <form class="contact-form reveal" action="https://formsubmit.co/iaconoian1@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New message from your portfolio">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="">
             <div class="contact-form__row">
               <label class="contact-form__field">
                 <span class="label">Name</span>
-                <input type="text" name="nombre" autocomplete="name" required>
+                <input type="text" name="name" autocomplete="name" required>
               </label>
               <label class="contact-form__field">
                 <span class="label">Email</span>
@@ -414,7 +428,7 @@
             </div>
             <label class="contact-form__field">
               <span class="label">Message</span>
-              <textarea name="mensaje" rows="5" required></textarea>
+              <textarea name="message" rows="5" required></textarea>
             </label>
             <button type="submit" class="btn btn--primary">Send</button>
           </form>
