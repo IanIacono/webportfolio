@@ -1055,3 +1055,18 @@ referencia, así que `--hero-top-clearance` volvió a 8.75rem (el del
 punto 80) en vez del punto medio del 82.** Todo lo demás en ese
 archivo (botones Back/Next, grillas de 3 por fila, etc.) ya coincidía
 con lo que hay ahora, así que no hubo que tocar nada más.
+
+**84. Los embeds de YouTube: cambié el dominio de youtube-nocookie.com
+a youtube.com (el modo "sin cookies" a veces valida más estricto de
+dónde viene la página, y es el sospechoso más común en estos casos).**
+Ojo: esto no soluciona por sí solo el problema de fondo, que es cómo
+estás probando el sitio, no el código del embed — ver el mensaje en el
+chat para la explicación completa y la forma real de probarlo.
+
+**85. Al apretar Back en un proyecto, ahora hace la misma mini
+animación (fade + deslizamiento hacia arriba) que al entrar a un
+proyecto — antes volvía de golpe, sin transición.** Es la misma
+animación en los dos sentidos porque las dos pasan por la misma
+función del router (`show()` en main.js), y ahora se repite cada vez
+que cambiás de página — no solo la primera vez que la ves, a
+diferencia del fade-in de los bloques al scrollear.

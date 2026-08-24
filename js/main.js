@@ -56,6 +56,18 @@
       page.classList.toggle("is-active", active);
     });
 
+    /* Mini animacion de entrada: la pagina que se acaba de mostrar aparece
+       con un fade + leve deslizamiento hacia arriba, en vez de aparecer
+       de golpe -- pasa lo mismo yendo de home a un proyecto (click en una
+       tarjeta) que volviendo de un proyecto a home (Back), porque las dos
+       pasan por aca. Solo cuando de verdad cambiamos de pagina (no en la
+       carga inicial, ni si ya estabas viendola). */
+    if (!isFirstLoad && !wasAlreadyShown && !reduceMotion.matches) {
+      next.classList.remove("page-enter");
+      void next.offsetWidth; /* fuerza reflow para poder repetir la animacion */
+      next.classList.add("page-enter");
+    }
+
     /* El titulo de la pestana del navegador acompana la pagina */
     var pageTitle = next.dataset.title;
     document.title = pageTitle ? pageTitle + " — " + siteName : siteName;
