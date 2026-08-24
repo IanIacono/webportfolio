@@ -1086,6 +1086,46 @@ p { text-wrap: pretty; }
   height: 352px;
   border-radius: var(--r-lg);
 }
+/* Con mas de 2 reproductores adjuntados (ver project_page en build.py) --
+   el alto "compact" oficial de Spotify: sigue mostrando tapa, titulo y
+   barra de progreso, solo que en una fila en vez de la tarjeta grande. */
+.embed--audio.embed--audio--compact > iframe {
+  height: 152px;
+}
+
+/* Fila con scroll horizontal para los Reels de Instagram de un proyecto:
+   son verticales y bastante altos, así que apilarlos uno debajo del otro
+   haría enorme la página del proyecto -- en carrusel ocupan una sola fila
+   de alto sin importar cuántos sean.
+   min-width:0 en los dos es necesario -- si no, el ancho minimo "automatico"
+   de estos items de grid/flex es el de todo el contenido sin achicarse (la
+   fila entera de 8 reels), y eso empuja a lo ancho tanto a .project__media
+   (el grid de afuera) como a .embed (el video, que comparte esa columna). */
+.reels-carousel {
+  min-width: 0;
+  margin-top: var(--sp-5);
+}
+.reels-carousel__track {
+  display: flex;
+  min-width: 0;
+  gap: var(--sp-4);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+}
+.reels-carousel__item {
+  flex: none;
+  width: 280px;
+  scroll-snap-align: start;
+}
+.reels-carousel__item iframe {
+  display: block;
+  width: 100%;
+  height: 520px;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-md);
+  background: var(--c-bg-raised);
+}
 
 .project__title {
   font-size: var(--fs-3xl);
@@ -1465,6 +1505,17 @@ p { text-wrap: pretty; }
      necesita un poco mas de margen arriba que en desktop para no
      quedar pegado contra ellos. */
   :root { --hero-top-clearance: 11rem; }
+
+  /* En desktop el reel se ancla arriba (align-items:flex-start en
+     .hero) porque ahi el "top clearance" ya calcula justo cuanto
+     hace falta para separarlo del header. Pero en mobile/tablet el
+     .hero ocupa toda la pantalla (100svh) y el marco es mas chico
+     (menos ancho disponible = menos alto, por el aspect-ratio), asi
+     que anclado arriba deja un espacio vacio enorme abajo antes del
+     "See Projects" -- y el margen de arriba, fijo, se siente escaso
+     en comparacion. Centrado verticalmente reparte ese aire entre
+     arriba y abajo, en vez de amontonarlo todo abajo. */
+  .hero { align-items: center; }
 
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
 

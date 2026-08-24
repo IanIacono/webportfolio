@@ -1190,3 +1190,57 @@ textos nuevos tiene guiones "—", como pediste. El rol de Te Lo Aseguro
 sigue diciendo solo "V" — no lo toqué porque no tengo de dónde sacar
 cuál es tu rol real ahí, y prefiero dejarlo pendiente antes que
 inventarlo.
+
+**94. Cuando un proyecto tiene más de 2 reproductores adjuntados,
+ahora se achican solos para que la página no se haga larguísima.**
+Antes de esto, La Llamada Fatal (3 episodios de Spotify) medía más de
+1000px solo en esa columna — bastante más que el texto de al lado. Le
+medí la altura real al texto (574px) y le apliqué a Spotify su alto
+"compact" oficial (152px en vez de 352px: sigue mostrando tapa,
+título y barra de progreso, solo que en una fila en vez de la tarjeta
+grande) — los 3 quedan en 504px, por debajo del texto. La regla es
+general, no solo para Spotify: a partir de más de 2 reproductores
+(sean YouTube, Spotify, lo que sea), la columna entera se angosta un
+poco, lo que de paso achica también los de YouTube (dependen del
+ancho por su relación de aspecto). Red Bull Batallas, que tiene
+exactamente 2, se queda igual que estaba — la usé de referencia para
+esto porque dijiste que esa altura está bien.
+
+**95. En mobile, el reel ya no queda pegado al nombre/subtítulo —
+ahora se centra en el espacio disponible.** El problema no era el
+orden (nombre, subtítulo y los botones Showreel/Projects/Contact ya
+iban antes que el video, como pediste) sino que en mobile el bloque
+del reel ocupa toda la pantalla de alto, y el reel se anclaba arriba
+del todo de ese bloque — dejaba muy poco aire respecto al header y, a
+la vez, un espacio vacío enorme abajo antes del texto "See Projects".
+Centrarlo verticalmente reparte ese aire arriba y abajo por igual, en
+vez de amontonarlo todo abajo. Esto no toca desktop (ahí seguís
+viendo el reel anclado arriba, como siempre).
+
+**96. Te Lo Aseguro | Analipsis: le saqué la mención puntual a "Las
+cenizas no se apagan" (ahora habla en general de qué es el podcast,
+no de una temporada específica) y le cambié el video por una
+playlist de YouTube — la que me pasaste, arrancando en el episodio
+que elegiste pero dejando ver y saltar a todos los demás desde el
+mismo reproductor.**
+
+**97. Rèport Travel Media: cambié el video adjuntado por el que me
+pasaste.**
+
+**98. Juleriaque ya tiene contenido real, dejó de ser Lorem
+ipsum.** Le adjunté el video que me pasaste (el episodio de Beauty
+Ride para el Día del Padre) y escribí el texto en base a lo que
+investigué: Juleriaque es una cadena de perfumerías con 40 años en
+Argentina, Beauty Ride es su ciclo de contenido de belleza, y esta
+pieza la conduce Juana Viale. También sumé los 8 Reels de Instagram
+que me pasaste — quedaron en un carrusel con scroll horizontal debajo
+del video, no apilados uno abajo del otro (son verticales y altos;
+apilados hubieran hecho la página kilométrica). Actualicé el rol a
+"Video editing" — decía "Sound design", que no correspondía con lo
+que me contaste que hiciste ahí.
+
+**99. Polvora Podcast: reescribí el texto porque el anterior era
+redundante (decía que era formato mesa con micrófonos, algo que ya se
+ve en la portada).** Investigué de qué trata realmente (bienestar,
+hábitos, alimentación, decisiones cotidianas) y escribí en base a eso
+— quedó un poco más largo que antes, como pediste.
