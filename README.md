@@ -1070,3 +1070,20 @@ animación en los dos sentidos porque las dos pasan por la misma
 función del router (`show()` en main.js), y ahora se repite cada vez
 que cambiás de página — no solo la primera vez que la ves, a
 diferencia del fade-in de los bloques al scrollear.
+
+**86. GitHub Pages te mostraba la página sin ningún estilo (sin CSS,
+sin JS, sin imágenes) — arreglado: era un problema de rutas.** Todo el
+sitio usaba rutas "absolutas" que empiezan con `/` (por ejemplo
+`/css/style.css`). Esas rutas funcionan en Vercel porque ahí el sitio
+vive en la raíz del dominio (`tudominio.com/css/style.css`), pero
+GitHub Pages publica los repos dentro de una subcarpeta
+(`ianiacono.github.io/webportfolio/`), y una ruta que arranca con `/`
+siempre apunta a la raíz del dominio (`ianiacono.github.io/css/...`,
+que no existe) sin importar en qué subcarpeta esté la página. Cambié
+todas esas rutas a relativas (sin el `/` adelante): así el navegador
+las busca relativas a donde está la propia página, y funciona igual
+de bien colgado en la raíz de un dominio o en una subcarpeta — no hay
+que tocar nada distinto según dónde lo publiques. Lo probé armando una
+copia del sitio local que simula exactamente la misma estructura de
+carpetas que usa GitHub Pages, y confirmé que las 16 cosas que pide la
+página (CSS, fuentes, imágenes, JS) cargan bien, sin ningún error.

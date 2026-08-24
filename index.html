@@ -39,17 +39,21 @@
   <meta name="color-scheme" content="dark">
 
   <!-- Iconos de la pestana del navegador y del celular -->
-  <link rel="icon" href="/favicon.ico" sizes="32x32">
-  <link rel="icon" href="/assets/img/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
   <!-- Las tipografias estan en este mismo sitio: no dependemos de nadie -->
-  <link rel="preload" href="/assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- El poster del reel se pide con prioridad: es lo primero grande que se ve. -->
-  <link rel="preload" href="/assets/img/reel-poster.webp" as="image" fetchpriority="high">
+  <link rel="preload" href="assets/img/reel-poster.webp" as="image" fetchpriority="high">
 
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- Rutas relativas (sin "/" adelante) a proposito: asi el sitio funciona
+       tal cual este en la raiz de un dominio (Vercel, dominio propio) o en
+       una subcarpeta (GitHub Pages sirve en usuario.github.io/repo/, no en
+       la raiz) sin tener que tocar nada segun donde este colgado. -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body data-site-name="Ian Iacono">
@@ -119,14 +123,14 @@
            sincronizado en todo momento con el que se ve adelante. -->
       <div class="hero">
         <div class="hero__bg" aria-hidden="true">
-          <video src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+          <video src="assets/video/reel.mp4" muted loop playsinline preload="none"
                  tabindex="-1" data-hero-bg></video>
         </div>
 
         <div class="hero__frame">
           <div class="player" data-hero-main>
-            <video class="hero__video" data-src="/assets/video/reel.mp4" preload="none" loop playsinline muted
-                   poster="/assets/img/reel-poster.webp"
+            <video class="hero__video" data-src="assets/video/reel.mp4" preload="none" loop playsinline muted
+                   poster="assets/img/reel-poster.webp"
                    width="1280" height="720"
                    aria-label="Demo reel de sound design de Ian Iacono"></video>
 
@@ -183,11 +187,11 @@
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/the-carbon-case-960.webp"
-                   srcset="/assets/img/the-carbon-case-480.webp 480w, /assets/img/the-carbon-case-960.webp 960w"
+              <img class="tile__poster" src="assets/img/the-carbon-case-960.webp"
+                   srcset="assets/img/the-carbon-case-480.webp 480w, assets/img/the-carbon-case-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1600" height="1531" alt="Portada de The Carbon Case: un campo sembrado bajo un cielo celeste" style="object-position:50% 15%" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1600" height="1531" aria-hidden="true" tabindex="-1" style="object-position:50% 15%"></video>
             </div>
             <div class="tile__meta">
@@ -202,11 +206,11 @@
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#lumia" aria-label="Ver proyecto: Lumia">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/lumia-960.webp"
-                   srcset="/assets/img/lumia-480.webp 480w, /assets/img/lumia-960.webp 960w"
+              <img class="tile__poster" src="assets/img/lumia-960.webp"
+                   srcset="assets/img/lumia-480.webp 480w, assets/img/lumia-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1253" height="1045" alt="Portada de Lumia: una figura geometrica de lineas blancas sobre fondo negro" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1253" height="1045" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -221,11 +225,11 @@
         <article class="tile reveal" data-delay="2">
           <a class="tile__link" href="#redbull" aria-label="Ver proyecto: Red Bull Batallas">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/red-bull-batallas-960.webp"
-                   srcset="/assets/img/red-bull-batallas-480.webp 480w, /assets/img/red-bull-batallas-960.webp 960w"
+              <img class="tile__poster" src="assets/img/red-bull-batallas-960.webp"
+                   srcset="assets/img/red-bull-batallas-480.webp 480w, assets/img/red-bull-batallas-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1125" height="1013" alt="Portada de Red Bull Batallas: el logo sobre el escenario de una batalla de rap" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1125" height="1013" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -240,11 +244,11 @@
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#lallamada" aria-label="Ver proyecto: La Llamada Fatal">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/la-llamada-fatal-960.webp"
-                   srcset="/assets/img/la-llamada-fatal-480.webp 480w, /assets/img/la-llamada-fatal-960.webp 960w"
+              <img class="tile__poster" src="assets/img/la-llamada-fatal-960.webp"
+                   srcset="assets/img/la-llamada-fatal-480.webp 480w, assets/img/la-llamada-fatal-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="640" height="640" alt="Portada del podcast La Llamada Fatal: un telefono rojo sobre fondo oscuro" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="640" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -259,11 +263,11 @@
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#koupe" aria-label="Ver proyecto: Koupe">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/koupe-960.webp"
-                   srcset="/assets/img/koupe-480.webp 480w, /assets/img/koupe-960.webp 960w"
+              <img class="tile__poster" src="assets/img/koupe-960.webp"
+                   srcset="assets/img/koupe-480.webp 480w, assets/img/koupe-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="958" height="1080" alt="Portada de Koupe: el titulo en letras celestes sobre una textura metalica" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="958" height="1080" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -285,11 +289,11 @@
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/report-travel-media-960.webp"
-                   srcset="/assets/img/report-travel-media-480.webp 480w, /assets/img/report-travel-media-960.webp 960w"
+              <img class="tile__poster" src="assets/img/report-travel-media-960.webp"
+                   srcset="assets/img/report-travel-media-480.webp 480w, assets/img/report-travel-media-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -304,11 +308,11 @@
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/detras-del-puesto-960.webp"
-                   srcset="/assets/img/detras-del-puesto-480.webp 480w, /assets/img/detras-del-puesto-960.webp 960w"
+              <img class="tile__poster" src="assets/img/detras-del-puesto-960.webp"
+                   srcset="assets/img/detras-del-puesto-480.webp 480w, assets/img/detras-del-puesto-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="822" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -323,11 +327,11 @@
         <article class="tile reveal" data-delay="2">
           <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/te-lo-aseguro-960.webp"
-                   srcset="/assets/img/te-lo-aseguro-480.webp 480w, /assets/img/te-lo-aseguro-960.webp 960w"
+              <img class="tile__poster" src="assets/img/te-lo-aseguro-960.webp"
+                   srcset="assets/img/te-lo-aseguro-480.webp 480w, assets/img/te-lo-aseguro-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="983" height="593" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -342,11 +346,11 @@
         <article class="tile reveal" data-delay="0">
           <a class="tile__link" href="#juleriaque" aria-label="Ver proyecto: Juleriaque">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/report-travel-media-2-960.webp"
-                   srcset="/assets/img/report-travel-media-2-480.webp 480w, /assets/img/report-travel-media-2-960.webp 960w"
+              <img class="tile__poster" src="assets/img/report-travel-media-2-960.webp"
+                   srcset="assets/img/report-travel-media-2-480.webp 480w, assets/img/report-travel-media-2-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -361,11 +365,11 @@
         <article class="tile reveal" data-delay="1">
           <a class="tile__link" href="#section12" aria-label="Ver proyecto: Polvora Podcast">
             <div class="tile__media">
-              <img class="tile__poster" src="/assets/img/polvora-podcast-960.webp"
-                   srcset="/assets/img/polvora-podcast-480.webp 480w, /assets/img/polvora-podcast-960.webp 960w"
+              <img class="tile__poster" src="assets/img/polvora-podcast-960.webp"
+                   srcset="assets/img/polvora-podcast-480.webp 480w, assets/img/polvora-podcast-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="1280" height="720" alt="Miniatura de Polvora Podcast: dos invitadas conversando frente a los microfonos" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="/assets/video/reel.mp4" muted loop playsinline preload="none"
+              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1280" height="720" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
@@ -909,9 +913,9 @@
   </footer>
 
     <!-- Scripts al final para que la pagina se vea antes de cargarlos -->
-  <script src="/js/main.js" defer></script>
-  <script src="/js/audio.js" defer></script>
-  <script src="/js/player.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/player.js" defer></script>
 
 </body>
 </html>

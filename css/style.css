@@ -229,7 +229,7 @@ ul, ol { list-style: none; }
 
 @font-face {
   font-family: "Space Grotesk";
-  src: url("/assets/fonts/spacegrotesk-latin.woff2") format("woff2");
+  src: url("../assets/fonts/spacegrotesk-latin.woff2") format("woff2");
   font-weight: 300 700;          /* una sola fuente cubre todos los pesos */
   font-style: normal;
   font-display: swap;
@@ -240,7 +240,7 @@ ul, ol { list-style: none; }
 }
 @font-face {
   font-family: "Space Grotesk";
-  src: url("/assets/fonts/spacegrotesk-latin-ext.woff2") format("woff2");
+  src: url("../assets/fonts/spacegrotesk-latin-ext.woff2") format("woff2");
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
@@ -253,7 +253,7 @@ ul, ol { list-style: none; }
 /* Alexandria: solo se usa en el selector Sound/Audiovisual (.portfolio-tab) */
 @font-face {
   font-family: "Alexandria";
-  src: url("/assets/fonts/alexandria-latin.woff2") format("woff2");
+  src: url("../assets/fonts/alexandria-latin.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -264,7 +264,7 @@ ul, ol { list-style: none; }
 }
 @font-face {
   font-family: "Alexandria";
-  src: url("/assets/fonts/alexandria-latin-ext.woff2") format("woff2");
+  src: url("../assets/fonts/alexandria-latin-ext.woff2") format("woff2");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -280,7 +280,7 @@ ul, ol { list-style: none; }
    provisoria, todavia en revision. */
 @font-face {
   font-family: "Unbounded";
-  src: url("/assets/fonts/unbounded-black-latin.woff2") format("woff2");
+  src: url("../assets/fonts/unbounded-black-latin.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -291,7 +291,7 @@ ul, ol { list-style: none; }
 }
 @font-face {
   font-family: "Unbounded";
-  src: url("/assets/fonts/unbounded-black-latin-ext.woff2") format("woff2");
+  src: url("../assets/fonts/unbounded-black-latin-ext.woff2") format("woff2");
   font-weight: 900;
   font-style: normal;
   font-display: swap;
