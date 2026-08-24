@@ -41,7 +41,7 @@
 
   function paint() {
     toggle.setAttribute("aria-pressed", String(!state.muted));
-    toggle.setAttribute("aria-label", state.muted ? "Activar sonido del sitio" : "Silenciar el sitio");
+    toggle.setAttribute("aria-label", state.muted ? "Turn on site sound" : "Mute site sound");
     var pct = Math.round(state.volume * 100);
     /* La barra queda siempre activa (nunca "disabled"): arrastrarla es la
        forma mas intuitiva de activar el sonido, ademas del boton. Un input

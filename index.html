@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" class="no-js">
+<html lang="en" class="no-js">
 <head>
 
   <!-- ======================================================================
@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Ian Iacono — Sound Portfolio</title>
-  <meta name="description" content="Ian Iacono — sound design, mezcla y master. Portfolio de sonido y audiovisual: The Carbon Case, Lumia, Red Bull Batallas, La Llamada Fatal y Koupe.">
+  <meta name="description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, La Llamada Fatal, and Koupe.">
 
   <!-- IMPORTANTE: cuando tengas tu dominio propio, cambia
        "https://ianiacono.vercel.app" por tu direccion en las 4 lineas marcadas con DOMINIO -->
@@ -22,17 +22,17 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Ian Iacono">
   <meta property="og:title" content="Ian Iacono — Sound Portfolio">
-  <meta property="og:description" content="Ian Iacono — sound design, mezcla y master. Portfolio de sonido y audiovisual: The Carbon Case, Lumia, Red Bull Batallas, La Llamada Fatal y Koupe.">
+  <meta property="og:description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, La Llamada Fatal, and Koupe.">
   <meta property="og:url" content="https://ianiacono.vercel.app/">                               <!-- DOMINIO -->
   <meta property="og:image" content="https://ianiacono.vercel.app/assets/img/og.jpg">       <!-- DOMINIO -->
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Ian Iacono — Sound Portfolio">
-  <meta property="og:locale" content="es_AR">
+  <meta property="og:locale" content="en_US">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Ian Iacono — Sound Portfolio">
-  <meta name="twitter:description" content="Ian Iacono — sound design, mezcla y master. Portfolio de sonido y audiovisual: The Carbon Case, Lumia, Red Bull Batallas, La Llamada Fatal y Koupe.">
+  <meta name="twitter:description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, La Llamada Fatal, and Koupe.">
   <meta name="twitter:image" content="https://ianiacono.vercel.app/assets/img/og.jpg">      <!-- DOMINIO -->
 
   <meta name="theme-color" content="#08090a">
@@ -58,7 +58,7 @@
 
 <body data-site-name="Ian Iacono">
 
-  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
     <!-- ==========================================================================
          BARRA DE NAVEGACION  —  aparece fija arriba en todas las paginas
@@ -95,14 +95,14 @@
              mirando en la grilla). Los navegadores exigen un click real
              para permitir sonido, por eso arranca siempre en silencio. -->
         <div class="audio-control">
-          <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Activar sonido del sitio">
+          <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Turn on site sound">
             <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
           </button>
           <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
-                 aria-label="Volumen del sitio" style="--level-num:80">
+                 aria-label="Site volume" style="--level-num:80">
         </div>
 
-        <nav class="nav__links" aria-label="Navegacion principal">
+        <nav class="nav__links" aria-label="Main navigation">
           <!-- #home ya hace scroll instantaneo al toque del reel (ver el
                router en main.js) — no hace falta un ancla nueva. -->
           <a class="nav__link" href="#home">Showreel</a>
@@ -132,18 +132,18 @@
             <video class="hero__video" data-src="assets/video/reel.mp4" preload="none" loop playsinline muted
                    poster="assets/img/reel-poster.webp"
                    width="1280" height="720"
-                   aria-label="Demo reel de sound design de Ian Iacono"></video>
+                   aria-label="Sound design demo reel by Ian Iacono"></video>
 
             <!-- El sonido de este video lo maneja el control del header:
                  aca solo queda pausar/reanudar y la linea de tiempo. -->
             <div class="player__controls">
-              <button type="button" class="player__playpause" data-hero-playpause aria-pressed="true" aria-label="Pausar">
+              <button type="button" class="player__playpause" data-hero-playpause aria-pressed="true" aria-label="Pause">
                 <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg><svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
               </button>
               <input type="range" class="player__scrub" min="0" max="1000" value="0" step="1"
-                     aria-label="Linea de tiempo del video">
+                     aria-label="Video timeline">
               <span class="player__time" aria-hidden="true">0:00 / 0:00</span>
-              <button type="button" class="player__fullscreen" data-hero-fullscreen aria-pressed="false" aria-label="Pantalla completa">
+              <button type="button" class="player__fullscreen" data-hero-fullscreen aria-pressed="false" aria-label="Fullscreen">
                 <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg><svg class="icon-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>
               </button>
             </div>
@@ -163,7 +163,7 @@
              abajo se ve, sin cambiar de pagina. -->
         <div class="portfolio-tabs-row reveal">
           <h2 class="portfolio-tabs-row__title">Selected Works</h2>
-          <div class="portfolio-tabs" data-portfolio-tabs role="tablist" aria-label="Categoria de proyectos">
+          <div class="portfolio-tabs" data-portfolio-tabs role="tablist" aria-label="Project category">
             <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
             <button type="button" class="portfolio-tab" data-portfolio-target="sound"
                     role="tab" aria-selected="true" aria-controls="grid-sound" id="tab-sound">
@@ -185,12 +185,12 @@
           <div class="grid" id="grid-sound" data-portfolio-panel="sound"
                role="tabpanel" aria-labelledby="tab-sound">
         <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#thecarboncase" aria-label="Ver proyecto: The Carbon Case">
+          <a class="tile__link" href="#thecarboncase" aria-label="View project: The Carbon Case">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/the-carbon-case-960.webp"
                    srcset="assets/img/the-carbon-case-480.webp 480w, assets/img/the-carbon-case-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1600" height="1531" alt="Portada de The Carbon Case: un campo sembrado bajo un cielo celeste" style="object-position:50% 15%" loading="lazy" decoding="async">
+                   width="1600" height="1531" alt="The Carbon Case cover: a planted field under a pale blue sky" style="object-position:50% 15%" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1600" height="1531" aria-hidden="true" tabindex="-1" style="object-position:50% 15%"></video>
             </div>
@@ -204,12 +204,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#lumia" aria-label="Ver proyecto: Lumia">
+          <a class="tile__link" href="#lumia" aria-label="View project: Lumia">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/lumia-960.webp"
                    srcset="assets/img/lumia-480.webp 480w, assets/img/lumia-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1253" height="1045" alt="Portada de Lumia: una figura geometrica de lineas blancas sobre fondo negro" loading="lazy" decoding="async">
+                   width="1253" height="1045" alt="Lumia cover: a geometric figure made of white lines on a black background" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1253" height="1045" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -223,12 +223,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="2">
-          <a class="tile__link" href="#redbull" aria-label="Ver proyecto: Red Bull Batallas">
+          <a class="tile__link" href="#redbull" aria-label="View project: Red Bull Batallas">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/red-bull-batallas-960.webp"
                    srcset="assets/img/red-bull-batallas-480.webp 480w, assets/img/red-bull-batallas-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1125" height="1013" alt="Portada de Red Bull Batallas: el logo sobre el escenario de una batalla de rap" loading="lazy" decoding="async">
+                   width="1125" height="1013" alt="Red Bull Batallas cover: the logo over a rap battle stage" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1125" height="1013" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -242,12 +242,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#lallamada" aria-label="Ver proyecto: La Llamada Fatal">
+          <a class="tile__link" href="#lallamada" aria-label="View project: La Llamada Fatal">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/la-llamada-fatal-960.webp"
                    srcset="assets/img/la-llamada-fatal-480.webp 480w, assets/img/la-llamada-fatal-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="640" height="640" alt="Portada del podcast La Llamada Fatal: un telefono rojo sobre fondo oscuro" loading="lazy" decoding="async">
+                   width="640" height="640" alt="La Llamada Fatal podcast cover: a red telephone on a dark background" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="640" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -261,12 +261,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#koupe" aria-label="Ver proyecto: Koupe">
+          <a class="tile__link" href="#koupe" aria-label="View project: Koupe">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/koupe-960.webp"
                    srcset="assets/img/koupe-480.webp 480w, assets/img/koupe-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="958" height="1080" alt="Portada de Koupe: el titulo en letras celestes sobre una textura metalica" loading="lazy" decoding="async">
+                   width="958" height="1080" alt="Koupe cover: the title in light blue letters over a metallic texture" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="958" height="1080" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -287,12 +287,12 @@
           <div class="grid" id="grid-audiovisual" data-portfolio-panel="audiovisual"
                role="tabpanel" aria-labelledby="tab-audiovisual" hidden>
         <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#reports" aria-label="Ver proyecto: Rèport Travel Media">
+          <a class="tile__link" href="#reports" aria-label="View project: Rèport Travel Media">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/report-travel-media-960.webp"
                    srcset="assets/img/report-travel-media-480.webp 480w, assets/img/report-travel-media-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1252" height="1252" alt="Logo de Rèport Travel Media en blanco y negro sobre fondo rojo" loading="lazy" decoding="async">
+                   width="1252" height="1252" alt="Rèport Travel Media logo in black and white on a red background" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -306,12 +306,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#ddp" aria-label="Ver proyecto: Detras del Puesto">
+          <a class="tile__link" href="#ddp" aria-label="View project: Detras del Puesto">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/detras-del-puesto-960.webp"
                    srcset="assets/img/detras-del-puesto-480.webp 480w, assets/img/detras-del-puesto-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="822" height="640" alt="Logo de Detras del Puesto en naranja sobre fondo blanco" loading="lazy" decoding="async">
+                   width="822" height="640" alt="Detras del Puesto logo in orange on a white background" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="822" height="640" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -325,18 +325,18 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="2">
-          <a class="tile__link" href="#faiketen" aria-label="Ver proyecto: Proyecto">
+          <a class="tile__link" href="#faiketen" aria-label="View project: Project">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/te-lo-aseguro-960.webp"
                    srcset="assets/img/te-lo-aseguro-480.webp 480w, assets/img/te-lo-aseguro-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="983" height="593" alt="Miniatura del programa: dos conductores junto al titulo Las cenizas no se apagan" loading="lazy" decoding="async">
+                   width="983" height="593" alt="Show thumbnail: two hosts next to the title Las cenizas no se apagan" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="983" height="593" aria-hidden="true" tabindex="-1"></video>
             </div>
             <div class="tile__meta">
               <div>
-                <h2 class="tile__title visually-hidden">Ver proyecto</h2>
+                <h2 class="tile__title visually-hidden">View project</h2>
                 
               </div>
               <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
@@ -344,12 +344,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#juleriaque" aria-label="Ver proyecto: Juleriaque">
+          <a class="tile__link" href="#juleriaque" aria-label="View project: Juleriaque">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/report-travel-media-2-960.webp"
                    srcset="assets/img/report-travel-media-2-480.webp 480w, assets/img/report-travel-media-2-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1023" height="1027" alt="Placa negra con la palabra Juleriaque en letras blancas" loading="lazy" decoding="async">
+                   width="1023" height="1027" alt="Black title card with the word Juleriaque in white letters" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -363,12 +363,12 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="1">
-          <a class="tile__link" href="#section12" aria-label="Ver proyecto: Polvora Podcast">
+          <a class="tile__link" href="#section12" aria-label="View project: Polvora Podcast">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/polvora-podcast-960.webp"
                    srcset="assets/img/polvora-podcast-480.webp 480w, assets/img/polvora-podcast-960.webp 960w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1280" height="720" alt="Miniatura de Polvora Podcast: dos invitadas conversando frente a los microfonos" loading="lazy" decoding="async">
+                   width="1280" height="720" alt="Polvora Podcast thumbnail: two guests talking in front of the microphones" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
                      width="1280" height="720" aria-hidden="true" tabindex="-1"></video>
             </div>
@@ -390,8 +390,7 @@
            (atributo mailto: en el action) — funciona sin backend, pero abre
            el cliente de correo de quien escribe en vez de mandarlo directo.
            Para que se mande solo, sin abrir nada, hace falta conectar un
-           servicio como Formspree (tiene un plan gratis). Mientras tanto,
-           reemplaza TUMAIL@ejemplo.com y TUUSUARIO por los tuyos.
+           servicio como Formspree (tiene un plan gratis).
            El degrade de fondo (negro a violeta muy sutil) va aca, en la
            franja de ancho completo -- no en el .wrap de adentro, que es
            angosto: si el color se pintara ahi, quedaria como una caja
@@ -400,13 +399,12 @@
         <div class="wrap wrap--narrow page__body">
           <div class="page__head reveal">
             <h2 class="project__title">Contact</h2>
-            <p class="contact-form__lead">Tenes un proyecto en mente? Contame de que se trata.</p>
           </div>
 
-          <form class="contact-form reveal" action="mailto:TUMAIL@ejemplo.com" method="post" enctype="text/plain">
+          <form class="contact-form reveal" action="mailto:iaconoian1@gmail.com" method="post" enctype="text/plain">
             <div class="contact-form__row">
               <label class="contact-form__field">
-                <span class="label">Nombre</span>
+                <span class="label">Name</span>
                 <input type="text" name="nombre" autocomplete="name" required>
               </label>
               <label class="contact-form__field">
@@ -415,10 +413,10 @@
               </label>
             </div>
             <label class="contact-form__field">
-              <span class="label">Mensaje</span>
+              <span class="label">Message</span>
               <textarea name="mensaje" rows="5" required></textarea>
             </label>
-            <button type="submit" class="btn btn--primary">Enviar</button>
+            <button type="submit" class="btn btn--primary">Send</button>
           </form>
 
           <div class="contact-form__links reveal">
@@ -444,7 +442,7 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/2TYgE3qMO4k?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="The Carbon Case — video del proyecto" loading="lazy"
+                    title="The Carbon Case — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -457,11 +455,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">La nueva producción de Helmi recorre Paraguay, Mozambique, Tailandia y Singapur para ver de cerca los mercados de carbono — y descubrir qué está funcionando, qué falta, y qué hace falta para escalarlos. Estuve a cargo del diseño sonoro, la remezcla y la masterización, construyendo una paleta sonora que acompaña a la película a través de cuatro países muy distintos, mientras mantiene cada voz, ambiente y entrevista clara y con base. El resultado es una mezcla que deja viajar a la historia sin perder pie en ningún momento.</p>
+              <p class="prose" lang="es">La nueva producción de Helmi recorre Paraguay, Mozambique, Tailandia y Singapur para ver de cerca los mercados de carbono — y descubrir qué está funcionando, qué falta, y qué hace falta para escalarlos. Estuve a cargo del diseño sonoro, la remezcla y la masterización, construyendo una paleta sonora que acompaña a la película a través de cuatro países muy distintos, mientras mantiene cada voz, ambiente y entrevista clara y con base. El resultado es una mezcla que deja viajar a la historia sin perder pie en ningún momento.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Helmi&#39;s new production travels through Paraguay, Mozambique, Thailand, and Singapore to see carbon markets on the ground — and find out what&#39;s working, what&#39;s missing, and what it takes to scale. I handled the sound design, re-recording mix, and mastering, building a sonic palette that moves with the film across four very different countries while keeping every voice, ambience, and interview clear and grounded. The result is a mix that lets the story travel without ever losing its footing.</p>
+              <p class="prose">Helmi&#39;s new production travels through Paraguay, Mozambique, Thailand, and Singapore to see carbon markets on the ground — and find out what&#39;s working, what&#39;s missing, and what it takes to scale. I handled the sound design, re-recording mix, and mastering, building a sonic palette that moves with the film across four very different countries while keeping every voice, ambience, and interview clear and grounded. The result is a mix that lets the story travel without ever losing its footing.</p>
             </div>
           </div>
 
@@ -492,7 +490,7 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/1Q3iFE-h9RM?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Lumia — video del proyecto" loading="lazy"
+                    title="Lumia — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -506,11 +504,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
+              <p class="prose" lang="es">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
+              <p class="prose">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
             </div>
           </div>
 
@@ -541,13 +539,13 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/aUop2SCJn10?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Red Bull Batallas — video del proyecto" loading="lazy"
+                    title="Red Bull Batallas — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/ZFDeO8fDAvI?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Red Bull Batallas — segundo video del proyecto" loading="lazy"
+                    title="Red Bull Batallas — second project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -560,11 +558,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Limpieza de audio y mezcla para batallas de rap oficiales de Red Bull, asegurando un equilibrio claro entre las voces de los participantes, el publico y la conductora.</p>
+              <p class="prose" lang="es">Limpieza de audio y mezcla para batallas de rap oficiales de Red Bull, asegurando un equilibrio claro entre las voces de los participantes, el publico y la conductora.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Audio cleaning and mixing for official Red Bull rap battles, ensuring a clear balance between the participants&#39; vocals, the host, and the crowd.</p>
+              <p class="prose">Audio cleaning and mixing for official Red Bull rap battles, ensuring a clear balance between the participants&#39; vocals, the host, and the crowd.</p>
             </div>
           </div>
 
@@ -595,17 +593,17 @@
         <div class="project__media reveal">
           <div class="embed embed--audio">
             <iframe src="https://open.spotify.com/embed/episode/3gu56XUbJWXSjcrw7pOc3g?utm_source=generator&amp;theme=0"
-                    title="La Llamada Fatal — episodio en Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    title="La Llamada Fatal — episode on Spotify" loading="lazy" width="100%" height="352" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
           <div class="embed embed--audio">
             <iframe src="https://open.spotify.com/embed/episode/5DJchpRlyf3DZMsiWbYLJX?utm_source=generator&amp;theme=0"
-                    title="La Llamada Fatal — segundo episodio en Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    title="La Llamada Fatal — second episode on Spotify" loading="lazy" width="100%" height="352" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
           <div class="embed embed--audio">
             <iframe src="https://open.spotify.com/embed/episode/6qlD3El6SVTRuBnmR348g3?utm_source=generator&amp;theme=0"
-                    title="La Llamada Fatal — tercer episodio en Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    title="La Llamada Fatal — third episode on Spotify" loading="lazy" width="100%" height="352" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
         </div>
@@ -617,11 +615,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Podcast sobre cine argentino conducido por Tomás Binder y Patricio Fontana. En cada episodio, los creadores conversan con diferentes invitados especiales sobre películas clave, directores y la historia del cine nacional.</p>
+              <p class="prose" lang="es">Podcast sobre cine argentino conducido por Tomás Binder y Patricio Fontana. En cada episodio, los creadores conversan con diferentes invitados especiales sobre películas clave, directores y la historia del cine nacional.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Podcast about Argentine cinema hosted by Tomás Binder and Patricio Fontana. In each episode, the creators talk with different special guests about key films, directors, and the history of national cinema.</p>
+              <p class="prose">Podcast about Argentine cinema hosted by Tomás Binder and Patricio Fontana. In each episode, the creators talk with different special guests about key films, directors, and the history of national cinema.</p>
             </div>
           </div>
 
@@ -657,11 +655,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Detrás del Puesto es un podcast sobre carrera profesional en el que referentes del turismo, la tecnología, el marketing y el liderazgo corporativo cuentan cómo encontraron su camino — los obstáculos, los puntos de quiebre y lo que realmente hizo falta para llegar. Hice la animación del logo y toda la identidad sonora del programa, y produje la cortina musical que cierra los créditos de cada episodio.</p>
+              <p class="prose" lang="es">Detrás del Puesto es un podcast sobre carrera profesional en el que referentes del turismo, la tecnología, el marketing y el liderazgo corporativo cuentan cómo encontraron su camino — los obstáculos, los puntos de quiebre y lo que realmente hizo falta para llegar. Hice la animación del logo y toda la identidad sonora del programa, y produje la cortina musical que cierra los créditos de cada episodio.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Detrás del Puesto is a career podcast where professionals from tourism, tech, marketing, and corporate leadership open up about how they found their path — the obstacles, the turning points, and what it actually took to get where they are. I created the show&#39;s logo animation and full sonic identity, and produced the closing musical sting that plays over the credits of every episode.</p>
+              <p class="prose">Detrás del Puesto is a career podcast where professionals from tourism, tech, marketing, and corporate leadership open up about how they found their path — the obstacles, the turning points, and what it actually took to get where they are. I created the show&#39;s logo animation and full sonic identity, and produced the closing musical sting that plays over the credits of every episode.</p>
             </div>
           </div>
 
@@ -692,7 +690,7 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/2TYgE3qMO4k?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Te Lo Aseguro | Analipsis — video del proyecto" loading="lazy"
+                    title="Te Lo Aseguro | Analipsis — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -735,7 +733,7 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/2TYgE3qMO4k?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Rèport Travel Media — video del proyecto" loading="lazy"
+                    title="Rèport Travel Media — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -748,11 +746,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
+              <p class="prose" lang="es">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
+              <p class="prose">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
             </div>
           </div>
 
@@ -818,7 +816,7 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/2TYgE3qMO4k?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Koupe — video del proyecto" loading="lazy"
+                    title="Koupe — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -831,11 +829,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
+              <p class="prose" lang="es">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
+              <p class="prose">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
             </div>
           </div>
 
@@ -866,7 +864,7 @@
         <div class="project__media reveal">
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/XWi0vnR9PGU?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="Polvora Podcast — video del proyecto" loading="lazy"
+                    title="Polvora Podcast — project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
@@ -879,11 +877,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
+              <p class="prose" lang="es">Cortometraje sobre la creación del cosmos. Realicé el diseño sonoro y la musicalización en su totalidad, utilizando texturas y espacialidad para transmitir la inmensidad, el vacío y la luz del universo. El trabajo concluyó con la mezcla de sonido final.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose" lang="en">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
+              <p class="prose">Short film about the creation of the cosmos. I handled the entire sound design and original score, using spatiality and sound textures to convey empty space, light, and pure immensity, followed by the final audio mix.</p>
             </div>
           </div>
 

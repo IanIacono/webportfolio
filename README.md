@@ -1087,3 +1087,31 @@ que tocar nada distinto según dónde lo publiques. Lo probé armando una
 copia del sitio local que simula exactamente la misma estructura de
 carpetas que usa GitHub Pages, y confirmé que las 16 cosas que pide la
 página (CSS, fuentes, imágenes, JS) cargan bien, sin ningún error.
+
+**87. Saqué el subtítulo de Contact ("Tenés un proyecto en mente?
+Contame de qué se trata."), y el formulario ahora manda el mail
+directo a tu casilla real (`iaconoian1@gmail.com`) en vez del
+placeholder de ejemplo.**
+
+**88. Toda la sección de Contact ahora está centrada de verdad.** El
+`.wrap` que la contiene ya estaba centrado en la página, pero el
+título "Contact" y el ícono de Instagram de abajo quedaban pegados al
+borde izquierdo de esa caja (alineación de texto/flex por defecto),
+lo que daba la sensación óptica de que todo estaba corrido a la
+izquierda. Centré el título y el ícono — el formulario en sí ya
+ocupaba el ancho completo de forma simétrica, así que no hacía falta
+tocarlo.
+
+**89. Todo el texto del sitio pasa a inglés, salvo el bloque marcado
+"ESP" de cada proyecto, que se queda en español como corresponde.**
+Traduje toda la navegación, el reproductor del reel, las tarjetas de
+proyecto, el selector Sound/Audiovisual, el formulario de contacto y
+la descripción para buscadores — botones, aria-labels (para lectores
+de pantalla), todo. Los párrafos "ESP" de cada proyecto no se
+tocaron: siguen en español exactamente como estaban, y ahora llevan
+`lang="es"` (antes era el bloque "ENG" el que llevaba la marca
+`lang="en"`, porque el idioma por defecto de toda la página era
+español — ahora es al revés: el `<html>` pasa a `lang="en"` y es el
+bloque en español el que se marca como la excepción). Esto es más que
+estética: le dice correctamente a los lectores de pantalla y a Google
+en qué idioma está cada párrafo.

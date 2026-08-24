@@ -658,7 +658,7 @@ p { text-wrap: pretty; }
 .page__body--after-hero { padding-top: var(--sp-9); position: relative; }
 
 /* Encabezado de pagina interna: etiqueta + titulo grande */
-.page__head { margin-bottom: var(--sp-8); }
+.page__head { margin-bottom: var(--sp-8); text-align: center; }
 
 
 /* ==========================================================================
@@ -1147,8 +1147,6 @@ p { text-wrap: pretty; }
   background: linear-gradient(to bottom, transparent 0%, transparent 35%, var(--c-bloom-violet) 100%);
 }
 
-.contact-form__lead { color: var(--c-accent-soft); margin-top: var(--sp-2); }
-
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -1193,6 +1191,7 @@ p { text-wrap: pretty; }
   margin-top: var(--sp-6);
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--sp-3);
 }
 

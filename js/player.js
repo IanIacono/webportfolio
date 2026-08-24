@@ -172,7 +172,7 @@
     var paintHeroPlayPause = function (playing) {
       if (!heroPlayBtn) return;
       heroPlayBtn.setAttribute("aria-pressed", String(playing));
-      heroPlayBtn.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+      heroPlayBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
     };
 
     var playHero = function () {
@@ -217,7 +217,7 @@
       var paintFullscreen = function () {
         var active = (document.fullscreenElement || document.webkitFullscreenElement) === heroFrame;
         heroFsBtn.setAttribute("aria-pressed", String(active));
-        heroFsBtn.setAttribute("aria-label", active ? "Salir de pantalla completa" : "Pantalla completa");
+        heroFsBtn.setAttribute("aria-label", active ? "Exit fullscreen" : "Fullscreen");
       };
       document.addEventListener("fullscreenchange", paintFullscreen);
       document.addEventListener("webkitfullscreenchange", paintFullscreen);
