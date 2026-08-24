@@ -1244,3 +1244,60 @@ redundante (decía que era formato mesa con micrófonos, algo que ya se
 ve en la portada).** Investigué de qué trata realmente (bienestar,
 hábitos, alimentación, decisiones cotidianas) y escribí en base a eso
 — quedó un poco más largo que antes, como pediste.
+
+**100. The Carbon Case: reemplacé el texto por el que me pasaste
+(corrigiendo ortografía y puntuación), sumé que es un "upcoming
+documentary" y agregué un link "Watch the trailer" debajo del rol,
+apuntando al mismo video que ya estaba embebido.** En inglés, donde
+me pediste que dijera "re-recording mixer" en vez de "mezcla",
+terminé reescribiendo esa frase como una lista de roles (sound
+designer, dialogue editor, re-recording mixer, mastering engineer) en
+vez de mezclar roles con tareas sueltas — se lee más natural así.
+
+**101. Red Bull Batallas: sumé "diálogos" a lo que limpié y "música"
+a la lista de cosas que balanceo en la mezcla,** tal como me
+pediste.
+
+**102. La Llamada Fatal: arreglé que los embeds de Spotify quedaran
+descentrados dentro de su columna.** Lo que pasaba: la ronda pasada
+angosté esa columna (para que los 3 episodios entraran en menos
+alto), pero se quedaba pegada al borde izquierdo de su espacio en vez
+de centrarse, dejando un hueco vacío a la derecha — le agregué
+centrado horizontal y ahora el hueco queda repartido igual a los dos
+lados. También agregué un link "Listen on Spotify" al perfil
+completo del programa, y sumé una oración a los textos con lo que
+hiciste vos: edición de sonido y limpieza de diálogos (actualicé
+también el campo de rol, que no lo mencionaba).
+
+**103. Detrás del Puesto: reemplacé el texto por el que me pasaste
+(con ortografía y puntuación corregidas), agregué el video que me
+diste, un link a su Instagram y el programa completo de Spotify
+embebido.** También sumé que editaste algunas de sus miniaturas.
+
+**104. Te Lo Aseguro | Analipsis: el rol ya no dice solo "V" — ahora
+dice "Video editing",** y sumé una oración al texto con eso mismo.
+
+**105. Rèport Travel Media: sumé que también hacés operación de
+video en vivo en el estudio,** tanto en el rol como en el texto.
+
+**106. Polvora Podcast: agregué el video que me pasaste, arriba del
+que ya estaba, saqué la oración que me pediste y sumé que lo conduce
+Julieta Kemble.**
+
+**107. Nuevo proyecto en Audiovisual: Playbook.** Investigué de qué
+se trata (el podcast de Proteína Marketing conducido por Anita
+Figueiredo y Sebastián Paschmann, para que otros marketers repiensen
+su trabajo con estrategia) y escribí el texto en base a eso. Le
+adjunté el video de YouTube que me pasaste arriba del embed del
+programa completo de Spotify, y sumé que hiciste la edición de video
+usando los elementos gráficos propios del programa. **Ojo: todavía no
+aparece en la grilla de Audiovisual** — me falta la imagen de tapa
+que me describiste (fondo negro, "x Anita y Sebas" / "Playbook" /
+"marketing para marketers") y no tengo forma de bajarla yo mismo
+desde acá, no tengo acceso real a internet en este entorno. Mandame
+ese archivo de imagen y lo agrego a la grilla. Mientras tanto, la
+página ya existe y se llega apretando "Next" desde Polvora Podcast.
+
+**108. Saqué el proyecto Koupe por completo** (página, tarjeta de la
+grilla de Sound y todo) — quedan 9 proyectos más Playbook, 10 en
+total.

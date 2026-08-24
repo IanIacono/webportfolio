@@ -1143,6 +1143,12 @@ p { text-wrap: pretty; }
   letter-spacing: var(--ls-normal);
 }
 
+.project__links {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+}
+
 .project__text { margin-top: var(--sp-8); }
 
 /* Bloque de idioma: la etiqueta ESP/ENG arriba y el parrafo debajo */
