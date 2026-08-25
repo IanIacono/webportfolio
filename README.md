@@ -1458,3 +1458,13 @@ estaba.
 fuerte.** Antes titilaba cada 3 segundos con un temblor suave; ahora
 el ciclo completo dura 1.4 segundos y la sacudida es más marcada
 (más recorrido, más rebotes), para que llame más la atención.
+
+**130. El subtítulo debajo de tu nombre (arriba y en el pie de
+página) ahora dice "Sound Designer · Mix · Master // Multimedia Post
+Production"** en vez de solo "Sound Designer // Multimedia Post
+Production". Lo cambié en los dos lugares donde aparece, y lo probé
+en varios anchos de pantalla (celular incluido) para confirmar que
+sigue entrando bien.
+
+**131. Nuevo video propio al pasar el mouse por The Carbon Case**,
+reemplaza al que había.
