@@ -1521,3 +1521,65 @@ un proyecto no tenía su propio video de hover, mostraba el reel
 general de relleno, pero para este proyecto (que es solo audio) no
 pegaba. Cuando me pases el audio armamos ese hover con la animación
 de soundwave que hablamos.
+
+**139. Los videos de YouTube dentro de un proyecto ahora se
+"cierran" solos si te vas a otro proyecto mientras están sonando.**
+Como no existe forma de pausar un video de YouTube embebido desde
+afuera sin usar la API oficial de YouTube, lo que se hace es
+recargar el iframe entero: al salir de la página queda en blanco
+(mismo efecto que cerrarlo), y recién vuelve a pedir el video real
+cuando volvés a entrar a esa página — así siempre lo encontrás de
+nuevo en 0:00 y mudo, nunca sonando de fondo sin que lo veas. La
+primera versión de este arreglo tenía un bug: como estos iframes se
+cargan "lazy" (recién piden el video cuando están a la vista, para
+no bajar los 11 videos de golpe al entrar al sitio), pedirles que
+vuelvan a cargar mientras su página todavía estaba oculta hacía que
+el navegador pospusiera esa carga para siempre, y ni siquiera se
+terminaba pidiendo al volver. Ahora se guarda el link real aparte y
+se lo restaura justo en el momento en que la página vuelve a
+mostrarse, nunca antes, así el navegador lo pide de una como la
+primera vez. Los de Spotify quedan afuera de esto, solo se pidió
+para YouTube.
+
+**140. En celular, además del botón de sonido del header (que no se
+ve hasta que scrolleás), ahora hay una copia del mismo botón entre
+los links de navegación y el reel** — mismo ícono violeta que titila
+para llamar la atención, y los dos quedan sincronizados: tocar
+cualquiera de los dos prende o apaga el sonido de todo el sitio. En
+escritorio no se ve, ahí ya existe el del header.
+
+**141. Los controles del reel (pausa y la línea de tiempo) ya no
+están siempre visibles en celular.** Antes se mostraban fijos todo
+el tiempo apenas se detectaba que era un dispositivo táctil. Ahora
+arrancan ocultos y aparecen recién al tocar el video, se esconden
+solos a los 3 segundos si el reel sigue reproduciéndose, y se quedan
+a la vista mientras está en pausa (para no perder de dónde
+retomarlo). Tocar el video de nuevo los esconde antes de tiempo, y
+tocar la barra o el botón de pausa reinicia la cuenta de los 3
+segundos en vez de escondértelos a mitad de uso.
+
+**142. En celular ahora es más fácil agarrar la bolita de la línea
+de tiempo del reel para arrastrarla.** No hacía falta tocar el
+navegador para verlo: en pantallas táctiles no existe el ":hover"
+que hace que la bolita crezca al pasar el mouse, así que se quedaba
+siempre en su tamaño chico, y ese tamaño chico es justo lo que el
+dedo puede tocar para agarrarla. Ahora en celular la bolita queda
+siempre en su tamaño real (sin el achique) y además un poco más
+grande que en escritorio, así hay margen de sobra alrededor sin
+tener que acertarle justo al centro.
+
+**143. Tu nombre y el subtítulo, en celular, estaban demasiado
+pegados (incluso un poco cortados) contra el borde de arriba de la
+pantalla.** Les di más aire arriba, sin tocar la posición del reel
+(son dos cosas independientes en el código, así que una no arrastra
+a la otra).
+
+**144. El fondo borroso detrás del reel, el mismo video agrandado y
+desenfocado que ya tenías en escritorio, había quedado apagado en
+celular** (una decisión de una ronda anterior, pensando en el
+rendimiento) **y por eso solo se veía el reel solo, sin nada
+alrededor. Ya está prendido también en celular**, con el mismo
+desenfoque en los bordes de arriba y abajo, y el mismo difuminado
+hacia el color de fondo real de la página en el borde inferior, así
+se sigue sintiendo continuo hacia la sección de proyectos en vez de
+cortar en seco.

@@ -464,8 +464,22 @@ p { text-wrap: pretty; }
   margin-block-start: var(--sp-4);
   margin-inline: auto;
 }
+
+/* Copia movil del boton de sonido: mismas reglas de titileo/vibrado que
+   el del header (comparten la clase .audio-control__toggle), solo se le
+   agrega la posicion -- centrado, debajo de los links. El selector
+   combinado (dos clases, no una) es a proposito: .audio-control__toggle
+   ya trae "display:inline-flex" de fondo mas abajo en este archivo, y
+   con la misma especificidad (una clase contra una clase) esa regla
+   posterior le ganaba a esta por orden de aparicion, asi que el boton
+   quedaba visible tambien en desktop. */
+.audio-control__toggle.nav__brand-audio {
+  display: none;
+  margin: var(--sp-5) auto 0;
+}
 @media (max-width: 900px) {
   .nav__brand-links { display: flex; }
+  .audio-control__toggle.nav__brand-audio { display: inline-flex; }
 }
 
 .nav__link {
@@ -1601,6 +1615,24 @@ p { text-wrap: pretty; }
 .hero__frame:hover .player__scrub::-moz-range-thumb,
 .player__scrub:focus-visible::-moz-range-thumb { transform: scale(1); }
 
+/* En celular no hay ":hover" que agrande la bolita, asi que se queda
+   siempre chica (scale .72) -- y como el transform tambien achica la
+   zona que el dedo puede tocar para agarrarla, terminaba haciendo falta
+   acertarle casi pixel perfecto. Aca se la deja siempre a tamaño real
+   (sin el achique) y ademas mas grande que en escritorio, asi el dedo
+   tiene margen de sobra alrededor sin tener que caer justo en el centro. */
+@media (hover: none) {
+  .player__scrub::-webkit-slider-thumb {
+    width: 22px; height: 22px;
+    margin-top: -9.5px;
+    transform: scale(1);
+  }
+  .player__scrub::-moz-range-thumb {
+    width: 22px; height: 22px;
+    transform: scale(1);
+  }
+}
+
 .player__time {
   flex: none;
   font-size: var(--fs-2xs);
@@ -1659,6 +1691,14 @@ p { text-wrap: pretty; }
      necesita un poco mas de margen arriba que en desktop para no
      quedar pegado contra ellos. */
   :root { --hero-top-clearance: 11rem; }
+
+  /* En este ancho el nombre + subtitulo + links + boton de sonido son un
+     bloque bastante mas alto que en desktop (todo apilado), y con el
+     padding-block de escritorio el nombre quedaba directamente cortado
+     contra (incluso por encima de) el borde de arriba de la pantalla.
+     Mas padding acá empuja todo el bloque hacia abajo sin tocar la
+     posicion del reel (son independientes, ver comentario de arriba). */
+  .nav { padding-block: 6.25rem; }
 
   /* En desktop el reel se ancla arriba (align-items:flex-start en
      .hero) porque ahi el "top clearance" ya calcula justo cuanto

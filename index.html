@@ -114,6 +114,15 @@
           <a class="nav__link" href="#projects">Projects</a>
           <a class="nav__link" href="#contact">Contact</a>
         </div>
+
+        <!-- Copia movil del boton de sonido (sin la barra de volumen),
+             para que se vea ya de entrada -- el de .nav__right (el que
+             titila/vibra) recien se muestra al hacer scroll en celular,
+             y para entonces ya pudiste haber visto el reel en silencio.
+             Mismo boton, mismo estado: audio.js los mantiene sincronizados. -->
+        <button type="button" class="audio-control__toggle nav__brand-audio" aria-pressed="false" aria-label="Turn on site sound">
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
+        </button>
       </div>
 
       <div class="nav__right">

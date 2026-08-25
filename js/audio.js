@@ -3,10 +3,11 @@
    audio.js — control global de sonido
 
    Es el UNICO lugar del sitio donde se prende o apaga el audio: el boton
-   y la barra que estan en el header. Controla el reel del inicio y, en la
-   grilla de proyectos, el video que estes mirando con el mouse en ese
-   momento. Los embeds de YouTube y Spotify de las paginas de cada proyecto
-   tienen sus propios controles nativos y quedan fuera de esto.
+   (puede haber mas de uno -- ver mas abajo) y la barra que estan en el
+   header. Controla el reel del inicio y, en la grilla de proyectos, el
+   video que estes mirando con el mouse en ese momento. Los embeds de
+   YouTube y Spotify de las paginas de cada proyecto tienen sus propios
+   controles nativos y quedan fuera de esto.
 
    Por como funcionan los navegadores, el sonido siempre arranca apagado:
    hace falta un click real (en este boton) para que el sitio quede
@@ -19,9 +20,14 @@
   "use strict";
 
   var STORAGE_KEY = "ii-volumen";
-  var toggle = document.querySelector(".audio-control__toggle");
+  /* Mas de un boton puede existir a la vez (el del header + la copia
+     movil arriba del reel, que se ve mientras .nav__right todavia esta
+     oculto -- ver build.py y css/style.css): todos quedan sincronizados,
+     cualquiera refleja y controla el mismo estado. La barra de volumen
+     sigue siendo una sola, esa no se duplica. */
+  var toggles = Array.prototype.slice.call(document.querySelectorAll(".audio-control__toggle"));
   var slider = document.querySelector(".audio-control__level");
-  if (!toggle || !slider) return;
+  if (!toggles.length || !slider) return;
 
   var state = { muted: true, volume: 0.8 };
 
@@ -40,8 +46,10 @@
   }
 
   function paint() {
-    toggle.setAttribute("aria-pressed", String(!state.muted));
-    toggle.setAttribute("aria-label", state.muted ? "Turn on site sound" : "Mute site sound");
+    toggles.forEach(function (toggle) {
+      toggle.setAttribute("aria-pressed", String(!state.muted));
+      toggle.setAttribute("aria-label", state.muted ? "Turn on site sound" : "Mute site sound");
+    });
     var pct = Math.round(state.volume * 100);
     /* La barra queda siempre activa (nunca "disabled"): arrastrarla es la
        forma mas intuitiva de activar el sonido, ademas del boton. Un input
@@ -85,8 +93,10 @@
     subscribe: function (fn) { listeners.push(fn); }
   };
 
-  toggle.addEventListener("click", function () {
-    window.AudioBus.setMuted(!state.muted);
+  toggles.forEach(function (toggle) {
+    toggle.addEventListener("click", function () {
+      window.AudioBus.setMuted(!state.muted);
+    });
   });
 
   slider.addEventListener("input", function () {

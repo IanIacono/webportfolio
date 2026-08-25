@@ -141,6 +141,39 @@
 
 
   /* ======================================================================
+     VIDEOS DE YOUTUBE EN LAS PAGINAS DE PROYECTO
+     Un iframe de YouTube sigue sonando de fondo si te vas a otro proyecto
+     mientras esta reproduciendose (la seccion vieja solo queda "hidden",
+     nunca se destruye). No hay manera de pausarlo desde afuera sin la API
+     de YouTube, asi que se lo manda a about:blank al salir -- mismo efecto
+     que si la pagina se hubiera cerrado. El src original se guarda en
+     data-embed-src y se lo restaura recien al volver a entrar a esa misma
+     pagina, nunca antes: estos iframes tienen loading="lazy", y pedirles
+     el src real mientras su seccion todavia esta "hidden" (display:none)
+     hace que el navegador posponga la carga indefinidamente -- ni siquiera
+     se termina pidiendo al volver. Restaurando el src justo cuando la
+     seccion ya esta visible (el "page.hidden = false" en main.js corre
+     antes de este evento) el navegador lo pide de una, como la primera vez.
+     Los de Spotify (.embed--audio) quedan afuera: solo se pidio esto para
+     YouTube. */
+  var ytFrames = Array.prototype.slice.call(document.querySelectorAll(".embed:not(.embed--audio) iframe"));
+  ytFrames.forEach(function (frame) { frame.dataset.embedSrc = frame.src; });
+
+  document.addEventListener("page:change", function (event) {
+    var activePage = event.detail.page;
+    ytFrames.forEach(function (frame) {
+      var original = frame.dataset.embedSrc;
+      if (!original) return;
+      if (activePage.contains(frame)) {
+        if (frame.src !== original) frame.src = original;
+      } else if (frame.src !== "about:blank") {
+        frame.src = "about:blank";
+      }
+    });
+  });
+
+
+  /* ======================================================================
      REEL DEL INICIO
      Arranca solo cuando esta a la vista, se pausa al salir de pantalla, y
      tiene boton de pausar/reanudar y una linea de tiempo para saltar a un
@@ -160,9 +193,42 @@
     var heroInView = false;
     var heroUserPaused = false;
 
-    /* En celular no hay "hover": la barra de controles queda siempre
-       visible, si no nadie encontraria la linea de tiempo. */
-    if (isTouch && heroControls) heroControls.classList.add("is-touch");
+    /* En celular no hay "hover": los controles se muestran al tocar el
+       video (no los controles mismos, para no interferir con lo que ya
+       hacen el boton y la barra) y se esconden solos a los 3s si el
+       video sigue reproduciendose -- si esta en pausa se quedan, para
+       poder encontrar como retomarlo. Toca de nuevo el video para
+       esconderlos antes de tiempo. */
+    if (isTouch && heroControls) {
+      var heroControlsHideTimer = null;
+      var showHeroControls = function () {
+        heroControls.classList.add("is-touch");
+        clearTimeout(heroControlsHideTimer);
+        if (!hero.paused) {
+          heroControlsHideTimer = setTimeout(function () {
+            heroControls.classList.remove("is-touch");
+          }, 3000);
+        }
+      };
+      var hideHeroControls = function () {
+        heroControls.classList.remove("is-touch");
+        clearTimeout(heroControlsHideTimer);
+      };
+      heroRoot.addEventListener("click", function (e) {
+        if (heroControls.contains(e.target)) return;
+        if (heroControls.classList.contains("is-touch")) hideHeroControls();
+        else showHeroControls();
+      });
+      /* Reinicia la cuenta si estan tocando la barra o el boton, asi no
+         se esconden a mitad de un arrastre. */
+      heroControls.addEventListener("pointerdown", function () {
+        if (heroControls.classList.contains("is-touch")) showHeroControls();
+      });
+      hero.addEventListener("pause", showHeroControls);
+      hero.addEventListener("play", function () {
+        if (heroControls.classList.contains("is-touch")) showHeroControls();
+      });
+    }
 
     var heroLoad = function () {
       if (heroLoaded) return;
@@ -310,7 +376,6 @@
     (function () {
       var bg = document.querySelector("[data-hero-bg]");
       if (!bg) return;
-      if (window.matchMedia("(max-width: 768px)").matches) { bg.removeAttribute("src"); return; }
 
       var rafId = null;
 
