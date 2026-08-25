@@ -1388,3 +1388,22 @@ de 8 segundos: la página se muestra igual, nunca se queda trabada
 esperando. Para quien tiene activada la preferencia de "menos
 movimiento" del sistema, o si el JavaScript está desactivado, la
 página se muestra directamente sin blur ni pantalla de carga.
+
+**117. Video propio al pasar el mouse por The Carbon Case, Lumia, Red
+Bull Batallas y Detrás del Puesto.** Me pasaste los 4 archivos, los
+comprimí (sin audio, ya que se reproducen en silencio; el peso final
+quedó entre 100KB y 1.3MB cada uno) y los conecté a la tarjeta de
+cada proyecto en la grilla. El resto de los proyectos sigue mostrando
+el reel general de placeholder hasta que tengan el suyo propio.
+
+**118. Detrás del Puesto: cambié el video adjuntado por el nuevo que
+me pasaste.**
+
+**119. El mensaje de la pantalla de carga ahora dice "Turn the audio
+on for a better experience."**
+
+**120. El botón de sonido (a la izquierda de la barra de volumen)
+titila en violeta y vibra un poco cada tanto mientras el sitio está
+silenciado**, para llamar la atención sobre que hay que prenderlo.
+Se detiene solo con prender el sonido, o mientras alguien lo está
+enfocando o le pasa el mouse por arriba.
