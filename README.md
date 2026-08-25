@@ -1487,3 +1487,6 @@ originales ya venían con el audio a ~317kbps, la solución real era
 más simple: copiar esa pista de audio tal cual, sin tocarla, en vez
 de recomprimirla — así queda exactamente igual de pesada y de buena
 que el archivo que mandaste, sin ninguna pérdida de calidad.
+
+**134. Lumia también tiene la etiqueta "Upcoming release"** debajo
+del rol, igual que The Carbon Case.
