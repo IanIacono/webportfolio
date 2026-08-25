@@ -1469,7 +1469,17 @@ sigue entrando bien.
 **131. Nuevo video propio al pasar el mouse por The Carbon Case**,
 reemplaza al que había.
 
-**132. El audio de los 9 videos de hover ahora es el original, sin
+**132. Nuevo demo reel principal, en 1080p.** Reemplaza al que
+había (720p, 3.8MB) por el que exportaste siguiendo la configuración
+que te pasé (H.264, VBR 2 pasadas, 1.8 Mbps de video + 320kbps de
+audio) — quedó en 25.4MB para 1 minuto 36 segundos, ya viene con el
+`moov` antes que los datos (arranca rápido, sin tener que esperar a
+bajar el archivo entero) así que no hizo falta tocarlo más. Mismo
+nombre de archivo que el anterior (`reel.mp4`), así que no hizo falta
+cambiar nada del código: hero, fondo desenfocado y precarga siguen
+apuntando al mismo lugar de siempre.
+
+**133. El audio de los 9 videos de hover ahora es el original, sin
 recomprimir.** Antes lo recomprimía a 96kbps (y despues probé pedirle
 320kbps al codificador, pero el codificador de audio de este entorno
 no llega a esa cifra por más que se la pida). Como los archivos
