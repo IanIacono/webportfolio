@@ -1407,3 +1407,37 @@ titila en violeta y vibra un poco cada tanto mientras el sitio está
 silenciado**, para llamar la atención sobre que hay que prenderlo.
 Se detiene solo con prender el sonido, o mientras alguien lo está
 enfocando o le pasa el mouse por arriba.
+
+**121. Los videos de hover ahora suenan de verdad.** El problema no
+era el sitio: el mecanismo que activa el sonido de la tarjeta que
+estás mirando ya funcionaba bien, pero los 4 archivos que subí la
+vez pasada los había comprimido sin pista de audio (pensando que,
+como arrancan en silencio, no hacía falta) — sin audio en el archivo
+no hay nada que activar. Los volví a comprimir con el audio adentro
+(quedaron entre 400KB y 1.4MB) y agregué también el de Juleriaque,
+que faltaba.
+
+**122. Nueva tapa para Polvora Podcast** (el logo en dorado sobre
+fondo bordó que me pasaste), reemplaza la captura del video que
+había antes.
+
+**123. Playbook: la tapa ya no corta el texto.** Como la foto es
+cuadrada y la tarjeta es panorámica (16:9), mostrar la imagen
+completa sin recortar significa agrandar mucho el ancho: le agregué
+franjas negras a los costados en vez de recortarla, y como la foto
+ya tenía fondo negro, no se notan — ahora entran "Anita & Sebas",
+"Playbook" y "Presentado por Proteína" completos.
+
+**124. The Carbon Case: arreglado el recorte que cortaba el "THE".**
+Medí a píxel dónde arranca el texto en la imagen original — el
+recorte de la tarjeta empezaba unos pocos píxeles más abajo del
+principio de la palabra "THE" y se comía el borde de arriba. Ajusté
+el punto de enfoque del recorte para que arranque un poco antes, y
+ahora entra el título completo.
+
+**125. Repasé el peso de las imágenes de cara a esta etapa final:**
+achiqué un poco The Carbon Case y Te Lo Aseguro (eran las más
+pesadas del sitio, sin que se note la diferencia a simple vista) y
+borré del todo los archivos de imagen que ya habían quedado sin uso
+(Koupe y una versión vieja de Detrás del Puesto que nadie
+referenciaba).
