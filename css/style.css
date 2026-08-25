@@ -547,12 +547,12 @@ p { text-wrap: pretty; }
 }
 
 /* Mientras el sitio esta silenciado, el boton titila en violeta y
-   vibra un poco cada tanto, invitando a activar el sonido -- se
+   vibra fuerte y seguido, invitando a activar el sonido -- se
    detiene solo al prenderlo (aria-pressed pasa a "true", lo pinta
    audio.js) o si alguien lo esta enfocando o pasandole el mouse por
    arriba, para no competir con esa interaccion real. */
 .audio-control__toggle[aria-pressed="false"] {
-  animation: toggle-attention 3s ease-in-out infinite;
+  animation: toggle-attention 1.4s ease-in-out infinite;
 }
 .audio-control__toggle[aria-pressed="false"]:hover,
 .audio-control__toggle[aria-pressed="false"]:focus-visible {
@@ -564,15 +564,18 @@ p { text-wrap: pretty; }
     box-shadow: 0 0 0 0 transparent;
     transform: translateX(0);
   }
-  3%  { transform: translateX(-2px); }
-  6%  { transform: translateX(2px); }
-  9%  { transform: translateX(-1px); }
-  12% {
+  2%  { transform: translateX(-3px); }
+  4%  { transform: translateX(3px); }
+  6%  { transform: translateX(-3px); }
+  8%  { transform: translateX(3px); }
+  10% { transform: translateX(-2px); }
+  12% { transform: translateX(2px); }
+  14% {
     transform: translateX(0);
     border-color: var(--c-accent);
-    box-shadow: 0 0 16px 2px color-mix(in srgb, var(--c-accent) 60%, transparent);
+    box-shadow: 0 0 18px 3px color-mix(in srgb, var(--c-accent) 65%, transparent);
   }
-  30% {
+  40% {
     border-color: var(--c-line-strong);
     box-shadow: 0 0 0 0 transparent;
   }

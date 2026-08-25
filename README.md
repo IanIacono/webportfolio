@@ -1453,3 +1453,8 @@ tienen su propio hover en vez del reel de relleno.
 **128. The Carbon Case: agregué una etiqueta de "Upcoming release"
 debajo del rol**, y un segundo video de YouTube debajo del que ya
 estaba.
+
+**129. El botón de sonido silenciado vibra más seguido y más
+fuerte.** Antes titilaba cada 3 segundos con un temblor suave; ahora
+el ciclo completo dura 1.4 segundos y la sacudida es más marcada
+(más recorrido, más rebotes), para que llame más la atención.
