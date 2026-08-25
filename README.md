@@ -1468,3 +1468,12 @@ sigue entrando bien.
 
 **131. Nuevo video propio al pasar el mouse por The Carbon Case**,
 reemplaza al que había.
+
+**132. El audio de los 9 videos de hover ahora es el original, sin
+recomprimir.** Antes lo recomprimía a 96kbps (y despues probé pedirle
+320kbps al codificador, pero el codificador de audio de este entorno
+no llega a esa cifra por más que se la pida). Como los archivos
+originales ya venían con el audio a ~317kbps, la solución real era
+más simple: copiar esa pista de audio tal cual, sin tocarla, en vez
+de recomprimirla — así queda exactamente igual de pesada y de buena
+que el archivo que mandaste, sin ninguna pérdida de calidad.
