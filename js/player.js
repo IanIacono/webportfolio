@@ -346,5 +346,72 @@
       hero.addEventListener("seeked", function () { align(true); });
       hero.addEventListener("loadeddata", function () { bg.load(); });
     })();
+
+    /* ====================================================================
+       PANTALLA DE CARGA INICIAL
+       Tapa toda la pagina (ver .site-blur en css/style.css) con blur + 3
+       puntitos hasta que el reel y el video de cada tarjeta de proyecto
+       (las dos grillas, Sound y Audiovisual, esten a la vista o no)
+       esten listos para reproducirse -- asi nunca se ve la pagina "a
+       medio cargar". El blur se va reduciendo de a poco, no todo o
+       nada, a medida que cada video queda listo. Un tope maximo de
+       espera evita que un video lento (o roto) deje la pagina trabada. */
+    (function () {
+      var blurWrap = document.querySelector("[data-site-blur]");
+      var preloader = document.querySelector("[data-preloader]");
+      if (!blurWrap) return;
+
+      if (reduceMotion.matches) {
+        blurWrap.classList.add("is-ready");
+        if (preloader) preloader.hidden = true;
+        return;
+      }
+
+      var pending = [hero].concat(
+        tileLinks.map(function (link) { return link.querySelector(".tile__video"); })
+      ).filter(Boolean);
+      var total = pending.length;
+      var ready = 0;
+      var revealed = false;
+
+      var reveal = function () {
+        if (revealed) return;
+        revealed = true;
+        blurWrap.classList.add("is-ready");
+        if (preloader) {
+          preloader.classList.add("is-hidden");
+          window.setTimeout(function () { preloader.hidden = true; }, 600);
+        }
+        /* El reel puede haber quedado con datos bufferizados (o incluso
+           en reproduccion, si alguien lo apuro a mano) mientras estaba
+           tapado -- se lo manda de vuelta al arranque para que la
+           primera imagen que se vea, ya destapada, sea siempre 0:00. */
+        try { hero.currentTime = 0; } catch (e) {}
+        if (!heroUserPaused) playHero();
+      };
+
+      var mark = function () {
+        ready++;
+        blurWrap.style.setProperty("--load-ratio", String(ready / total));
+        if (ready >= total) reveal();
+      };
+
+      if (!total) {
+        reveal();
+      } else {
+        pending.forEach(function (v) {
+          if (v.readyState >= 3) { mark(); return; }
+          var done = function () {
+            v.removeEventListener("canplay", done);
+            v.removeEventListener("error", done);
+            mark();
+          };
+          v.addEventListener("canplay", done);
+          v.addEventListener("error", done);
+          loadEl(v);
+        });
+        window.setTimeout(reveal, 8000);
+      }
+    })();
   }
 })();

@@ -1372,3 +1372,19 @@ logo diseñado): "Te Lo Aseguro" y "Polvora Podcast".
   Si en algún momento conseguís una foto de mayor calidad (por
   ejemplo la que hayan usado internamente antes de subirla a
   YouTube), mandámela y la reemplazo.
+
+**116. Pantalla de carga antes de ver la página, en vez del spinner
+chico de antes.** Apenas entrás al sitio, la página entera arranca
+desenfocada, con un mensaje ("Turn your volume up. This is a sound
+portfolio.") y tres puntitos animados encima, hasta que el reel y el
+video de cada tarjeta de proyecto (Sound y Audiovisual, aunque no se
+estén viendo en ese momento) están listos para reproducirse. El
+desenfoque se va destapando de a poco, no todo junto, a medida que
+cada video queda listo. Cuando todo terminó de cargar, se saca el
+blur y la pantalla de carga juntos, y el reel arranca siempre desde
+0:00, nunca desde donde sea que haya quedado mientras estaba tapado.
+Si algo tarda demasiado (conexión lenta, un video roto), hay un tope
+de 8 segundos: la página se muestra igual, nunca se queda trabada
+esperando. Para quien tiene activada la preferencia de "menos
+movimiento" del sistema, o si el JavaScript está desactivado, la
+página se muestra directamente sin blur ni pantalla de carga.

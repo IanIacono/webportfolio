@@ -57,11 +57,31 @@
        una subcarpeta (GitHub Pages sirve en usuario.github.io/repo/, no en
        la raiz) sin tener que tocar nada segun donde este colgado. -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Sin JavaScript no hay forma de sacar el blur ni la pantalla de
+       carga de aca abajo -- sin este escape quedarian puestos para
+       siempre. Con JS activado (el caso normal) esta regla ni se nota,
+       el blur lo maneja el CSS/JS de mas abajo. -->
+  <noscript><style>.site-blur{filter:none!important}[data-preloader]{display:none!important}</style></noscript>
 </head>
 
 <body data-site-name="Ian Iacono">
 
   <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- PANTALLA DE CARGA INICIAL. Tapa la pagina (ver .site-blur, la capa
+       que envuelve la barra de navegacion + el contenido + el pie, mas
+       abajo) con un blur que se va destapando a medida que el reel y el
+       video de cada tarjeta de proyecto quedan listos para reproducirse
+       (ver PRELOADER en js/player.js). Vive afuera de .site-blur a
+       proposito, para que el cartel y los puntitos se vean siempre
+       nitidos mientras el fondo todavia esta borroso. -->
+  <div class="preloader" data-preloader aria-hidden="true">
+    <p class="preloader__msg">Turn your volume up. This is a sound portfolio.</p>
+    <div class="preloader__dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <div class="site-blur" data-site-blur>
 
     <!-- ==========================================================================
          BARRA DE NAVEGACION  —  aparece fija arriba en todas las paginas
@@ -1021,6 +1041,8 @@
       <span class="site-footer__copy">&copy; 2026</span>
     </div>
   </footer>
+
+  </div><!-- /.site-blur -->
 
     <!-- Scripts al final para que la pagina se vea antes de cargarlos -->
   <script src="js/main.js" defer></script>
