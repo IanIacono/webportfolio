@@ -912,6 +912,22 @@ p { text-wrap: pretty; }
   .preloader { display: none !important; }
 }
 
+/* Etiqueta chica debajo del rol de un proyecto, para casos como "todavia
+   no se estreno" -- ver project__badge en build.py (project_page). */
+.project__badge {
+  display: inline-block;
+  margin: var(--sp-2) 0 0;
+  padding: 0.3em 0.85em;
+  border: 1px solid var(--c-accent);
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--c-accent) 14%, transparent);
+  color: var(--c-accent-soft);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
 /* "See Projects": solo tiene sentido en celular, donde no se ve la grilla
    de entrada. En desktop la grilla ya asoma debajo del reel, asi que se
    oculta (ver seccion 17, responsive). */

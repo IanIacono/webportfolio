@@ -1441,3 +1441,15 @@ pesadas del sitio, sin que se note la diferencia a simple vista) y
 borré del todo los archivos de imagen que ya habían quedado sin uso
 (Koupe y una versión vieja de Detrás del Puesto que nadie
 referenciaba).
+
+**126. Nueva tapa para Red Bull Batallas** (el logo que me pasaste),
+reemplaza la portada anterior.
+
+**127. Video propio al pasar el mouse por Rèport Travel Media, Te Lo
+Aseguro, Polvora Podcast y Playbook.** Ya con esto los nueve
+proyectos con video (todos menos La Llamada Fatal, que es solo audio)
+tienen su propio hover en vez del reel de relleno.
+
+**128. The Carbon Case: agregué una etiqueta de "Upcoming release"
+debajo del rol**, y un segundo video de YouTube debajo del que ya
+estaba.
