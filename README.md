@@ -1503,3 +1503,21 @@ todavía existía.
 barritas naranjas** — ahora es el gris oscuro violáceo del sitio
 (el mismo fondo que usa toda la página) con las barritas en violeta,
 el mismo color que usé en la imagen vieja del reel.
+
+**137. Si el ícono seguía viéndose negro y naranja, no era que el
+archivo estuviera mal** (ya lo había cambiado bien) **— era el
+navegador, que cachea el ícono de la pestaña muchísimo más agresivo
+que el resto de la página** y a veces ni con un refresh fuerte lo
+vuelve a pedir. Le agregué un "?v=2" al final de los tres links del
+ícono para que el navegador lo trate como un archivo distinto y lo
+baje de nuevo — la próxima vez que se edite el ícono, ese número hay
+que subirlo de nuevo. De paso corregí el color de la barra del
+navegador en celular (`theme-color`), que había quedado con el negro
+viejo en vez del gris oscuro actual.
+
+**138. La Llamada Fatal ya no muestra ningún video al pasar el
+mouse en la tarjeta** — se queda quieta en la portada. Antes cuando
+un proyecto no tenía su propio video de hover, mostraba el reel
+general de relleno, pero para este proyecto (que es solo audio) no
+pegaba. Cuando me pases el audio armamos ese hover con la animación
+de soundwave que hablamos.

@@ -35,13 +35,18 @@
   <meta name="twitter:description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, and La Llamada Fatal.">
   <meta name="twitter:image" content="https://ianiacono.vercel.app/assets/img/og.jpg">      <!-- DOMINIO -->
 
-  <meta name="theme-color" content="#08090a">
+  <meta name="theme-color" content="#0a0910">
   <meta name="color-scheme" content="dark">
 
-  <!-- Iconos de la pestana del navegador y del celular -->
-  <link rel="icon" href="favicon.ico" sizes="32x32">
-  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <!-- Iconos de la pestana del navegador y del celular. El "?v=2" al
+       final es a proposito: los navegadores cachean el favicon mucho
+       mas agresivo que el resto de la pagina (a veces no lo vuelven a
+       pedir ni con un refresh fuerte) -- al cambiarle los colores hacia
+       falta esto para que lo trate como un archivo distinto y lo baje
+       de nuevo. La proxima vez que se edite el icono, subir este numero. -->
+  <link rel="icon" href="favicon.ico?v=2" sizes="32x32">
+  <link rel="icon" href="assets/img/icon.svg?v=2" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
 
   <!-- Las tipografias estan en este mismo sitio: no dependemos de nadie -->
   <link rel="preload" href="assets/fonts/spacegrotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -280,8 +285,7 @@
                    srcset="assets/img/la-llamada-fatal-480.webp 480w, assets/img/la-llamada-fatal-960.webp 960w, assets/img/la-llamada-fatal.webp 640w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
                    width="640" height="640" alt="La Llamada Fatal podcast cover: a red telephone on a dark background" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/reel.mp4" muted loop playsinline preload="none"
-                     width="640" height="640" aria-hidden="true" tabindex="-1"></video>
+              
             </div>
             <div class="tile__meta">
               <div>
