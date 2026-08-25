@@ -1490,3 +1490,16 @@ que el archivo que mandaste, sin ninguna pérdida de calidad.
 
 **134. Lumia también tiene la etiqueta "Upcoming release"** debajo
 del rol, igual que The Carbon Case.
+
+**135. La pestaña del navegador ahora dice "Ian Iacono — Portfolio"**
+en vez de "Sound Portfolio" — y en cualquier proyecto dice "Ian
+Iacono — [nombre del proyecto]" (el nombre va siempre primero, así
+se identifica el sitio de un vistazo si tenés varias pestañas
+abiertas). De paso corregí una mención vieja a "Koupe" que había
+quedado en la descripción para Google/redes, de cuando ese proyecto
+todavía existía.
+
+**136. El ícono de la pestaña (favicon) ya no es negro con las
+barritas naranjas** — ahora es el gris oscuro violáceo del sitio
+(el mismo fondo que usa toda la página) con las barritas en violeta,
+el mismo color que usé en la imagen vieja del reel.

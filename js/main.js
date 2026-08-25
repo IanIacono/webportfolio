@@ -68,9 +68,12 @@
       next.classList.add("page-enter");
     }
 
-    /* El titulo de la pestana del navegador acompana la pagina */
+    /* El titulo de la pestana del navegador acompana la pagina -- el
+       nombre va siempre primero (Ian Iacono — Portfolio / Ian Iacono —
+       The Carbon Case), asi la pestana identifica el sitio de un vistazo
+       aunque haya varias pestanas abiertas. */
     var pageTitle = next.dataset.title;
-    document.title = pageTitle ? pageTitle + " — " + siteName : siteName;
+    document.title = pageTitle ? siteName + " — " + pageTitle : siteName;
 
     document.dispatchEvent(new CustomEvent("page:change", { detail: { id: next.id, page: next } }));
 
