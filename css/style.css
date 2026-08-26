@@ -449,9 +449,12 @@ p { text-wrap: pretty; }
   padding-inline: var(--sp-3);
   /* Antes eran mas chicos y livianos que .nav__brand-role (el subtitulo
      de arriba) -- se leian como una nota al pie en vez de una barra de
-     navegacion. Ahora son claramente mas grandes y mas pesados que el
-     subtitulo, para que destaquen como corresponde a links reales. */
-  font-size: var(--fs-sm);
+     navegacion. Mas grandes y mas pesados que el subtitulo, para que
+     destaquen como corresponde a links reales -- pero sin pasarse: un
+     salto mas grande (a --fs-sm) hacia mas ancho el bloque de la derecha
+     y se metia contra el nombre grande centrado en pantallas medianas
+     (~1366px, ver el comentario de .nav__brand-name mas abajo). */
+  font-size: var(--fs-xs);
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -1900,17 +1903,13 @@ p { text-wrap: pretty; }
   /* Espacio ENTRE las dos filas de tarjetas (ej.: entre la fila de
      arriba y la fila de abajo, donde esta "La Llamada Fatal"). */
   #projects .grid { row-gap: var(--sp-4); }
-  /* Si con los margenes de arriba todavia no entra la segunda fila
-     completa en pantallas mas bajas, esto achica un poco las tarjetas
-     mismas (ancho, y por lo tanto tambien alto, ya que las imagenes son
-     16:9) -- SOLO las imagenes/videos de las tarjetas, nunca los
-     titulos debajo (esos quedan con su tamano de letra de siempre). Un
-     94% deja las tarjetas visiblemente iguales, no es un achique
-     drastico. */
-  #projects .grid {
-    max-width: 94%;
-    margin-inline: auto;
-  }
+  /* OJO: un intento anterior le puso "max-width: 94%" a esta grilla para
+     achicar las tarjetas un poco -- en vez de un achique leve, termino
+     achicandolas muchisimo mas de lo esperado (interaccion rara con
+     .portfolio-panels, que tambien es un grid). Se saco por completo:
+     si "La Llamada Fatal" sigue sin entrar en tu pantalla, avisame el
+     alto de tu ventana y lo resolvemos con otro numero, no con este
+     mecanismo. */
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
