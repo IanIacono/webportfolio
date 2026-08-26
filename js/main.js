@@ -442,7 +442,18 @@
         if (snapCancelled) { snapAnimating = false; return; }
         if (startTime === null) startTime = now;
         var progress = Math.min(1, (now - startTime) / duration);
-        window.scrollTo(0, startY + delta * easeInOutCubic(progress));
+        /* "behavior: instant" es clave aca -- css/style.css pone
+           "scroll-behavior: smooth" en el <html> (para los links con
+           ancla). Sin este objeto, scrollTo(x, y) hereda ese "smooth" del
+           CSS y el navegador intenta animar CADA UNO de estos ~60
+           llamados por segundo por su cuenta, encima de la curva propia
+           de aca abajo -- eso es lo que se sentia tironeado/brusco en vez
+           de fluido, y lo que dejaba scroll "trabado" un rato despues de
+           soltar la rueda (el navegador seguia terminando animaciones
+           viejas de a una). Con "instant" cada cuadro salta directo al
+           punto que ya calculo easeInOutCubic, sin animacion extra
+           superpuesta -- la unica curva que corre es la de esta funcion. */
+        window.scrollTo({ top: startY + delta * easeInOutCubic(progress), left: 0, behavior: "instant" });
         if (progress < 1) {
           requestAnimationFrame(step);
         } else {

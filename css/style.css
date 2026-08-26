@@ -448,29 +448,27 @@ p { text-wrap: pretty; }
 }
 
 /* Copia movil del boton de sonido: mismas reglas de titileo/vibrado que
-   el del header (comparten la clase .audio-control__toggle). Ya NO vive
-   dentro de .nav__brand (ver index.html): ese bloque es position:fixed,
-   asi que flotaba sobre el reel al scrollear en vez de quedarse quieto
-   en su lugar. Ahora es hijo directo de .hero (position:relative, ver
-   "07. HERO / REEL") y se ancla ahi con position:absolute -- se queda
-   fijo respecto al reel y se va con el al scrollear, en vez de flotar
-   con el header. El selector combinado (dos clases, no una) es a
-   proposito: .audio-control__toggle ya trae "display:inline-flex" de
-   fondo mas abajo en este archivo, y con la misma especificidad (una
-   clase contra una clase) esa regla posterior le ganaba a esta por
-   orden de aparicion, asi que el boton quedaba visible tambien en
-   desktop. */
+   el del header (comparten la clase .audio-control__toggle), centrada,
+   debajo de los links. Vuelve a vivir dentro de .nav__brand (ver
+   index.html): la probamos afuera, anclada al reel, pero el nombre, el
+   subtitulo, los links Y este boton tienen que ser un solo bloque fijo
+   que nunca se mueve mientras esta visible -- ver mas abajo, en el
+   media query, el ajuste para que ese bloque ya no se encoja/desplace al
+   scrollear, solo aparezca y desaparezca en su lugar. El selector
+   combinado (dos clases, no una) es a proposito: .audio-control__toggle
+   ya trae "display:inline-flex" de fondo mas abajo en este archivo, y
+   con la misma especificidad (una clase contra una clase) esa regla
+   posterior le ganaba a esta por orden de aparicion, asi que el boton
+   quedaba visible tambien en desktop. */
 .audio-control__toggle.nav__brand-audio {
   display: none;
+  margin: var(--sp-5) auto 0;
 }
 @media (max-width: 900px) {
   .nav__brand-links { display: flex; }
   .audio-control__toggle.nav__brand-audio {
     display: inline-flex;
-    position: absolute;
-    top: calc(var(--hero-top-clearance) + var(--sp-4));
-    right: var(--sp-4);
-    z-index: 2;
+    margin-top: var(--sp-7);
   }
 }
 
@@ -535,6 +533,14 @@ p { text-wrap: pretty; }
               color var(--dur) var(--ease),
               box-shadow var(--dur) var(--ease);
 }
+/* El boton del header (el de la barra compacta/.nav__right, con la barra
+   de volumen al lado) un poco mas chico que el tamano base de arriba --
+   la copia de .nav__brand (la de la bienvenida movil) se queda con el
+   tamano original. */
+.nav__right .audio-control__toggle {
+  width: calc(var(--tap) - 2px);
+  height: calc(var(--tap) - 2px);
+}
 /* Escopado a "hover:hover" a proposito: en celular/tablet, tocar el boton
    dispara :hover igual que un mouse y el navegador lo deja "pegado" hasta
    el proximo toque en otro lado -- sin este escope, volver a mutear se
@@ -580,30 +586,26 @@ p { text-wrap: pretty; }
   /* Mismo motivo que en aria-pressed="true": que el swap de vuelta a
      negro/violeta sea instantaneo, a la par del icono. */
   transition-duration: 0s;
-  animation: toggle-attention 3s ease-in-out infinite;
+  animation: toggle-attention 1.5s ease-in-out infinite;
 }
 .audio-control__toggle[aria-pressed="false"]:hover,
 .audio-control__toggle[aria-pressed="false"]:focus-visible {
   animation-play-state: paused;
 }
-/* El vaiven antes pasaba por sus 6 pasos en apenas 2%-12% del ciclo -- a
-   cualquier duracion, eso se siente como un zumbido rapido (motor de
-   celular), no una vibracion lenta. Con menos pasos (4) repartidos en un
-   tramo bien mas ancho (hasta 32%) cada movimiento dura mucho mas, y se
-   percibe como un vaiven pausado de verdad en vez de un buzz. */
+/* Ni vaiven de lado a lado ni titileo rapido: ahora gira hasta 45 grados
+   y vuelve a su lugar, una sola vez por ciclo -- al doble de velocidad
+   del intento anterior (1.5s en vez de 3s). */
 @keyframes toggle-attention {
   0%, 100% {
     box-shadow: 0 0 0 0 transparent;
-    transform: translateX(0);
+    transform: rotate(0deg);
   }
-  8%  { transform: translateX(-3px); }
-  16% { transform: translateX(3px); }
-  24% { transform: translateX(-2px); }
-  32% {
-    transform: translateX(0);
+  20% { transform: rotate(45deg); }
+  40% {
+    transform: rotate(0deg);
     box-shadow: 0 0 18px 3px color-mix(in srgb, var(--c-accent) 65%, transparent);
   }
-  60% {
+  65% {
     box-shadow: 0 0 0 0 transparent;
   }
 }
@@ -1723,33 +1725,47 @@ p { text-wrap: pretty; }
      Mas padding acá empuja todo el bloque hacia abajo sin tocar la
      posicion del reel (son independientes, ver comentario de arriba).
 
-     Con esto ademas la barra pasa de su alto normal a "is-stuck" (0 de
-     padding) recorriendo mucha mas distancia que en escritorio -- con
-     la misma duracion de transicion (--dur-slow, 250ms) ese recorrido
-     mas largo se sentia repentino en vez de gradual. Una transicion
-     propia, mas lenta solo aca, lo resuelve sin tocar la de escritorio. */
+     El nombre/subtitulo/links/boton NUNCA se encogen ni se desplazan
+     mientras estan a la vista -- eso fue lo que se sentia mal antes (se
+     "movian" al scrollear). Ahora el cambio es secuencial, en dos mitades
+     de 450ms cada una (900ms en total):
+       1. 0-450ms: el bloque que se ve se apaga (opacity, sin moverse,
+          con el padding todavia en su tamano de origen).
+       2. a los 450ms, instantaneo: el padding salta al tamano del otro
+          estado -- pasa mientras los dos bloques estan invisibles, asi
+          que no se ve.
+       3. 450-900ms: el bloque nuevo se prende (opacity), ya en su
+          posicion final, sin moverse tampoco.
+     Por eso el padding-block usa "0s" de duracion (nunca se anima/desliza
+     solo, salta) con un delay de 450ms (siempre pasa a mitad del total) --
+     y por eso, mas abajo, .nav__brand y .nav__right tienen cada uno un
+     delay distinto en su opacity segun si estan apareciendo (arrancan
+     recien a los 450ms) o desapareciendo (arrancan ya, en 0ms). */
   .nav {
     padding-block: 7.25rem;
-    transition: padding-block 450ms var(--ease),
+    transition: padding-block 0s linear 450ms,
+                background 450ms var(--ease),
+                border-color 450ms var(--ease);
+  }
+  .nav.is-stuck {
+    transition: padding-block 0s linear 450ms,
                 background 450ms var(--ease),
                 border-color 450ms var(--ease);
   }
 
-  /* La marca grande y los links/volumen (mas abajo, .nav__right) se
-     desvanecen en cruz con la misma duracion de arriba (450ms): antes
-     seguian con var(--dur-slow), 250ms, mas corta -- el texto terminaba
-     su fundido antes de que la barra terminara de encogerse, y ese resto
-     de recorrido (con el contenido ya asentado) se sentia como un salto
-     en vez de un solo movimiento fluido.
-     La curva tambien cambia a proposito: "ease-in-out" (simetrica, arranca
-     y termina despacio) en vez de var(--ease) (pensada para movimiento de
-     UI que arranca rapido) -- esta se lee mas como un fundido de
-     verdad, "fade in/fade out", que como una animacion de interfaz. */
+  /* Curva simetrica ("ease-in-out", arranca y termina despacio) en vez de
+     var(--ease) (pensada para movimiento de UI que arranca rapido) --
+     esta se lee mas como un fundido de verdad, "fade in/fade out". */
   .nav__brand {
-    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
+    /* Apareciendo (dejo de estar "stuck"): recien empieza a los 450ms,
+       una vez que .nav__right ya termino de apagarse y el padding ya
+       salto a su tamano grande -- se prende ya en su posicion final. */
+    transition: opacity 450ms ease-in-out 450ms, visibility 0s linear 450ms;
   }
   .nav.is-stuck .nav__brand {
-    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
+    /* Desapareciendo (paso a "stuck"): arranca ya, en 0ms -- se apaga
+       en su lugar, mientras el padding todavia esta grande. */
+    transition: opacity 450ms ease-in-out 0s, visibility 0s linear 450ms;
   }
 
   /* En desktop el reel se ancla arriba (align-items:flex-start en
@@ -1778,13 +1794,18 @@ p { text-wrap: pretty; }
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
+    /* Desapareciendo (dejo de estar "stuck"): arranca ya, en 0ms -- se
+       apaga en su lugar, mientras el padding todavia esta chico. */
+    transition: opacity 450ms ease-in-out 0s, visibility 0s linear 450ms;
   }
   .nav.is-stuck .nav__right {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
+    /* Apareciendo (paso a "stuck"): recien a los 450ms, una vez que
+       .nav__brand ya termino de apagarse y el padding ya salto a su
+       tamano chico -- se prende ya en su posicion final. */
+    transition: opacity 450ms ease-in-out 450ms, visibility 0s linear 450ms;
   }
 }
 
