@@ -397,89 +397,48 @@
 
 
   /* ======================================================================
-     6. SCROLL FORZADO: DEL REEL A SELECTED WORKS (SOLO ESCRITORIO)
-     Mientras se esta viendo el reel, la primera rueda del mouse/trackpad
-     hacia abajo no scrollea libre: anima un scroll propio, con una curva
-     de velocidad pareja (acelera y frena de a poco, "ease-in-out") directo
-     hasta el arranque de "Selected Works". De ahi para abajo (Contact,
-     etc.) el scroll vuelve a ser 100% libre -- el enganche es unicamente
-     para ese primer tramo, y unicamente en pantallas de mas de 900px (el
-     mismo corte que usa css/style.css para el resto de este ajuste). No
-     usa scroll-snap de CSS a proposito: el navegador no deja elegir la
-     curva ni la duracion de esa animacion, y se sentia seca/brusca en vez
-     de fluida.
-     ====================================================================== */
+     6. SCROLL FORZADO: ENTRE EL REEL Y SELECTED WORKS (SOLO ESCRITORIO)
+     Mientras se ve el reel, la rueda del mouse/trackpad hacia abajo no
+     scrollea libre: salta directo hasta el arranque de "Selected Works".
+     Al reves tambien: scrolleando para arriba mientras se esta dentro de
+     Selected Works (todavia sin llegar a Contact), vuelve directo al
+     reel. Cruzando hacia Contact (para abajo) o volviendo desde Contact
+     hacia Selected Works (para arriba), el scroll es 100% libre -- el
+     enganche es unicamente en el limite reel/Selected Works, en los dos
+     sentidos, y unicamente en pantallas de mas de 900px.
 
+     Un intento anterior reimplementaba el scroll suave a mano (con
+     requestAnimationFrame y una curva propia): se sentia trabado, porque
+     el <html> ya tiene "scroll-behavior: smooth" puesto (para los links
+     con ancla) y cada llamado de esa animacion terminaba peleando con el
+     scroll suave nativo del navegador por encima. Esta version usa
+     directamente scrollIntoView(), que es el scroll suave DEL NAVEGADOR
+     -- mas robusto y mas fluido de verdad que reinventarlo. */
+
+  var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
-  if (projectsEl && !reduceMotion.matches) {
-    var snapAnimating = false;
-    var snapCancelled = false;
+  var contactEl = document.getElementById("contact");
 
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    /* Misma cuenta que "scroll-padding-top" en css/style.css (nav-h +
-       sp-4): deja lugar para la barra fija, que a esta altura del scroll
-       ya esta en su version chica ("is-stuck"). */
-    function scrollTargetForProjects() {
-      var root = getComputedStyle(document.documentElement);
-      var pxPerRem = parseFloat(root.fontSize) || 16;
-      var navH = (parseFloat(root.getPropertyValue("--nav-h")) || 4.5) * pxPerRem;
-      var gap = (parseFloat(root.getPropertyValue("--sp-4")) || 1) * pxPerRem;
-      return window.scrollY + projectsEl.getBoundingClientRect().top - navH - gap;
-    }
-
-    function animateScrollTo(targetY, duration) {
-      var startY = window.scrollY;
-      var delta = targetY - startY;
-      if (Math.abs(delta) < 1) return;
-      var startTime = null;
-      snapAnimating = true;
-      snapCancelled = false;
-
-      function step(now) {
-        if (snapCancelled) { snapAnimating = false; return; }
-        if (startTime === null) startTime = now;
-        var progress = Math.min(1, (now - startTime) / duration);
-        /* "behavior: instant" es clave aca -- css/style.css pone
-           "scroll-behavior: smooth" en el <html> (para los links con
-           ancla). Sin este objeto, scrollTo(x, y) hereda ese "smooth" del
-           CSS y el navegador intenta animar CADA UNO de estos ~60
-           llamados por segundo por su cuenta, encima de la curva propia
-           de aca abajo -- eso es lo que se sentia tironeado/brusco en vez
-           de fluido, y lo que dejaba scroll "trabado" un rato despues de
-           soltar la rueda (el navegador seguia terminando animaciones
-           viejas de a una). Con "instant" cada cuadro salta directo al
-           punto que ya calculo easeInOutCubic, sin animacion extra
-           superpuesta -- la unica curva que corre es la de esta funcion. */
-        window.scrollTo({ top: startY + delta * easeInOutCubic(progress), left: 0, behavior: "instant" });
-        if (progress < 1) {
-          requestAnimationFrame(step);
-        } else {
-          snapAnimating = false;
-        }
-      }
-      requestAnimationFrame(step);
-    }
-
+  if (heroEl && projectsEl && !reduceMotion.matches) {
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
 
-      if (snapAnimating) {
-        /* Scrollear para arriba durante la animacion la cancela en el
-           acto, en vez de forcejear con ella -- se siente como una salida
-           de emergencia, no como si el sitio "no soltara" el scroll. */
-        if (e.deltaY < 0) { snapCancelled = true; return; }
+      var y = window.scrollY;
+      var projectsTop = projectsEl.offsetTop;
+      var contactTop = contactEl ? contactEl.offsetTop : Infinity;
+
+      if (e.deltaY > 0 && y < projectsTop - 4) {
+        /* Todavia en el reel, scrolleando para abajo: salta a Selected Works. */
         e.preventDefault();
-        return;
+        projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (e.deltaY < 0 && y >= projectsTop - 4 && y < contactTop - 4) {
+        /* Dentro de Selected Works (no llego a Contact todavia),
+           scrolleando para arriba: vuelve al reel. */
+        e.preventDefault();
+        heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-
-      if (e.deltaY <= 0) return;
-      if (window.scrollY >= projectsEl.offsetTop - 4) return;
-
-      e.preventDefault();
-      animateScrollTo(scrollTargetForProjects(), 900);
+      /* Cualquier otro caso (ya cruzando hacia/desde Contact) no se toca:
+         scroll nativo, libre. */
     }, { passive: false });
   }
 

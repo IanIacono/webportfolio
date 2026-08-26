@@ -586,26 +586,28 @@ p { text-wrap: pretty; }
   /* Mismo motivo que en aria-pressed="true": que el swap de vuelta a
      negro/violeta sea instantaneo, a la par del icono. */
   transition-duration: 0s;
-  animation: toggle-attention 1.5s ease-in-out infinite;
+  animation: toggle-attention 1.4s ease-in-out infinite;
 }
 .audio-control__toggle[aria-pressed="false"]:hover,
 .audio-control__toggle[aria-pressed="false"]:focus-visible {
   animation-play-state: paused;
 }
-/* Ni vaiven de lado a lado ni titileo rapido: ahora gira hasta 45 grados
-   y vuelve a su lugar, una sola vez por ciclo -- al doble de velocidad
-   del intento anterior (1.5s en vez de 3s). */
 @keyframes toggle-attention {
   0%, 100% {
     box-shadow: 0 0 0 0 transparent;
-    transform: rotate(0deg);
+    transform: translateX(0);
   }
-  20% { transform: rotate(45deg); }
-  40% {
-    transform: rotate(0deg);
+  2%  { transform: translateX(-3px); }
+  4%  { transform: translateX(3px); }
+  6%  { transform: translateX(-3px); }
+  8%  { transform: translateX(3px); }
+  10% { transform: translateX(-2px); }
+  12% { transform: translateX(2px); }
+  14% {
+    transform: translateX(0);
     box-shadow: 0 0 18px 3px color-mix(in srgb, var(--c-accent) 65%, transparent);
   }
-  65% {
+  40% {
     box-shadow: 0 0 0 0 transparent;
   }
 }
@@ -1725,47 +1727,32 @@ p { text-wrap: pretty; }
      Mas padding acá empuja todo el bloque hacia abajo sin tocar la
      posicion del reel (son independientes, ver comentario de arriba).
 
-     El nombre/subtitulo/links/boton NUNCA se encogen ni se desplazan
-     mientras estan a la vista -- eso fue lo que se sentia mal antes (se
-     "movian" al scrollear). Ahora el cambio es secuencial, en dos mitades
-     de 450ms cada una (900ms en total):
-       1. 0-450ms: el bloque que se ve se apaga (opacity, sin moverse,
-          con el padding todavia en su tamano de origen).
-       2. a los 450ms, instantaneo: el padding salta al tamano del otro
-          estado -- pasa mientras los dos bloques estan invisibles, asi
-          que no se ve.
-       3. 450-900ms: el bloque nuevo se prende (opacity), ya en su
-          posicion final, sin moverse tampoco.
-     Por eso el padding-block usa "0s" de duracion (nunca se anima/desliza
-     solo, salta) con un delay de 450ms (siempre pasa a mitad del total) --
-     y por eso, mas abajo, .nav__brand y .nav__right tienen cada uno un
-     delay distinto en su opacity segun si estan apareciendo (arrancan
-     recien a los 450ms) o desapareciendo (arrancan ya, en 0ms). */
-  .nav {
+     El padding-block de ESTE elemento (.nav) ya NO cambia con is-stuck en
+     este ancho -- se queda siempre en 7.25rem. Antes achicaba a 0
+     (animado, y despues probamos que saltara solo) y eso es lo que
+     causaba que el nombre/subtitulo/links/boton se sintieran "moviendose"
+     al scrollear: esos elementos se centran verticalmente DENTRO de esta
+     caja (top:50% / align-items:center), asi que cualquier cambio en su
+     alto -- animado o instantaneo -- los corre de lugar. Con el alto fijo
+     para siempre, dejan de moverse pase lo que pase; lo unico que cambia
+     al scrollear es la opacidad de que contenido se ve (mas abajo),
+     ademas del fondo/blur (eso si sigue animado, es solo un color, no
+     mueve nada). */
+  .nav, .nav.is-stuck {
     padding-block: 7.25rem;
-    transition: padding-block 0s linear 450ms,
-                background 450ms var(--ease),
-                border-color 450ms var(--ease);
-  }
-  .nav.is-stuck {
-    transition: padding-block 0s linear 450ms,
-                background 450ms var(--ease),
-                border-color 450ms var(--ease);
+    transition: background 450ms var(--ease), border-color 450ms var(--ease);
   }
 
-  /* Curva simetrica ("ease-in-out", arranca y termina despacio) en vez de
-     var(--ease) (pensada para movimiento de UI que arranca rapido) --
-     esta se lee mas como un fundido de verdad, "fade in/fade out". */
+  /* .nav__brand y .nav__right cruzan en fundido de verdad: los dos con la
+     MISMA duracion y sin delay, asi se superponen (uno se apaga mientras
+     el otro se prende), en vez de esperar a que termine uno para que
+     arranque el otro. Curva simetrica ("ease-in-out") para que se lea
+     como un fundido real. */
   .nav__brand {
-    /* Apareciendo (dejo de estar "stuck"): recien empieza a los 450ms,
-       una vez que .nav__right ya termino de apagarse y el padding ya
-       salto a su tamano grande -- se prende ya en su posicion final. */
-    transition: opacity 450ms ease-in-out 450ms, visibility 0s linear 450ms;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
   }
   .nav.is-stuck .nav__brand {
-    /* Desapareciendo (paso a "stuck"): arranca ya, en 0ms -- se apaga
-       en su lugar, mientras el padding todavia esta grande. */
-    transition: opacity 450ms ease-in-out 0s, visibility 0s linear 450ms;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
   }
 
   /* En desktop el reel se ancla arriba (align-items:flex-start en
@@ -1794,18 +1781,13 @@ p { text-wrap: pretty; }
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    /* Desapareciendo (dejo de estar "stuck"): arranca ya, en 0ms -- se
-       apaga en su lugar, mientras el padding todavia esta chico. */
-    transition: opacity 450ms ease-in-out 0s, visibility 0s linear 450ms;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
   }
   .nav.is-stuck .nav__right {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    /* Apareciendo (paso a "stuck"): recien a los 450ms, una vez que
-       .nav__brand ya termino de apagarse y el padding ya salto a su
-       tamano chico -- se prende ya en su posicion final. */
-    transition: opacity 450ms ease-in-out 450ms, visibility 0s linear 450ms;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
   }
 }
 
@@ -1886,12 +1868,14 @@ p { text-wrap: pretty; }
     justify-content: center;
     /* Solo margenes achicados aca -- ni las tarjetas ni los textos
        cambian de tamano. La meta es que las 2 filas de proyectos entren
-       completas debajo del reel sin necesitar scroll propio. */
-    padding-top: var(--sp-6);
-    padding-bottom: var(--sp-6);
+       completas debajo del reel sin necesitar scroll propio -- achicado
+       de nuevo (eran var(--sp-6), 32px, en los 4 lugares) porque con eso
+       la ultima fila todavia quedaba cortada. */
+    padding-top: var(--sp-3);
+    padding-bottom: var(--sp-3);
   }
-  #projects .portfolio-tabs-row { margin-bottom: var(--sp-6); }
-  #projects .grid { row-gap: var(--sp-6); }
+  #projects .portfolio-tabs-row { margin-bottom: var(--sp-4); }
+  #projects .grid { row-gap: var(--sp-4); }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
