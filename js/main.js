@@ -208,26 +208,37 @@
     window.addEventListener("scroll", onScroll, { passive: true });
     updateNavMode();
 
-    /* Que seccion esta "activa": el link correspondiente (Projects o
-       Contact) se subraya solo cuando esa seccion cruza el centro de la
-       pantalla -- no apenas asoma un borde, para que no titile entre
-       las dos si estan cerca. */
-    var spyLinks = Array.prototype.slice.call(nav.querySelectorAll(".nav__link"));
+    /* Que seccion esta "activa": el link correspondiente (Showreel,
+       Projects o Contact) se subraya solo cuando esa seccion cruza el
+       centro de la pantalla -- no apenas asoma un borde, para que no
+       titile entre dos si estan cerca.
+       Ojo con "document.querySelectorAll" (no "nav.querySelectorAll"):
+       los mismos 3 links existen DOS VECES -- la copia de .nav__right
+       (siempre en el DOM) y la de .hero__welcome-links (la bienvenida
+       movil, ver "07. HERO / REEL" en css/style.css) -- las dos tienen
+       que subrayarse juntas, sea cual sea la que este visible en cada
+       momento. */
+    var spyLinks = Array.prototype.slice.call(document.querySelectorAll(".nav__link"));
     var spyTargets = spyLinks
       .map(function (link) {
         var id = (link.getAttribute("href") || "").replace(/^#/, "");
         /* "Showreel" apunta a #home, que es la pagina entera -- no una
-           seccion puntual -- asi que no tiene sentido marcarlo "activo"
-           segun el scroll. Se lo deja afuera del observer. */
-        return { link: link, el: (id && id !== homeId) ? document.getElementById(id) : null };
+           seccion puntual -- asi que en vez de eso se observa .hero (el
+           reel), que es a donde ese link en realidad lleva. */
+        var el = id === homeId ? document.querySelector(".hero") : (id ? document.getElementById(id) : null);
+        return { link: link, el: el };
       })
       .filter(function (t) { return t.el; });
 
     if (spyTargets.length && "IntersectionObserver" in window) {
       var spyObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          var match = spyTargets.filter(function (t) { return t.el === entry.target; })[0];
-          if (match) match.link.classList.toggle("is-active", entry.isIntersecting);
+          /* forEach, no "el primer match": puede haber mas de un link
+             (la copia de .nav__right y la de .hero__welcome-links)
+             apuntando al mismo elemento -- las dos se actualizan. */
+          spyTargets.forEach(function (t) {
+            if (t.el === entry.target) t.link.classList.toggle("is-active", entry.isIntersecting);
+          });
         });
       }, { rootMargin: "-40% 0px -40% 0px" });
       spyTargets.forEach(function (t) { spyObserver.observe(t.el); });

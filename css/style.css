@@ -322,7 +322,10 @@ p { text-wrap: pretty; }
   padding-inline: var(--gutter);
 }
 
-.wrap--narrow { max-width: var(--maxw-sm); }
+/* Solo la usa Contact (ver index.html) -- valor propio, no var(--maxw-sm),
+   para agrandarla sin afectar al pie de pagina (.site-footer__inner), que
+   si usa esa variable compartida directamente. */
+.wrap--narrow { max-width: 68rem; }
 
 /* Linea divisoria fina */
 .rule {
@@ -1410,6 +1413,11 @@ p { text-wrap: pretty; }
   background: linear-gradient(to bottom, transparent 0%, transparent 35%, var(--c-bloom-violet) 100%);
 }
 
+/* .page__head (el titulo "Contact") comparte clase con el de cada pagina
+   de proyecto -- se achica el espacio solo aca, no en esas otras (ahi
+   var(--sp-8) se queda igual). */
+#contact .page__head { margin-bottom: var(--sp-4); }
+
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -1806,6 +1814,13 @@ p { text-wrap: pretty; }
     visibility: hidden;
     pointer-events: none;
     transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
+    /* Mas chico que en desktop: con el tamano de link mas grande que le
+       pusimos a .nav__link en general, esta fila (boton + 3 links) ya no
+       entraba en una pantalla angosta y se salia por el costado. Aca
+       adentro, en esta barra compacta especificamente, vuelve a un
+       tamano chico -- .hero__welcome-links (la bienvenida, arriba de
+       todo) no se toca, se queda grande. */
+    gap: var(--sp-2);
   }
   .nav.is-stuck .nav__right {
     opacity: 1;
@@ -1813,6 +1828,27 @@ p { text-wrap: pretty; }
     pointer-events: auto;
     transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
   }
+  .nav__right .nav__link {
+    padding-inline: var(--sp-2);
+    font-size: var(--fs-2xs);
+  }
+  .nav__right .nav__links { gap: var(--sp-1); }
+  .nav__right .audio-control__toggle {
+    width: calc(var(--tap) - 8px);
+    height: calc(var(--tap) - 8px);
+  }
+  /* .nav__brand esta oculto en este ancho (no ocupa lugar), asi que
+     .nav__right (boton de volumen + links) queda como el unico
+     contenido real de la barra -- centrado en vez de pegado a la
+     derecha. */
+  .nav__inner { justify-content: center; }
+
+  /* .page__body trae un padding-top pensado para paginas que arrancan
+     solas, justo debajo de la barra fija (cada proyecto). Contact no es
+     una de esas -- viene justo despues de la grilla de proyectos, en el
+     mismo scroll continuo -- asi que ese mismo padding quedaba como
+     demasiada separacion entre las dos secciones. */
+  #contact .page__body { padding-top: var(--sp-6); }
 }
 
 /* --- Celular (hasta 640px) --- */
@@ -1892,15 +1928,25 @@ p { text-wrap: pretty; }
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    /* El padding de ARRIBA se saca del todo (0): ese aire, sumado al
-       margen que ya deja "scroll-padding-top" (ver el <html> en "02.
-       RESET Y BASE") para no quedar tapado por la barra fija, sumaba
-       demasiado espacio vacio antes de "Selected Works" -- y era
-       espacio que le hacia falta a la fila de abajo para entrar
-       completa. Abajo se deja un respiro. */
+    /* "flex-start", no "center": con "center", si el contenido (titulo +
+       pestanas + grilla) es mas bajo que la pantalla, el sobrante se
+       reparte MITAD ARRIBA MITAD ABAJO -- eso le devolvia por atras el
+       aire que se le habia sacado a padding-top (aca abajo), asi que el
+       cambio anterior no se notaba. Con "flex-start" todo el sobrante
+       cae SOLO abajo (invisible, no afecta si entra la ultima fila), y
+       arriba el contenido arranca pegado al padding-top real, sin nada
+       que lo empuje mas abajo. */
+    justify-content: flex-start;
+    /* Se saca del todo: ver el comentario de arriba. */
     padding-top: 0;
     padding-bottom: var(--sp-4);
+    /* El <html> reserva "scroll-padding-top" (altura de la barra fija +
+       un respiro de 16px, ver "02. RESET Y BASE") para que el scroll
+       nunca deje nada tapado detras de esa barra. Ese respiro de 16px es
+       mas de lo que hace falta aca -- se recorta a la mitad (scroll-margin
+       SUMA a scroll-padding, asi que un valor negativo lo resta) sin
+       tocarlo para el resto del sitio. */
+    scroll-margin-top: -8px;
   }
   /* Espacio entre las pestanas Sound/Audiovisual y la grilla: achicado
      un poco mas. */
