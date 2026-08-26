@@ -413,25 +413,47 @@
      con ancla) y cada llamado de esa animacion terminaba peleando con el
      scroll suave nativo del navegador por encima. Esta version usa
      directamente scrollIntoView(), que es el scroll suave DEL NAVEGADOR
-     -- mas robusto y mas fluido de verdad que reinventarlo. */
+     -- mas robusto y mas fluido de verdad que reinventarlo.
+
+     BUG que corrige esta version: los limites de zona se comparaban
+     contra projectsEl.offsetTop / contactEl.offsetTop "en crudo", pero
+     css/style.css tiene "scroll-padding-top" puesto (dejar lugar a la
+     barra fija) -- eso hace que scrollIntoView() NUNCA lleve el scroll
+     exactamente a offsetTop, sino a offsetTop MENOS ese margen (~88px).
+     Con los limites sin ese descuento, apenas se llegaba a Selected
+     Works el scroll quedaba en una "zona fantasma" que el codigo todavia
+     consideraba "reel" -- por eso scrollear para arriba no volvia al
+     reel (no entraba en la condicion de abajo) y scrollear para abajo de
+     nuevo volvia a saltar a Selected Works en vez de dejar avanzar hacia
+     Contact. Restando ese mismo margen a los limites, coinciden con
+     donde el scroll realmente se asienta. */
 
   var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
   var contactEl = document.getElementById("contact");
 
   if (heroEl && projectsEl && !reduceMotion.matches) {
+    function navClearance() {
+      var root = getComputedStyle(document.documentElement);
+      var pxPerRem = parseFloat(root.fontSize) || 16;
+      var navH = (parseFloat(root.getPropertyValue("--nav-h")) || 4.5) * pxPerRem;
+      var gap = (parseFloat(root.getPropertyValue("--sp-4")) || 1) * pxPerRem;
+      return navH + gap;
+    }
+
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
 
+      var clearance = navClearance();
       var y = window.scrollY;
-      var projectsTop = projectsEl.offsetTop;
-      var contactTop = contactEl ? contactEl.offsetTop : Infinity;
+      var projectsSnap = projectsEl.offsetTop - clearance;
+      var contactSnap = contactEl ? contactEl.offsetTop - clearance : Infinity;
 
-      if (e.deltaY > 0 && y < projectsTop - 4) {
+      if (e.deltaY > 0 && y < projectsSnap - 4) {
         /* Todavia en el reel, scrolleando para abajo: salta a Selected Works. */
         e.preventDefault();
         projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (e.deltaY < 0 && y >= projectsTop - 4 && y < contactTop - 4) {
+      } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
         /* Dentro de Selected Works (no llego a Contact todavia),
            scrolleando para arriba: vuelve al reel. */
         e.preventDefault();

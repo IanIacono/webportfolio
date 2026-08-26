@@ -91,40 +91,23 @@
          ========================================================================== -->
   <header class="nav">
     <div class="nav__inner">
-      <!-- MARCA GRANDE: solo se ve arriba de todo del home (nombre +
-           subtitulo, centrados). Al scrollear -- o en cualquier otra
-           pagina -- se desvanece y la barra queda en su version chica
-           (ver .nav.is-stuck en css/style.css). No es un link: en ese
-           momento ya estas en el home. -->
+      <!-- MARCA GRANDE: SOLO ESCRITORIO (mas de 900px). Se ve arriba de
+           todo del home (nombre + subtitulo, centrados); al scrollear --
+           o en cualquier otra pagina -- se desvanece y la barra queda en
+           su version chica (ver .nav.is-stuck en css/style.css). No es
+           un link: en ese momento ya estas en el home.
+           En celular/tablet este bloque no se usa (display:none, ver
+           ".nav__brand" en "14. RESPONSIVE" de css/style.css): el
+           equivalente movil es ".hero__welcome", mas abajo, DENTRO de
+           .hero -- ahi porque .nav es position:fixed, asi que cualquier
+           cosa adentro se queda flotando sobre el reel al scrollear en
+           vez de irse con la pagina. Con nombre/subtitulo/links/boton
+           viviendo en .hero (flujo normal), se van del scroll como
+           cualquier otro contenido, en vez de quedar pegados a la
+           pantalla. -->
       <div class="nav__brand">
         <p class="nav__brand-name">Ian Iacono</p>
         <p class="nav__brand-role">Sound Designer &middot; Mix &middot; Master // Multimedia Post Production</p>
-
-        <!-- Repite los mismos links de aca abajo, pero solo se ve en
-             celular/tablet (ver .nav__brand-links en css/style.css):
-             ahi .nav__right se queda oculto hasta que se scrollea, asi
-             que sin esto no habia forma de navegar arriba de todo. Se
-             desvanece junto con el resto de .nav__brand al scrollear
-             (hereda su visibility), momento en el que .nav__right ya
-             se hizo visible y toma la posta. -->
-        <div class="nav__links nav__brand-links">
-          <a class="nav__link" href="#home">Showreel</a>
-          <a class="nav__link" href="#projects">Projects</a>
-          <a class="nav__link" href="#contact">Contact</a>
-        </div>
-
-        <!-- Copia movil del boton de sonido (sin la barra de volumen),
-             para que se vea ya de entrada -- el de .nav__right (el que
-             titila/vibra) recien se muestra al hacer scroll en celular,
-             y para entonces ya pudiste haber visto el reel en silencio.
-             Mismo boton, mismo estado: audio.js los mantiene sincronizados.
-             Adentro de .nav__brand a proposito: nombre, subtitulo, links
-             y este boton son un solo bloque fijo que nunca se mueve
-             mientras esta visible (ver css/style.css, seccion ".nav" en
-             "14. RESPONSIVE") -- solo aparece y desaparece en su lugar. -->
-        <button type="button" class="audio-control__toggle nav__brand-audio" aria-pressed="false" aria-label="Turn on site sound">
-          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-        </button>
       </div>
 
       <div class="nav__right">
@@ -169,6 +152,38 @@
                se viera entrecortado, sobre todo en celular. -->
           <video src="assets/video/reel-bg.mp4" muted loop playsinline preload="none"
                  tabindex="-1" data-hero-bg></video>
+        </div>
+
+        <!-- BIENVENIDA MOVIL: SOLO CELULAR/TABLET (hasta 900px, ver
+             ".hero__welcome" en css/style.css) -- el equivalente de
+             ".nav__brand" de arriba, pero viviendo aca adentro de .hero
+             (que NO es position:fixed) en vez de adentro de la barra
+             fija. Por eso se va con el scroll como cualquier otro
+             contenido del reel, en vez de quedar flotando encima. Mismo
+             nombre/subtitulo que arriba (reutiliza sus mismas clases,
+             .nav__brand-name/.nav__brand-role, para heredar el mismo
+             estilo) -- si cambias el texto de uno, cambia el del otro
+             tambien. -->
+        <div class="hero__welcome">
+          <p class="nav__brand-name">Ian Iacono</p>
+          <p class="nav__brand-role">Sound Designer &middot; Mix &middot; Master // Multimedia Post Production</p>
+
+          <div class="nav__links hero__welcome-links">
+            <a class="nav__link" href="#home">Showreel</a>
+            <a class="nav__link" href="#projects">Projects</a>
+            <a class="nav__link" href="#contact">Contact</a>
+          </div>
+
+          <!-- Copia movil del boton de sonido (sin la barra de volumen),
+               para que se vea ya de entrada -- el de .nav__right (el que
+               titila/vibra) recien se muestra al hacer scroll, y para
+               entonces ya pudiste haber visto el reel en silencio. Mismo
+               boton, mismo estado: audio.js los mantiene sincronizados
+               (los busca a todos por la clase .audio-control__toggle,
+               sin importar donde viven). -->
+          <button type="button" class="audio-control__toggle hero__welcome-audio" aria-pressed="false" aria-label="Turn on site sound">
+            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
+          </button>
         </div>
 
         <div class="hero__frame">

@@ -437,40 +437,9 @@ p { text-wrap: pretty; }
   gap: var(--sp-2);
 }
 
-/* Copia movil de .nav__links, debajo del nombre y el subtitulo -- ver
-   el comentario en build.py. Oculta en desktop, .nav__right ya la
-   tiene ahi. */
-.nav__brand-links {
-  display: none;
-  width: fit-content;
-  margin-block-start: var(--sp-4);
-  margin-inline: auto;
-}
-
-/* Copia movil del boton de sonido: mismas reglas de titileo/vibrado que
-   el del header (comparten la clase .audio-control__toggle), centrada,
-   debajo de los links. Vuelve a vivir dentro de .nav__brand (ver
-   index.html): la probamos afuera, anclada al reel, pero el nombre, el
-   subtitulo, los links Y este boton tienen que ser un solo bloque fijo
-   que nunca se mueve mientras esta visible -- ver mas abajo, en el
-   media query, el ajuste para que ese bloque ya no se encoja/desplace al
-   scrollear, solo aparezca y desaparezca en su lugar. El selector
-   combinado (dos clases, no una) es a proposito: .audio-control__toggle
-   ya trae "display:inline-flex" de fondo mas abajo en este archivo, y
-   con la misma especificidad (una clase contra una clase) esa regla
-   posterior le ganaba a esta por orden de aparicion, asi que el boton
-   quedaba visible tambien en desktop. */
-.audio-control__toggle.nav__brand-audio {
-  display: none;
-  margin: var(--sp-5) auto 0;
-}
-@media (max-width: 900px) {
-  .nav__brand-links { display: flex; }
-  .audio-control__toggle.nav__brand-audio {
-    display: inline-flex;
-    margin-top: var(--sp-7);
-  }
-}
+/* .hero__welcome (el equivalente movil de .nav__brand, dentro de .hero
+   en vez de dentro de la barra fija) esta definido en "07. HERO / REEL",
+   junto al resto de .hero -- tiene mas sentido ahi que aca. */
 
 .nav__link {
   position: relative;
@@ -971,6 +940,36 @@ p { text-wrap: pretty; }
   font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
+}
+
+/* Bienvenida movil: nombre + subtitulo + links + boton de sonido. Es el
+   equivalente de .nav__brand (arriba, en "05. NAVEGACION"), pero vive
+   ADENTRO de .hero -- que es position:relative, no fixed -- en vez de
+   adentro de la barra de arriba. Por eso se va con el scroll como
+   cualquier otro contenido del reel, en vez de quedar flotando encima
+   mientras se scrollea. Solo existe en celular/tablet: en desktop se usa
+   .nav__brand (la version de la barra fija) en su lugar. Reutiliza las
+   clases .nav__brand-name / .nav__brand-role para el texto -- mismo
+   estilo, un solo lugar donde tocar la tipografia si hace falta. */
+.hero__welcome { display: none; }
+@media (max-width: 900px) {
+  .hero__welcome {
+    display: block;
+    position: absolute;
+    top: var(--sp-4);
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 2;
+  }
+  .hero__welcome-links {
+    width: fit-content;
+    margin: var(--sp-3) auto 0;
+  }
+  .hero__welcome-audio {
+    margin: var(--sp-4) auto 0;
+  }
 }
 
 /* "See Projects": solo tiene sentido en celular, donde no se ve la grilla
@@ -1715,45 +1714,26 @@ p { text-wrap: pretty; }
 
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
-  /* Con los links de .nav__brand-links ahora ahi abajo, el reel
-     necesita un poco mas de margen arriba que en desktop para no
-     quedar pegado contra ellos. */
-  :root { --hero-top-clearance: 11rem; }
+  /* Deja lugar arriba de .hero para ".hero__welcome" (nombre + subtitulo
+     + links + boton de sonido, ver "07. HERO / REEL") -- ese bloque
+     ahora vive DENTRO del reel, no en la barra fija (ver mas abajo por
+     que). Un poco mas alto que antes (13rem, no 11rem): ese bloque
+     completo (nombre + subtitulo + links + boton, apilados) no entraba
+     mas en el espacio viejo. */
+  :root { --hero-top-clearance: 13rem; }
 
-  /* En este ancho el nombre + subtitulo + links + boton de sonido son un
-     bloque bastante mas alto que en desktop (todo apilado), y con el
-     padding-block de escritorio el nombre quedaba directamente cortado
-     contra (incluso por encima de) el borde de arriba de la pantalla.
-     Mas padding acá empuja todo el bloque hacia abajo sin tocar la
-     posicion del reel (son independientes, ver comentario de arriba).
-
-     El padding-block de ESTE elemento (.nav) ya NO cambia con is-stuck en
-     este ancho -- se queda siempre en 7.25rem. Antes achicaba a 0
-     (animado, y despues probamos que saltara solo) y eso es lo que
-     causaba que el nombre/subtitulo/links/boton se sintieran "moviendose"
-     al scrollear: esos elementos se centran verticalmente DENTRO de esta
-     caja (top:50% / align-items:center), asi que cualquier cambio en su
-     alto -- animado o instantaneo -- los corre de lugar. Con el alto fijo
-     para siempre, dejan de moverse pase lo que pase; lo unico que cambia
-     al scrollear es la opacidad de que contenido se ve (mas abajo),
-     ademas del fondo/blur (eso si sigue animado, es solo un color, no
-     mueve nada). */
-  .nav, .nav.is-stuck {
-    padding-block: 7.25rem;
-    transition: background 450ms var(--ease), border-color 450ms var(--ease);
-  }
-
-  /* .nav__brand y .nav__right cruzan en fundido de verdad: los dos con la
-     MISMA duracion y sin delay, asi se superponen (uno se apaga mientras
-     el otro se prende), en vez de esperar a que termine uno para que
-     arranque el otro. Curva simetrica ("ease-in-out") para que se lea
-     como un fundido real. */
-  .nav__brand {
-    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
-  }
-  .nav.is-stuck .nav__brand {
-    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
-  }
+  /* .nav__brand (la version de escritorio, adentro de la barra fija) NO
+     se usa en este ancho. .nav es position:fixed, asi que nombre,
+     subtitulo, links y boton quedaban flotando sobre el reel al
+     scrollear en vez de irse con la pagina -- eso es lo que se pedia
+     corregir. La version movil (.hero__welcome) vive dentro de .hero,
+     que es position:relative (no fixed): se va del scroll como
+     cualquier otro contenido del reel. Con .nav__brand afuera de esto,
+     .nav vuelve a ser una barra chica siempre (nunca necesita ser
+     grande) -- se apoya en su min-height de base (var(--nav-h)) para
+     el alto. */
+  .nav__brand { display: none; }
+  .nav, .nav.is-stuck { padding-block: var(--sp-3); }
 
   /* En desktop el reel se ancla arriba (align-items:flex-start en
      .hero) porque ahi el "top clearance" ya calcula justo cuanto
@@ -1797,9 +1777,12 @@ p { text-wrap: pretty; }
 
   /* "Sound Designer // Multimedia Post Production" no entra en una linea
      en un celular angosto -- se corta contra los bordes. Se lo deja
-     envolver en 2 lineas en vez de forzarlo a una sola. */
-  .nav__brand { max-width: calc(100vw - var(--sp-8)); }
+     envolver en 2 lineas en vez de forzarlo a una sola. .nav__brand-role
+     ya no necesita su propio max-width (.nav__brand esta oculto en este
+     ancho, ver "14. RESPONSIVE" arriba) pero .hero__welcome, que es
+     quien lo reemplaza aca, si. */
   .nav__brand-role { white-space: normal; }
+  .hero__welcome { max-width: calc(100vw - var(--sp-8)); }
 
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
 
@@ -1866,16 +1849,16 @@ p { text-wrap: pretty; }
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Solo margenes achicados aca -- ni las tarjetas ni los textos
-       cambian de tamano. La meta es que las 2 filas de proyectos entren
-       completas debajo del reel sin necesitar scroll propio -- achicado
-       de nuevo (eran var(--sp-6), 32px, en los 4 lugares) porque con eso
-       la ultima fila todavia quedaba cortada. */
-    padding-top: var(--sp-3);
-    padding-bottom: var(--sp-3);
+    /* SOLO el padding de afuera de todo el bloque se achica (para
+       correrlo hacia arriba y que entre mejor en una pantalla) -- el
+       espacio de ADENTRO (entre las pestanas Sound/Audiovisual y la
+       grilla) NO se toca aca, se queda con su valor de siempre
+       (var(--sp-8), ver ".portfolio-tabs-row" y ".grid" en sus
+       secciones -- antes lo habia achicado tambien y quedaba
+       apretado). Ni las tarjetas ni los textos cambian de tamano. */
+    padding-top: var(--sp-6);
+    padding-bottom: var(--sp-6);
   }
-  #projects .portfolio-tabs-row { margin-bottom: var(--sp-4); }
-  #projects .grid { row-gap: var(--sp-4); }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
