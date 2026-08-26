@@ -2,7 +2,7 @@
    IAN IACONO — SOUND PORTFOLIO
    main.js
 
-   Hace seis cosas:
+   Hace siete cosas:
      1. Cambia de pagina cuando cambia el # de la direccion (igual que Carrd)
      2. Hace aparecer los bloques suavemente al hacer scroll
      3. Vuelve solida la barra de arriba cuando bajas
@@ -12,6 +12,8 @@
      6. En escritorio, la primera vez que se scrollea hacia abajo viendo
         el reel, fuerza el scroll directo hasta "Selected Works" (con una
         curva propia, mas fluida que el scroll-snap nativo del navegador)
+     7. En celular/tablet, centra el boton de sonido de la bienvenida en
+        el hueco real entre los links y el video (ver punto 7 mas abajo)
 
    No hace falta tocar este archivo para cambiar textos ni imagenes.
    ========================================================================== */
@@ -468,6 +470,43 @@
       }
       /* Cualquier otro caso no se toca: scroll nativo, libre. */
     }, { passive: false });
+  }
+
+
+  /* ======================================================================
+     7. CENTRAR EL BOTON DE SONIDO DE LA BIENVENIDA MOVIL (.hero__welcome)
+     Tiene que quedar centrado en el hueco real entre el borde de abajo de
+     los links (Showreel/Projects/Contact) y el borde de arriba del video
+     -- pero ese hueco no se puede calcular con un numero fijo en CSS:
+     .hero centra el marco del reel verticalmente en el aire libre que
+     sobra (align-items:center, solo en celular/tablet), asi que ese
+     borde de arriba se mueve segun el alto de pantalla. Se mide de
+     verdad, con getBoundingClientRect(), y se posiciona a mano.
+     ====================================================================== */
+
+  var welcomeLinks = document.querySelector(".hero__welcome-links");
+  var welcomeAudioWrap = document.querySelector(".hero__welcome-audio-wrap");
+  var welcomeBox = document.querySelector(".hero__welcome");
+  var welcomeFrame = document.querySelector(".hero__frame");
+
+  if (welcomeLinks && welcomeAudioWrap && welcomeBox && welcomeFrame) {
+    var positionWelcomeAudio = function () {
+      if (window.innerWidth > 900) return;
+      var boxTop = welcomeBox.getBoundingClientRect().top;
+      var linksBottom = welcomeLinks.getBoundingClientRect().bottom;
+      var frameTop = welcomeFrame.getBoundingClientRect().top;
+      var height = frameTop - linksBottom;
+      if (height <= 0) return; /* pantalla muy baja: no forzar nada raro */
+      welcomeAudioWrap.style.top = (linksBottom - boxTop) + "px";
+      welcomeAudioWrap.style.height = height + "px";
+    };
+    positionWelcomeAudio();
+    window.addEventListener("resize", positionWelcomeAudio);
+    /* Si la tipografia todavia no cargo, el alto de los links puede
+       correrse un poco al terminar de cargar -- se recalcula. */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(positionWelcomeAudio);
+    }
   }
 
 

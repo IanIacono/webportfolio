@@ -953,22 +953,12 @@ p { text-wrap: pretty; }
    estilo, un solo lugar donde tocar la tipografia si hace falta. */
 .hero__welcome { display: none; }
 @media (max-width: 900px) {
-  /* Alto = exactamente el espacio libre arriba del reel (--hero-top-clearance,
-     ver "14. RESPONSIVE"): el borde de ABAJO de esta caja coincide con el
-     borde de ARRIBA de .hero__frame. Columna flex: nombre/subtitulo/links
-     quedan arriba (su tamano natural) y ".hero__welcome-audio-wrap" ocupa
-     TODO el resto (flex:1) centrando el boton adentro -- asi el boton
-     queda centrado justo en el espacio que sobra entre el borde de abajo
-     de los links y el borde de arriba del reel, no pegado a los links con
-     un margen fijo. */
   .hero__welcome {
-    display: flex;
-    flex-direction: column;
+    display: block;
     position: absolute;
     top: 0;
     left: 50%;
     width: 100%;
-    height: var(--hero-top-clearance);
     padding-top: var(--sp-4);
     transform: translateX(-50%);
     text-align: center;
@@ -978,9 +968,19 @@ p { text-wrap: pretty; }
     width: fit-content;
     margin: var(--sp-3) auto 0;
   }
+  /* El "top" y el "height" de este wrap los calcula JS (ver "7. CENTRAR
+     EL BOTON..." en main.js), no CSS: .hero centra el marco del reel
+     verticalmente (align-items:center, mas abajo en este archivo) para
+     repartir el aire libre arriba/abajo, asi que el hueco real entre el
+     borde de abajo de los links y el borde de arriba del video cambia
+     segun el alto de pantalla -- no hay forma de calcularlo con un
+     numero fijo en CSS. Position:absolute lo saca del flujo de
+     .hero__welcome (que si no, seguiria empujando para abajo con su
+     tamano normal) para que JS lo pueda ubicar a mano en ese hueco. */
   .hero__welcome-audio-wrap {
-    flex: 1;
-    min-height: 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1773,6 +1773,13 @@ p { text-wrap: pretty; }
      en comparacion. Centrado verticalmente reparte ese aire entre
      arriba y abajo, en vez de amontonarlo todo abajo. */
   .hero { align-items: center; }
+
+  /* .page__body--after-hero (la clase de la que #projects hereda su
+     padding-top) esta pensada para cuando la barra fija ya no tapa nada
+     -- pero en este ancho, al tocar "Projects" en el nav (o al scrollear
+     hasta ahi), quedaba MUCHO aire antes del titulo "Selected Works".
+     Achicado especificamente para celular/tablet. */
+  #projects { padding-top: var(--sp-5); }
 
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
 
