@@ -338,6 +338,21 @@
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(function () { positionThumb(activeTab, true); });
     }
+
+    /* Bug: si se entra al sitio directo por un link a un proyecto (sin
+       pasar por home primero), la home queda "hidden" en ese momento --
+       mediciones como offsetWidth/offsetLeft dan 0 en un elemento
+       oculto, asi que la bolita se calculaba con ancho 0 y quedaba
+       "rota" (el texto de la pestana activa es siempre oscuro, pensado
+       para leerse SOBRE la bolita blanca -- sin ella detras, se ve como
+       texto negro perdido en el fondo oscuro). Como nada volvia a
+       llamar a positionThumb() al volver a home despues (solo pasaba en
+       resize o al cargar la fuente), quedaba rota para siempre. Ahora se
+       recalcula cada vez que la pagina que se muestra es la que tiene
+       las pestanas, para cuando ya esten visibles de verdad. */
+    document.addEventListener("page:change", function (e) {
+      if (e.detail.page.contains(portfolioTabs)) positionThumb(activeTab, true);
+    });
   }
 
 
