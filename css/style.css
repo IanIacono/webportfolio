@@ -1893,8 +1893,13 @@ p { text-wrap: pretty; }
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* El padding de afuera de todo el bloque, achicado un poco mas. */
-    padding-top: var(--sp-4);
+    /* El padding de ARRIBA se saca del todo (0): ese aire, sumado al
+       margen que ya deja "scroll-padding-top" (ver el <html> en "02.
+       RESET Y BASE") para no quedar tapado por la barra fija, sumaba
+       demasiado espacio vacio antes de "Selected Works" -- y era
+       espacio que le hacia falta a la fila de abajo para entrar
+       completa. Abajo se deja un respiro. */
+    padding-top: 0;
     padding-bottom: var(--sp-4);
   }
   /* Espacio entre las pestanas Sound/Audiovisual y la grilla: achicado
