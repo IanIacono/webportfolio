@@ -2,12 +2,16 @@
    IAN IACONO — SOUND PORTFOLIO
    main.js
 
-   Hace cuatro cosas:
+   Hace seis cosas:
      1. Cambia de pagina cuando cambia el # de la direccion (igual que Carrd)
      2. Hace aparecer los bloques suavemente al hacer scroll
      3. Vuelve solida la barra de arriba cuando bajas
      4. Alterna Sound / Audiovisual Portfolio sin cambiar de pagina (solo
         existe si el HTML trae el bloque [data-portfolio-tabs])
+     5. Manda el formulario de contacto sin salir de la pagina
+     6. En escritorio, la primera vez que se scrollea hacia abajo viendo
+        el reel, fuerza el scroll directo hasta "Selected Works" (con una
+        curva propia, mas fluida que el scroll-snap nativo del navegador)
 
    No hace falta tocar este archivo para cambiar textos ni imagenes.
    ========================================================================== */
@@ -389,6 +393,83 @@
           if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = btnDefaultText; }
         });
     });
+  }
+
+
+  /* ======================================================================
+     6. SCROLL FORZADO: DEL REEL A SELECTED WORKS (SOLO ESCRITORIO)
+     Mientras se esta viendo el reel, la primera rueda del mouse/trackpad
+     hacia abajo no scrollea libre: anima un scroll propio, con una curva
+     de velocidad pareja (acelera y frena de a poco, "ease-in-out") directo
+     hasta el arranque de "Selected Works". De ahi para abajo (Contact,
+     etc.) el scroll vuelve a ser 100% libre -- el enganche es unicamente
+     para ese primer tramo, y unicamente en pantallas de mas de 900px (el
+     mismo corte que usa css/style.css para el resto de este ajuste). No
+     usa scroll-snap de CSS a proposito: el navegador no deja elegir la
+     curva ni la duracion de esa animacion, y se sentia seca/brusca en vez
+     de fluida.
+     ====================================================================== */
+
+  var projectsEl = document.getElementById("projects");
+  if (projectsEl && !reduceMotion.matches) {
+    var snapAnimating = false;
+    var snapCancelled = false;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    /* Misma cuenta que "scroll-padding-top" en css/style.css (nav-h +
+       sp-4): deja lugar para la barra fija, que a esta altura del scroll
+       ya esta en su version chica ("is-stuck"). */
+    function scrollTargetForProjects() {
+      var root = getComputedStyle(document.documentElement);
+      var pxPerRem = parseFloat(root.fontSize) || 16;
+      var navH = (parseFloat(root.getPropertyValue("--nav-h")) || 4.5) * pxPerRem;
+      var gap = (parseFloat(root.getPropertyValue("--sp-4")) || 1) * pxPerRem;
+      return window.scrollY + projectsEl.getBoundingClientRect().top - navH - gap;
+    }
+
+    function animateScrollTo(targetY, duration) {
+      var startY = window.scrollY;
+      var delta = targetY - startY;
+      if (Math.abs(delta) < 1) return;
+      var startTime = null;
+      snapAnimating = true;
+      snapCancelled = false;
+
+      function step(now) {
+        if (snapCancelled) { snapAnimating = false; return; }
+        if (startTime === null) startTime = now;
+        var progress = Math.min(1, (now - startTime) / duration);
+        window.scrollTo(0, startY + delta * easeInOutCubic(progress));
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          snapAnimating = false;
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    window.addEventListener("wheel", function (e) {
+      if (window.innerWidth <= 900) return;
+
+      if (snapAnimating) {
+        /* Scrollear para arriba durante la animacion la cancela en el
+           acto, en vez de forcejear con ella -- se siente como una salida
+           de emergencia, no como si el sitio "no soltara" el scroll. */
+        if (e.deltaY < 0) { snapCancelled = true; return; }
+        e.preventDefault();
+        return;
+      }
+
+      if (e.deltaY <= 0) return;
+      if (window.scrollY >= projectsEl.offsetTop - 4) return;
+
+      e.preventDefault();
+      animateScrollTo(scrollTargetForProjects(), 900);
+    }, { passive: false });
   }
 
 

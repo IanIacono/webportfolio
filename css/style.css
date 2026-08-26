@@ -448,20 +448,30 @@ p { text-wrap: pretty; }
 }
 
 /* Copia movil del boton de sonido: mismas reglas de titileo/vibrado que
-   el del header (comparten la clase .audio-control__toggle), solo se le
-   agrega la posicion -- centrado, debajo de los links. El selector
-   combinado (dos clases, no una) es a proposito: .audio-control__toggle
-   ya trae "display:inline-flex" de fondo mas abajo en este archivo, y
-   con la misma especificidad (una clase contra una clase) esa regla
-   posterior le ganaba a esta por orden de aparicion, asi que el boton
-   quedaba visible tambien en desktop. */
+   el del header (comparten la clase .audio-control__toggle). Ya NO vive
+   dentro de .nav__brand (ver index.html): ese bloque es position:fixed,
+   asi que flotaba sobre el reel al scrollear en vez de quedarse quieto
+   en su lugar. Ahora es hijo directo de .hero (position:relative, ver
+   "07. HERO / REEL") y se ancla ahi con position:absolute -- se queda
+   fijo respecto al reel y se va con el al scrollear, en vez de flotar
+   con el header. El selector combinado (dos clases, no una) es a
+   proposito: .audio-control__toggle ya trae "display:inline-flex" de
+   fondo mas abajo en este archivo, y con la misma especificidad (una
+   clase contra una clase) esa regla posterior le ganaba a esta por
+   orden de aparicion, asi que el boton quedaba visible tambien en
+   desktop. */
 .audio-control__toggle.nav__brand-audio {
   display: none;
-  margin: var(--sp-5) auto 0;
 }
 @media (max-width: 900px) {
   .nav__brand-links { display: flex; }
-  .audio-control__toggle.nav__brand-audio { display: inline-flex; }
+  .audio-control__toggle.nav__brand-audio {
+    display: inline-flex;
+    position: absolute;
+    top: calc(var(--hero-top-clearance) + var(--sp-4));
+    right: var(--sp-4);
+    z-index: 2;
+  }
 }
 
 .nav__link {
@@ -548,6 +558,12 @@ p { text-wrap: pretty; }
   border-color: var(--c-text);
   color: #0a0910;
   box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 55%, transparent);
+  /* Instantaneo: el icono (sound-off -> sound-on) ya cambia de una, sin
+     transicion posible (es un display:none/block). Si el color tardaba
+     200ms en alcanzarlo, se veia como dos pasos separados -- primero
+     cambia el icono, recien despues el fondo termina de ponerse blanco.
+     Con 0s los dos cambian juntos, en el mismo instante. */
+  transition-duration: 0s;
 }
 
 /* Silenciado: negro con el borde violeta, y ademas titila (el glow crece
@@ -561,28 +577,33 @@ p { text-wrap: pretty; }
   /* Explicito (no solo heredado) para que vuelva bien a este color aunque
      el navegador haya dejado :hover "pegado" de un toque anterior. */
   color: var(--c-text);
-  animation: toggle-attention 2.8s ease-in-out infinite;
+  /* Mismo motivo que en aria-pressed="true": que el swap de vuelta a
+     negro/violeta sea instantaneo, a la par del icono. */
+  transition-duration: 0s;
+  animation: toggle-attention 3s ease-in-out infinite;
 }
 .audio-control__toggle[aria-pressed="false"]:hover,
 .audio-control__toggle[aria-pressed="false"]:focus-visible {
   animation-play-state: paused;
 }
+/* El vaiven antes pasaba por sus 6 pasos en apenas 2%-12% del ciclo -- a
+   cualquier duracion, eso se siente como un zumbido rapido (motor de
+   celular), no una vibracion lenta. Con menos pasos (4) repartidos en un
+   tramo bien mas ancho (hasta 32%) cada movimiento dura mucho mas, y se
+   percibe como un vaiven pausado de verdad en vez de un buzz. */
 @keyframes toggle-attention {
   0%, 100% {
     box-shadow: 0 0 0 0 transparent;
     transform: translateX(0);
   }
-  2%  { transform: translateX(-3px); }
-  4%  { transform: translateX(3px); }
-  6%  { transform: translateX(-3px); }
-  8%  { transform: translateX(3px); }
-  10% { transform: translateX(-2px); }
-  12% { transform: translateX(2px); }
-  14% {
+  8%  { transform: translateX(-3px); }
+  16% { transform: translateX(3px); }
+  24% { transform: translateX(-2px); }
+  32% {
     transform: translateX(0);
     box-shadow: 0 0 18px 3px color-mix(in srgb, var(--c-accent) 65%, transparent);
   }
-  40% {
+  60% {
     box-shadow: 0 0 0 0 transparent;
   }
 }
@@ -722,7 +743,7 @@ p { text-wrap: pretty; }
   justify-content: center;
   padding-top: var(--hero-top-clearance);
   padding-bottom: var(--hero-bottom-clearance);
-  background: #000;
+  background: var(--c-bg);
   overflow: hidden;
   isolation: isolate;
 }
@@ -738,9 +759,12 @@ p { text-wrap: pretty; }
   /* Mismo tipo de difuminado alpha que .hero__frame (ver mas abajo), pero
      solo en el borde de abajo: el fondo borroso se desvanece hacia
      transparente (revela el fondo solido de la pagina detras, del mismo
-     color) en vez de cortar en seco. En porcentaje, no en px, para que la
-     misma proporcion funcione en pc y en celular sin reglas aparte. */
-  --hero-bg-fade-start: 62%;
+     color, ver "background" arriba) en vez de cortar en seco. En
+     porcentaje, no en px, para que la misma proporcion funcione en pc y
+     en celular sin reglas aparte. Arranca antes que antes (55%, no 62%)
+     para que se note claramente -- el degrade de color de .hero__bg::after
+     ya no le pisa el efecto (ver ese comentario). */
+  --hero-bg-fade-start: 55%;
   -webkit-mask-image: linear-gradient(to bottom, #000 var(--hero-bg-fade-start), transparent 100%);
           mask-image: linear-gradient(to bottom, #000 var(--hero-bg-fade-start), transparent 100%);
 }
@@ -761,32 +785,20 @@ p { text-wrap: pretty; }
   will-change: filter;
 }
 
-/* Vineta: oscurece los bordes para que el video central resalte. Abajo
-   la vineta se funde con el color real de fondo de la pagina (no con
-   "transparent") para que el fondo borroso fluya hacia la seccion que
-   sigue en vez de cortar en seco contra ella. Esta capa vive detras
-   del reel (.hero__bg tiene z-index:-2, el reel z-index:1), asi que
-   nunca se superpone con el -- eso fue lo que salio mal la vez pasada
-   con .hero::after (que estaba arriba de todo, ver historial). */
+/* Vineta: oscurece los bordes para que el video central resalte, mas un
+   leve oscurecido arriba (para que el nombre/header se lean bien
+   encima). El desvanecido del borde de ABAJO ya no va aca -- lo hace el
+   mask-image de .hero__bg (mas arriba en este archivo): un alpha real
+   (transparencia de verdad, revela el fondo solido detras) en vez de
+   una mezcla de color -- los dos efectos pisandose se veian casi
+   invisibles juntos, por eso no se notaba ningun difuminado ahi. */
 .hero__bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  /* La mezcla a "var(--c-bg)" iba de golpe (60% a 100%, un solo tramo
-     lineal): a simple vista un degrade de alfa lineal se percibe con un
-     "hombro" justo donde arranca, como un corte -- sobre todo abajo de
-     "See Projects", que cae ya casi al final del tramo. Con paradas
-     intermedias (mas temprano y mas espaciadas) la misma distancia total
-     se siente gradual de verdad en vez de un corte con blur. */
   background:
     radial-gradient(120% 90% at 50% 45%, transparent 30%, rgba(0,0,0,.55) 100%),
-    linear-gradient(to bottom,
-      rgba(0,0,0,.5),
-      transparent 22%,
-      transparent 42%,
-      color-mix(in srgb, var(--c-bg) 30%, transparent) 65%,
-      color-mix(in srgb, var(--c-bg) 70%, transparent) 85%,
-      var(--c-bg) 100%);
+    linear-gradient(to bottom, rgba(0,0,0,.5), transparent 22%);
 }
 
 .hero__frame {
@@ -1728,17 +1740,17 @@ p { text-wrap: pretty; }
      seguian con var(--dur-slow), 250ms, mas corta -- el texto terminaba
      su fundido antes de que la barra terminara de encogerse, y ese resto
      de recorrido (con el contenido ya asentado) se sentia como un salto
-     en vez de un solo movimiento fluido. */
+     en vez de un solo movimiento fluido.
+     La curva tambien cambia a proposito: "ease-in-out" (simetrica, arranca
+     y termina despacio) en vez de var(--ease) (pensada para movimiento de
+     UI que arranca rapido) -- esta se lee mas como un fundido de
+     verdad, "fade in/fade out", que como una animacion de interfaz. */
   .nav__brand {
-    transition: opacity 450ms var(--ease), visibility 0s linear 0s;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
   }
   .nav.is-stuck .nav__brand {
-    transition: opacity 450ms var(--ease), visibility 0s linear 450ms;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
   }
-
-  /* Un poco mas de aire entre los links y el boton de sonido movil, para
-     que quede mas despegado del bloque de arriba. */
-  .audio-control__toggle.nav__brand-audio { margin-top: var(--sp-7); }
 
   /* En desktop el reel se ancla arriba (align-items:flex-start en
      .hero) porque ahi el "top clearance" ya calcula justo cuanto
@@ -1766,13 +1778,13 @@ p { text-wrap: pretty; }
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 450ms var(--ease), visibility 0s linear 450ms;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
   }
   .nav.is-stuck .nav__right {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transition: opacity 450ms var(--ease), visibility 0s linear 0s;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
   }
 }
 
@@ -1839,24 +1851,14 @@ p { text-wrap: pretty; }
   .hero__scroll { display: none; }
 }
 
-/* --- Escritorio (mas de 900px): scroll forzado del reel a Selected Works.
-   Al bajar desde el reel, en vez de poder scrollear libre, la pagina
-   encastra directo en la seccion "Selected Works" (titulo + selector +
-   grilla) -- que entra completa en una sola pantalla, centrada. Solo pasa
-   entre estos dos bloques: de ahi para abajo (Contact, etc.) el scroll
-   sigue libre como siempre, porque ningun otro bloque tiene
-   scroll-snap-align. En celular no se toca nada de esto. --- */
+/* --- Escritorio (mas de 900px): "Selected Works" entra completa en una
+   sola pantalla, centrada verticalmente. El scroll forzado del reel hacia
+   esta seccion (con una curva de velocidad propia, mas fluida que el
+   scroll-snap nativo del navegador -- ese no deja elegir la curva ni la
+   duracion) se hace por JavaScript, ver "6. SCROLL FORZADO..." en
+   js/main.js. En celular no se toca nada de esto. --- */
 @media (min-width: 901px) {
-  html { scroll-snap-type: y mandatory; }
-
-  .hero {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-
   #projects {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     min-height: 100svh;
     display: flex;
     flex-direction: column;
@@ -1869,11 +1871,6 @@ p { text-wrap: pretty; }
   }
   #projects .portfolio-tabs-row { margin-bottom: var(--sp-6); }
   #projects .grid { row-gap: var(--sp-6); }
-}
-@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
-  /* Quien pidio menos movimiento no recibe el encastre forzado: scroll
-     libre de toda la pagina, como si esta seccion no existiera. */
-  html { scroll-snap-type: none; }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
