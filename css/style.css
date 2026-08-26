@@ -416,7 +416,7 @@ p { text-wrap: pretty; }
 
 .nav__brand-role {
   margin-top: var(--sp-1);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-2xs);
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--c-text-muted);
@@ -447,8 +447,12 @@ p { text-wrap: pretty; }
   align-items: center;
   min-height: var(--tap);
   padding-inline: var(--sp-3);
-  font-size: var(--fs-2xs);
-  font-weight: 400;
+  /* Antes eran mas chicos y livianos que .nav__brand-role (el subtitulo
+     de arriba) -- se leian como una nota al pie en vez de una barra de
+     navegacion. Ahora son claramente mas grandes y mas pesados que el
+     subtitulo, para que destaquen como corresponde a links reales. */
+  font-size: var(--fs-sm);
+  font-weight: 600;
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--c-text-muted);
@@ -1781,7 +1785,9 @@ p { text-wrap: pretty; }
      Achicado especificamente para celular/tablet. */
   #projects { padding-top: var(--sp-5); }
 
-  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-7) var(--sp-5); }
+  /* Una sola columna: las tarjetas (Sound y Audiovisual, cada una en su
+     pestana) van apiladas una debajo de la otra, sin compartir fila. */
+  .grid { grid-template-columns: 1fr; gap: var(--sp-7) var(--sp-5); }
 
   .project {
     grid-template-columns: minmax(0, 1fr);
@@ -1819,7 +1825,7 @@ p { text-wrap: pretty; }
   .nav__brand-role { white-space: normal; }
   .hero__welcome { max-width: calc(100vw - var(--sp-8)); }
 
-  .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
+  .grid { grid-template-columns: 1fr; gap: var(--sp-6) var(--sp-4); }
 
   /* El marco ocupa todo el ancho, pegado al video, pero ahora si mantiene
      el mismo difuminado de arriba/abajo que en desktop (--hero-fade,
@@ -1884,20 +1890,27 @@ p { text-wrap: pretty; }
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* El padding de afuera de todo el bloque, achicado, para correrlo
-       hacia arriba y que entre mejor en una pantalla. Ni las tarjetas ni
-       los textos cambian de tamano en ningun lado de este ajuste. */
-    padding-top: var(--sp-5);
-    padding-bottom: var(--sp-5);
+    /* El padding de afuera de todo el bloque, achicado un poco mas. */
+    padding-top: var(--sp-4);
+    padding-bottom: var(--sp-4);
   }
-  /* Espacio entre las pestanas Sound/Audiovisual y la grilla: un poco
-     menos que el original (var(--sp-8), 64px) pero sin exagerar. */
-  #projects .portfolio-tabs-row { margin-bottom: var(--sp-7); }
+  /* Espacio entre las pestanas Sound/Audiovisual y la grilla: achicado
+     un poco mas. */
+  #projects .portfolio-tabs-row { margin-bottom: var(--sp-6); }
   /* Espacio ENTRE las dos filas de tarjetas (ej.: entre la fila de
-     arriba y la fila de abajo, donde esta "La Llamada Fatal"): el que
-     mas se achica, porque es el que mas espacio libera sin tener que
-     subir el bloque entero tanto. */
-  #projects .grid { row-gap: var(--sp-5); }
+     arriba y la fila de abajo, donde esta "La Llamada Fatal"). */
+  #projects .grid { row-gap: var(--sp-4); }
+  /* Si con los margenes de arriba todavia no entra la segunda fila
+     completa en pantallas mas bajas, esto achica un poco las tarjetas
+     mismas (ancho, y por lo tanto tambien alto, ya que las imagenes son
+     16:9) -- SOLO las imagenes/videos de las tarjetas, nunca los
+     titulos debajo (esos quedan con su tamano de letra de siempre). Un
+     94% deja las tarjetas visiblemente iguales, no es un achique
+     drastico. */
+  #projects .grid {
+    max-width: 94%;
+    margin-inline: auto;
+  }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */

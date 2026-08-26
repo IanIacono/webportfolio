@@ -434,7 +434,10 @@
   var projectsEl = document.getElementById("projects");
   var contactEl = document.getElementById("contact");
 
-  if (heroEl && projectsEl && !reduceMotion.matches) {
+  /* Los 3 requeridos (no solo heroEl/projectsEl): con el enganche ahora
+     tambien entre Selected Works y Contact, el codigo de abajo llama a
+     contactEl.scrollIntoView() sin volver a chequear que exista. */
+  if (heroEl && projectsEl && contactEl && !reduceMotion.matches) {
     function navClearance() {
       var root = getComputedStyle(document.documentElement);
       var pxPerRem = parseFloat(root.fontSize) || 16;
@@ -449,26 +452,33 @@
       var clearance = navClearance();
       var y = window.scrollY;
       var projectsSnap = projectsEl.offsetTop - clearance;
-      var contactSnap = contactEl ? contactEl.offsetTop - clearance : Infinity;
+      var contactSnap = contactEl.offsetTop - clearance;
 
+      /* Los 3 tramos (reel / Selected Works / Contact) quedan enganchados
+         de a pares, en las dos direcciones -- como pediste, ya no hay
+         tramo libre entre Selected Works y Contact. Una vez "adentro" de
+         Contact de verdad, scrollear mas para abajo (footer, etc.) si
+         queda libre: no hay un cuarto punto al que engancharse. */
       if (e.deltaY > 0 && y < projectsSnap - 4) {
-        /* Todavia en el reel, scrolleando para abajo: salta a Selected Works. */
+        /* Reel, para abajo: a Selected Works. */
         e.preventDefault();
         projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (e.deltaY > 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
+        /* Selected Works, para abajo: a Contact. */
+        e.preventDefault();
+        contactEl.scrollIntoView({ behavior: "smooth", block: "start" });
       } else if (e.deltaY < 0 && y >= contactSnap - 4) {
-        /* Ya en (o pasado) Contact, scrolleando para arriba: frena en
-           Selected Works -- nunca salta directo al reel de un salto. Si
-           se sigue scrolleando para arriba una vez ahi, la rama de abajo
-           es la que despues sí lleva al reel. */
+        /* Contact (o mas abajo), para arriba: frena en Selected Works --
+           nunca salta directo al reel de un salto. Si se sigue
+           scrolleando para arriba una vez ahi, la rama de abajo es la
+           que despues sí lleva al reel. */
         e.preventDefault();
         projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
       } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
-        /* Dentro de Selected Works (no llego a Contact todavia),
-           scrolleando para arriba: vuelve al reel. */
+        /* Selected Works, para arriba: al reel. */
         e.preventDefault();
         heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      /* Cualquier otro caso no se toca: scroll nativo, libre. */
     }, { passive: false });
   }
 
