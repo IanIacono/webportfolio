@@ -453,14 +453,20 @@
         /* Todavia en el reel, scrolleando para abajo: salta a Selected Works. */
         e.preventDefault();
         projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else if (e.deltaY < 0 && y >= contactSnap - 4) {
+        /* Ya en (o pasado) Contact, scrolleando para arriba: frena en
+           Selected Works -- nunca salta directo al reel de un salto. Si
+           se sigue scrolleando para arriba una vez ahi, la rama de abajo
+           es la que despues sí lleva al reel. */
+        e.preventDefault();
+        projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
       } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
         /* Dentro de Selected Works (no llego a Contact todavia),
            scrolleando para arriba: vuelve al reel. */
         e.preventDefault();
         heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
       }
-      /* Cualquier otro caso (ya cruzando hacia/desde Contact) no se toca:
-         scroll nativo, libre. */
+      /* Cualquier otro caso no se toca: scroll nativo, libre. */
     }, { passive: false });
   }
 

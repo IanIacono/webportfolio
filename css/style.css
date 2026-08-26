@@ -953,12 +953,23 @@ p { text-wrap: pretty; }
    estilo, un solo lugar donde tocar la tipografia si hace falta. */
 .hero__welcome { display: none; }
 @media (max-width: 900px) {
+  /* Alto = exactamente el espacio libre arriba del reel (--hero-top-clearance,
+     ver "14. RESPONSIVE"): el borde de ABAJO de esta caja coincide con el
+     borde de ARRIBA de .hero__frame. Columna flex: nombre/subtitulo/links
+     quedan arriba (su tamano natural) y ".hero__welcome-audio-wrap" ocupa
+     TODO el resto (flex:1) centrando el boton adentro -- asi el boton
+     queda centrado justo en el espacio que sobra entre el borde de abajo
+     de los links y el borde de arriba del reel, no pegado a los links con
+     un margen fijo. */
   .hero__welcome {
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: absolute;
-    top: var(--sp-4);
+    top: 0;
     left: 50%;
     width: 100%;
+    height: var(--hero-top-clearance);
+    padding-top: var(--sp-4);
     transform: translateX(-50%);
     text-align: center;
     z-index: 2;
@@ -967,8 +978,18 @@ p { text-wrap: pretty; }
     width: fit-content;
     margin: var(--sp-3) auto 0;
   }
+  .hero__welcome-audio-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Un poco mas grande que el tamano base de .audio-control__toggle
+     (calc(var(--tap) + 6px), 50px). */
   .hero__welcome-audio {
-    margin: var(--sp-4) auto 0;
+    width: calc(var(--tap) + 12px);
+    height: calc(var(--tap) + 12px);
   }
 }
 
@@ -1535,7 +1556,14 @@ p { text-wrap: pretty; }
   transition: opacity var(--dur-slow) var(--ease),
               transform var(--dur-slow) var(--ease);
 }
-.hero__frame:hover .player__controls,
+/* ":hover" escopado a "hover:hover" a proposito -- en tactil, tocar el
+   video dispara :hover igual que un mouse y el navegador lo deja
+   "pegado" hasta el proximo toque en otro lado, lo que hacia que los
+   controles se vieran "siempre" en vez de aparecer/ocultarse con el
+   toque (ver .is-touch, controlado por JS en player.js). */
+@media (hover: hover) {
+  .hero__frame:hover .player__controls { opacity: 1; transform: translateY(0); }
+}
 .hero__frame:focus-within .player__controls,
 .player__controls.is-touch {
   opacity: 1;
@@ -1849,16 +1877,20 @@ p { text-wrap: pretty; }
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* SOLO el padding de afuera de todo el bloque se achica (para
-       correrlo hacia arriba y que entre mejor en una pantalla) -- el
-       espacio de ADENTRO (entre las pestanas Sound/Audiovisual y la
-       grilla) NO se toca aca, se queda con su valor de siempre
-       (var(--sp-8), ver ".portfolio-tabs-row" y ".grid" en sus
-       secciones -- antes lo habia achicado tambien y quedaba
-       apretado). Ni las tarjetas ni los textos cambian de tamano. */
-    padding-top: var(--sp-6);
-    padding-bottom: var(--sp-6);
+    /* El padding de afuera de todo el bloque, achicado, para correrlo
+       hacia arriba y que entre mejor en una pantalla. Ni las tarjetas ni
+       los textos cambian de tamano en ningun lado de este ajuste. */
+    padding-top: var(--sp-5);
+    padding-bottom: var(--sp-5);
   }
+  /* Espacio entre las pestanas Sound/Audiovisual y la grilla: un poco
+     menos que el original (var(--sp-8), 64px) pero sin exagerar. */
+  #projects .portfolio-tabs-row { margin-bottom: var(--sp-7); }
+  /* Espacio ENTRE las dos filas de tarjetas (ej.: entre la fila de
+     arriba y la fila de abajo, donde esta "La Llamada Fatal"): el que
+     mas se achica, porque es el que mas espacio libera sin tener que
+     subir el bloque entero tanto. */
+  #projects .grid { row-gap: var(--sp-5); }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */

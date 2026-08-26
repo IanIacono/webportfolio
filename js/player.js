@@ -195,20 +195,17 @@
 
     /* En celular no hay "hover": los controles se muestran al tocar el
        video (no los controles mismos, para no interferir con lo que ya
-       hacen el boton y la barra) y se esconden solos a los 3s si el
-       video sigue reproduciendose -- si esta en pausa se quedan, para
-       poder encontrar como retomarlo. Toca de nuevo el video para
-       esconderlos antes de tiempo. */
+       hacen el boton y la barra) y se esconden solos a los 3s de no
+       tocarlos, este pausado o reproduciendose. Toca de nuevo el video
+       para esconderlos antes de tiempo. */
     if (isTouch && heroControls) {
       var heroControlsHideTimer = null;
       var showHeroControls = function () {
         heroControls.classList.add("is-touch");
         clearTimeout(heroControlsHideTimer);
-        if (!hero.paused) {
-          heroControlsHideTimer = setTimeout(function () {
-            heroControls.classList.remove("is-touch");
-          }, 3000);
-        }
+        heroControlsHideTimer = setTimeout(function () {
+          heroControls.classList.remove("is-touch");
+        }, 3000);
       };
       var hideHeroControls = function () {
         heroControls.classList.remove("is-touch");
