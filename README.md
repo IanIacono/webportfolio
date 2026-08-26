@@ -1583,3 +1583,50 @@ desenfoque en los bordes de arriba y abajo, y el mismo difuminado
 hacia el color de fondo real de la página en el borde inferior, así
 se sigue sintiendo continuo hacia la sección de proyectos en vez de
 cortar en seco.
+
+**145. La barra de arriba, en celular, ahora aparece y desaparece
+más suave al scrollear.** Antes usaba la misma velocidad de
+transición que en escritorio (un cuarto de segundo), pero como en
+celular el nombre y el subtítulo bajaron bastante más que en
+escritorio (ver el punto 143), la barra tenía mucho más recorrido
+para achicarse — con la misma velocidad de antes, ese recorrido más
+largo se sentía como un salto en vez de una animación. Le puse una
+transición propia, más lenta, solo en celular.
+
+**146. El fondo borroso detrás del reel ahora es mucho más liviano,
+así deja de verse entrecortado.** Estaba usando el mismo archivo de
+1080p que el reel principal, nada más que agrandado y desenfocado —
+pero decodificar dos videos pesados al mismo tiempo (más todavía en
+celular, con menos potencia) es lo que lo hacía ir a los tirones.
+Como ese fondo se ve tan desenfocado que el detalle real no se nota
+para nada, le generé una copia liviana aparte, mucho más chica (480
+por 270 en vez de 1920 por 1080, sin audio, un archivo de 1MB en vez
+de 25MB) — se ve exactamente igual después del desenfoque, pero al
+navegador le cuesta mucho menos reproducirla.
+
+**147. Ese mismo fondo ahora se difumina más gradual hacia abajo,
+sin el corte que se notaba debajo de "See Projects".** El difuminado
+hacia el color de fondo de la página iba de golpe en un solo tramo;
+ahora tiene varios pasos intermedios que hacen que la transición se
+sienta pareja en vez de tener un borde marcado a mitad de camino.
+
+**148. El botón de sonido cambió de colores según el estado.** Antes
+subía a violeta cuando el sonido estaba prendido; ahora, con el
+sonido prendido se ve blanco sólido (icono oscuro), y silenciado se
+ve negro con el borde violeta — más marcada la diferencia entre los
+dos estados de un vistazo. Sigue titilando y vibrando mientras está
+silenciado, para llamar la atención, y además quedó un toque más
+grande.
+
+**149. Tu nombre, el subtítulo y el botón de sonido de celular
+bajaron un poco más** — la primera pasada (punto 143) ya los había
+despegado del borde de arriba, pero pediste más aire todavía, así
+que les di otro empujón hacia abajo, y al botón de sonido en
+particular un poco más de separación respecto a los links de arriba.
+
+**150. Saqué el botoncito violeta de "Skip to content" que aparecía
+pegado arriba a la izquierda.** Era un link de accesibilidad (deja
+saltar directo al contenido si alguien navega con teclado o lector
+de pantalla, sin pasar por todo el menú) que normalmente queda
+invisible y solo aparece si alguien lo enfoca con tab — pero se
+veía suelto y fuera de lugar, así que lo saqué del todo.

@@ -194,24 +194,6 @@ ul, ol { list-style: none; }
 
 ::selection { background: var(--c-accent); color: #0a0910; }
 
-/* Link para saltar directo al contenido (lectores de pantalla / teclado) */
-.skip-link {
-  position: absolute;
-  top: var(--sp-3);
-  left: var(--sp-3);
-  z-index: 200;
-  padding: var(--sp-3) var(--sp-5);
-  background: var(--c-accent);
-  color: #0a0910;
-  font-size: var(--fs-sm);
-  font-weight: 500;
-  border-radius: var(--r-sm);
-  text-decoration: none;
-  transform: translateY(-200%);
-  transition: transform var(--dur) var(--ease);
-}
-.skip-link:focus { transform: translateY(0); }
-
 .visually-hidden {
   position: absolute !important;
   width: 1px; height: 1px;
@@ -531,8 +513,8 @@ p { text-wrap: pretty; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--tap);
-  height: var(--tap);
+  width: calc(var(--tap) + 6px);
+  height: calc(var(--tap) + 6px);
   border: 1px solid var(--c-line-strong);
   border-radius: var(--r-full);
   background: rgba(0,0,0,.3);
@@ -552,20 +534,22 @@ p { text-wrap: pretty; }
 .audio-control__toggle .icon-on  { display: none; }
 .audio-control__toggle[aria-pressed="true"] .icon-on   { display: block; }
 .audio-control__toggle[aria-pressed="true"] .icon-off  { display: none; }
-/* Mientras el sonido esta activo, el boton queda remarcado en violeta */
+/* Con sonido: boton blanco solido, icono oscuro -- se ve "activo/prendido". */
 .audio-control__toggle[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--c-accent) 22%, transparent);
-  border-color: var(--c-accent);
-  color: var(--c-accent-soft);
+  background: var(--c-text);
+  border-color: var(--c-text);
+  color: #0a0910;
   box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 55%, transparent);
 }
 
-/* Mientras el sitio esta silenciado, el boton titila en violeta y
-   vibra fuerte y seguido, invitando a activar el sonido -- se
-   detiene solo al prenderlo (aria-pressed pasa a "true", lo pinta
+/* Silenciado: negro con el borde violeta, y ademas titila (el glow crece
+   y se apaga) y vibra fuerte y seguido, invitando a activar el sonido --
+   se detiene solo al prenderlo (aria-pressed pasa a "true", lo pinta
    audio.js) o si alguien lo esta enfocando o pasandole el mouse por
    arriba, para no competir con esa interaccion real. */
 .audio-control__toggle[aria-pressed="false"] {
+  background: #0a0910;
+  border-color: var(--c-accent);
   animation: toggle-attention 1.4s ease-in-out infinite;
 }
 .audio-control__toggle[aria-pressed="false"]:hover,
@@ -574,7 +558,6 @@ p { text-wrap: pretty; }
 }
 @keyframes toggle-attention {
   0%, 100% {
-    border-color: var(--c-line-strong);
     box-shadow: 0 0 0 0 transparent;
     transform: translateX(0);
   }
@@ -586,11 +569,9 @@ p { text-wrap: pretty; }
   12% { transform: translateX(2px); }
   14% {
     transform: translateX(0);
-    border-color: var(--c-accent);
     box-shadow: 0 0 18px 3px color-mix(in srgb, var(--c-accent) 65%, transparent);
   }
   40% {
-    border-color: var(--c-line-strong);
     box-shadow: 0 0 0 0 transparent;
   }
 }
@@ -772,9 +753,21 @@ p { text-wrap: pretty; }
   content: "";
   position: absolute;
   inset: 0;
+  /* La mezcla a "var(--c-bg)" iba de golpe (60% a 100%, un solo tramo
+     lineal): a simple vista un degrade de alfa lineal se percibe con un
+     "hombro" justo donde arranca, como un corte -- sobre todo abajo de
+     "See Projects", que cae ya casi al final del tramo. Con paradas
+     intermedias (mas temprano y mas espaciadas) la misma distancia total
+     se siente gradual de verdad en vez de un corte con blur. */
   background:
     radial-gradient(120% 90% at 50% 45%, transparent 30%, rgba(0,0,0,.55) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,.5), transparent 22%, transparent 60%, var(--c-bg) 100%);
+    linear-gradient(to bottom,
+      rgba(0,0,0,.5),
+      transparent 22%,
+      transparent 42%,
+      color-mix(in srgb, var(--c-bg) 30%, transparent) 65%,
+      color-mix(in srgb, var(--c-bg) 70%, transparent) 85%,
+      var(--c-bg) 100%);
 }
 
 .hero__frame {
@@ -1697,8 +1690,23 @@ p { text-wrap: pretty; }
      padding-block de escritorio el nombre quedaba directamente cortado
      contra (incluso por encima de) el borde de arriba de la pantalla.
      Mas padding acá empuja todo el bloque hacia abajo sin tocar la
-     posicion del reel (son independientes, ver comentario de arriba). */
-  .nav { padding-block: 6.25rem; }
+     posicion del reel (son independientes, ver comentario de arriba).
+
+     Con esto ademas la barra pasa de su alto normal a "is-stuck" (0 de
+     padding) recorriendo mucha mas distancia que en escritorio -- con
+     la misma duracion de transicion (--dur-slow, 250ms) ese recorrido
+     mas largo se sentia repentino en vez de gradual. Una transicion
+     propia, mas lenta solo aca, lo resuelve sin tocar la de escritorio. */
+  .nav {
+    padding-block: 7.25rem;
+    transition: padding-block 450ms var(--ease),
+                background 450ms var(--ease),
+                border-color 450ms var(--ease);
+  }
+
+  /* Un poco mas de aire entre los links y el boton de sonido movil, para
+     que quede mas despegado del bloque de arriba. */
+  .audio-control__toggle.nav__brand-audio { margin-top: var(--sp-7); }
 
   /* En desktop el reel se ancla arriba (align-items:flex-start en
      .hero) porque ahi el "top clearance" ya calcula justo cuanto

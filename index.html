@@ -72,8 +72,6 @@
 
 <body data-site-name="Ian Iacono">
 
-  <a class="skip-link" href="#main">Skip to content</a>
-
   <!-- PANTALLA DE CARGA INICIAL. Tapa la pagina (ver .site-blur, la capa
        que envuelve la barra de navegacion + el contenido + el pie, mas
        abajo) con un blur que se va destapando a medida que el reel y el
@@ -160,7 +158,12 @@
            sincronizado en todo momento con el que se ve adelante. -->
       <div class="hero">
         <div class="hero__bg" aria-hidden="true">
-          <video src="assets/video/reel.mp4" muted loop playsinline preload="none"
+          <!-- Copia liviana del reel (480x270, sin audio, ~85kbps) solo para
+               este fondo: se lo agranda y desenfoca tanto que la resolucion
+               real no se nota, y decodificar un segundo video pesado en
+               simultaneo con el reel principal es lo que hacia que el fondo
+               se viera entrecortado, sobre todo en celular. -->
+          <video src="assets/video/reel-bg.mp4" muted loop playsinline preload="none"
                  tabindex="-1" data-hero-bg></video>
         </div>
 
