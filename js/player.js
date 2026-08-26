@@ -103,7 +103,12 @@
     };
 
     var enter = function () {
-      if (reduceMotion.matches) return;
+      /* En tactil no hay hover posible, asi que esta vista previa nunca
+         se ve -- ni vale la pena descargar el video. "focus" puede
+         disparar esto igual con un toque (el navegador enfoca el link al
+         tocarlo, antes de navegar), asi que el chequeo va aca, no solo en
+         el listener de pointerenter de mas abajo. */
+      if (reduceMotion.matches || isTouch) return;
       load();
       var pr = video.play();
       if (pr && pr.catch) pr.catch(function () {});
@@ -412,12 +417,20 @@
     /* ====================================================================
        PANTALLA DE CARGA INICIAL
        Tapa toda la pagina (ver .site-blur en css/style.css) con blur + 3
-       puntitos hasta que el reel y el video de cada tarjeta de proyecto
-       (las dos grillas, Sound y Audiovisual, esten a la vista o no)
-       esten listos para reproducirse -- asi nunca se ve la pagina "a
-       medio cargar". El blur se va reduciendo de a poco, no todo o
-       nada, a medida que cada video queda listo. Un tope maximo de
-       espera evita que un video lento (o roto) deje la pagina trabada. */
+       puntitos hasta que el reel -- y, solo en escritorio, el video de
+       cada tarjeta de proyecto (las dos grillas, Sound y Audiovisual,
+       esten a la vista o no) -- esten listos para reproducirse -- asi
+       nunca se ve la pagina "a medio cargar". El blur se va reduciendo
+       de a poco, no todo o nada, a medida que cada video queda listo. Un
+       tope maximo de espera evita que un video lento (o roto) deje la
+       pagina trabada.
+
+       En celular/tablet (isTouch) los videos de las tarjetas NUNCA se
+       piden aca: no hay hover posible en tactil (se navega directo al
+       tocar una tarjeta, ver "TARJETAS DE PROYECTO" mas arriba), asi que
+       esperarlos era descargar ~9 videos que jamas se iban a ver --
+       puro desperdicio de datos y tiempo de carga. Ahi el preloader solo
+       espera el reel. */
     (function () {
       var blurWrap = document.querySelector("[data-site-blur]");
       var preloader = document.querySelector("[data-preloader]");
@@ -430,7 +443,7 @@
       }
 
       var pending = [hero].concat(
-        tileLinks.map(function (link) { return link.querySelector(".tile__video"); })
+        isTouch ? [] : tileLinks.map(function (link) { return link.querySelector(".tile__video"); })
       ).filter(Boolean);
       var total = pending.length;
       var ready = 0;
