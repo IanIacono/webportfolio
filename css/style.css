@@ -525,10 +525,18 @@ p { text-wrap: pretty; }
               color var(--dur) var(--ease),
               box-shadow var(--dur) var(--ease);
 }
-.audio-control__toggle:hover {
-  background: var(--c-text);
-  border-color: var(--c-text);
-  color: #0a0910;
+/* Escopado a "hover:hover" a proposito: en celular/tablet, tocar el boton
+   dispara :hover igual que un mouse y el navegador lo deja "pegado" hasta
+   el proximo toque en otro lado -- sin este escope, volver a mutear se
+   veia mal (se quedaba con los colores de este estado en vez de pasar a
+   los de aria-pressed="false" de mas abajo). Con esto :hover solo corre
+   en dispositivos que de verdad tienen mouse. */
+@media (hover: hover) and (pointer: fine) {
+  .audio-control__toggle:hover {
+    background: var(--c-text);
+    border-color: var(--c-text);
+    color: #0a0910;
+  }
 }
 .audio-control__toggle svg { width: 16px; height: 16px; pointer-events: none; }
 .audio-control__toggle .icon-on  { display: none; }
@@ -550,7 +558,10 @@ p { text-wrap: pretty; }
 .audio-control__toggle[aria-pressed="false"] {
   background: #0a0910;
   border-color: var(--c-accent);
-  animation: toggle-attention 1.4s ease-in-out infinite;
+  /* Explicito (no solo heredado) para que vuelva bien a este color aunque
+     el navegador haya dejado :hover "pegado" de un toque anterior. */
+  color: var(--c-text);
+  animation: toggle-attention 2.8s ease-in-out infinite;
 }
 .audio-control__toggle[aria-pressed="false"]:hover,
 .audio-control__toggle[aria-pressed="false"]:focus-visible {
@@ -724,6 +735,14 @@ p { text-wrap: pretty; }
   overflow: hidden;
   pointer-events: none;
   background: #000;
+  /* Mismo tipo de difuminado alpha que .hero__frame (ver mas abajo), pero
+     solo en el borde de abajo: el fondo borroso se desvanece hacia
+     transparente (revela el fondo solido de la pagina detras, del mismo
+     color) en vez de cortar en seco. En porcentaje, no en px, para que la
+     misma proporcion funcione en pc y en celular sin reglas aparte. */
+  --hero-bg-fade-start: 62%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 var(--hero-bg-fade-start), transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 var(--hero-bg-fade-start), transparent 100%);
 }
 .hero__bg video,
 .hero__bg img {
@@ -1704,6 +1723,19 @@ p { text-wrap: pretty; }
                 border-color 450ms var(--ease);
   }
 
+  /* La marca grande y los links/volumen (mas abajo, .nav__right) se
+     desvanecen en cruz con la misma duracion de arriba (450ms): antes
+     seguian con var(--dur-slow), 250ms, mas corta -- el texto terminaba
+     su fundido antes de que la barra terminara de encogerse, y ese resto
+     de recorrido (con el contenido ya asentado) se sentia como un salto
+     en vez de un solo movimiento fluido. */
+  .nav__brand {
+    transition: opacity 450ms var(--ease), visibility 0s linear 0s;
+  }
+  .nav.is-stuck .nav__brand {
+    transition: opacity 450ms var(--ease), visibility 0s linear 450ms;
+  }
+
   /* Un poco mas de aire entre los links y el boton de sonido movil, para
      que quede mas despegado del bloque de arriba. */
   .audio-control__toggle.nav__brand-audio { margin-top: var(--sp-7); }
@@ -1734,13 +1766,13 @@ p { text-wrap: pretty; }
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
+    transition: opacity 450ms var(--ease), visibility 0s linear 450ms;
   }
   .nav.is-stuck .nav__right {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
+    transition: opacity 450ms var(--ease), visibility 0s linear 0s;
   }
 }
 
@@ -1756,14 +1788,12 @@ p { text-wrap: pretty; }
 
   .grid { grid-template-columns: repeat(2, 1fr); gap: var(--sp-6) var(--sp-4); }
 
-  /* En celular el marco ocupa todo el ancho, pegado al video: el
-     difuminado del borde inferior no tiene el mismo lugar para "respirar"
-     que en desktop y termina viendose como un corte raro. Se lo saca. */
+  /* El marco ocupa todo el ancho, pegado al video, pero ahora si mantiene
+     el mismo difuminado de arriba/abajo que en desktop (--hero-fade,
+     definido en la regla base de .hero__frame) en vez de sacarlo. */
   .hero__frame {
     width: 100%;
     border-radius: 0;
-    -webkit-mask-image: none;
-            mask-image: none;
   }
   .hero { min-height: 100svh; }
 
@@ -1807,6 +1837,43 @@ p { text-wrap: pretty; }
    asomando debajo del reel, asi que el cartel sobra. --- */
 @media (min-width: 641px) {
   .hero__scroll { display: none; }
+}
+
+/* --- Escritorio (mas de 900px): scroll forzado del reel a Selected Works.
+   Al bajar desde el reel, en vez de poder scrollear libre, la pagina
+   encastra directo en la seccion "Selected Works" (titulo + selector +
+   grilla) -- que entra completa en una sola pantalla, centrada. Solo pasa
+   entre estos dos bloques: de ahi para abajo (Contact, etc.) el scroll
+   sigue libre como siempre, porque ningun otro bloque tiene
+   scroll-snap-align. En celular no se toca nada de esto. --- */
+@media (min-width: 901px) {
+  html { scroll-snap-type: y mandatory; }
+
+  .hero {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  #projects {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Solo margenes achicados aca -- ni las tarjetas ni los textos
+       cambian de tamano. La meta es que las 2 filas de proyectos entren
+       completas debajo del reel sin necesitar scroll propio. */
+    padding-top: var(--sp-6);
+    padding-bottom: var(--sp-6);
+  }
+  #projects .portfolio-tabs-row { margin-bottom: var(--sp-6); }
+  #projects .grid { row-gap: var(--sp-6); }
+}
+@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
+  /* Quien pidio menos movimiento no recibe el encastre forzado: scroll
+     libre de toda la pagina, como si esta seccion no existiera. */
+  html { scroll-snap-type: none; }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
