@@ -1484,6 +1484,13 @@ p { text-wrap: pretty; }
   gap: var(--sp-4);
   text-align: left;
 }
+/* .project__title trae margin-bottom (separarlo de .project__role en la
+   pagina de un proyecto), pero aca el titulo y los iconos son vecinos en
+   la misma fila, no apilados -- ese margen no separaba nada, solo corria
+   el texto del titulo hacia arriba del centro real de la fila (el
+   align-items:center de arriba centra la caja CON margen, no el texto
+   visible). */
+#contact .page__head .project__title { margin-bottom: 0; }
 
 /* Mismo caso para el padding-bottom: .page__body trae var(--sp-10),
    pensado para una pagina de proyecto que termina sola. Contact termina
