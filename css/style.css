@@ -1575,6 +1575,54 @@ p { text-wrap: pretty; }
   border-color: var(--c-text);
 }
 
+/* Boton flotante "volver al reel": aparece solo, con un respiro,
+   mientras se esta viendo Contact (ver js/main.js, seccion 8). Oculto
+   por defecto -- opacity+visibility, no display, para poder animar la
+   entrada/salida y no perder el foco de un tiron. */
+.back-to-reel {
+  position: fixed;
+  right: var(--sp-5);
+  bottom: var(--sp-5);
+  z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap);
+  height: var(--tap);
+  border-radius: var(--r-full);
+  border: 1.5px solid var(--c-text);
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--c-text);
+  cursor: pointer;
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 70%, transparent);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 400ms var(--ease), transform 400ms var(--ease),
+              visibility 0s linear 400ms, background var(--dur) var(--ease),
+              color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.back-to-reel.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition: opacity 400ms var(--ease), transform 400ms var(--ease),
+              visibility 0s linear 0s, background var(--dur) var(--ease),
+              color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.back-to-reel svg { width: 20px; height: 20px; pointer-events: none; }
+@media (hover: hover) {
+  .back-to-reel:hover {
+    background: var(--c-text);
+    color: #0a0910;
+    box-shadow: 0 0 22px -1px color-mix(in srgb, var(--c-accent) 85%, transparent);
+  }
+}
+
 
 /* ==========================================================================
    11. BOTONES Y LINKS

@@ -2,7 +2,7 @@
    IAN IACONO — SOUND PORTFOLIO
    main.js
 
-   Hace siete cosas:
+   Hace ocho cosas:
      1. Cambia de pagina cuando cambia el # de la direccion (igual que Carrd)
      2. Hace aparecer los bloques suavemente al hacer scroll
      3. Vuelve solida la barra de arriba cuando bajas
@@ -14,6 +14,8 @@
         curva propia, mas fluida que el scroll-snap nativo del navegador)
      7. En celular/tablet, centra el boton de sonido de la bienvenida en
         el hueco real entre los links y el video (ver punto 7 mas abajo)
+     8. Muestra un boton flotante "volver al reel" mientras se esta
+        viendo Contact, que lleva de nuevo arriba del todo con un click
 
    No hace falta tocar este archivo para cambiar textos ni imagenes.
    ========================================================================== */
@@ -543,6 +545,49 @@
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(positionWelcomeAudio);
     }
+  }
+
+
+  /* ======================================================================
+     8. BOTON "VOLVER AL REEL"
+     Flotante, abajo a la derecha. Aparece con un respiro de 0.7s desde
+     que Contact entra en pantalla (asi no aparece de golpe si solo se
+     esta pasando de largo) y desaparece apenas se deja de ver Contact,
+     sea porque se subio scrolleando o porque se navego a otra pagina.
+     ====================================================================== */
+
+  var backToReel = document.querySelector(".back-to-reel");
+  var contactSection = document.getElementById("contact");
+  var heroSection = document.querySelector(".hero");
+
+  if (backToReel && contactSection && heroSection && "IntersectionObserver" in window) {
+    var backToReelTimer = null;
+
+    var contactObserver = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) {
+        if (backToReelTimer === null) {
+          backToReelTimer = window.setTimeout(function () {
+            backToReel.classList.add("is-visible");
+            backToReelTimer = null;
+          }, 700);
+        }
+      } else {
+        if (backToReelTimer !== null) {
+          window.clearTimeout(backToReelTimer);
+          backToReelTimer = null;
+        }
+        backToReel.classList.remove("is-visible");
+      }
+    }, { threshold: 0 });
+
+    contactObserver.observe(contactSection);
+
+    backToReel.addEventListener("click", function () {
+      heroSection.scrollIntoView({
+        behavior: reduceMotion.matches ? "auto" : "smooth",
+        block: "start"
+      });
+    });
   }
 
 
