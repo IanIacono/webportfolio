@@ -428,25 +428,99 @@
 
   /* ======================================================================
      6. SCROLL FORZADO: REEL / SELECTED WORKS / CONTACT (SOLO ESCRITORIO)
-     Las primeras dos versiones de esto interceptaban el evento "wheel"
-     a mano (primero con requestAnimationFrame, despues con
-     scrollIntoView() + limites en pixeles) para decidir cuando saltar
-     de una seccion a otra. Las dos tuvieron bugs reales entre rondas:
-     pelearon con "scroll-behavior: smooth", con la "zona fantasma" que
-     dejaba scroll-padding-top, y por ultimo la rueda quedaba
-     directamente sin responder ("se traba") porque un trackpad real no
-     manda un solo evento "wheel" por gesto sino decenas -- con inercia,
-     que puede seguir mandando eventos varios segundos despues de que
-     el dedo ya se levanto -- y volver a evaluar "hacia donde voy" en
-     cada uno de esos eventos, mientras el scroll anterior todavia
-     estaba animando, terminaba en resultados impredecibles.
+     Tercera version de esto. La primera (requestAnimationFrame con una
+     curva a mano) peleaba contra "scroll-behavior: smooth". La segunda
+     (scrollIntoView + limites en pixeles, despues con un candado
+     "isSnapping" liberado por el evento "scrollend") corrigio esos
+     bugs pero termino con la rueda sin responder igual: un trackpad
+     real no manda un solo evento "wheel" por gesto sino decenas, con
+     inercia que sigue mandando eventos un buen rato despues de que el
+     dedo ya se levanto -- y esos eventos tardios, llegando justo
+     cuando "isSnapping" recien se habia liberado, se leian como un
+     pedido nuevo y disparaban otro salto no pedido.
 
-     Esta version no interpreta "wheel" en absoluto: usa scroll-snap
-     nativo del navegador (ver ".hero, #projects, #contact" en
-     "14. RESPONSIVE" de css/style.css). El motor de scroll del
-     navegador mismo decide donde frenar, y ya sabe manejar mouse,
-     trackpad (con toda su inercia), touch y teclado correctamente, sin
-     que haga falta reimplementar nada de eso a mano. */
+     Se probo tambien reemplazar todo esto por scroll-snap NATIVO del
+     navegador (scroll-snap-type/scroll-snap-align en CSS, sin JS) --
+     soluciona lo de la rueda trabada de raiz porque el motor de scroll
+     nativo ya sabe absorber la inercia de un trackpad, pero el
+     "asentamiento" final de ese scroll-snap no se sintio tan fluido
+     como el scrollIntoView({behavior:"smooth"}) de la version anterior
+     (Chrome no siempre le aplica la misma curva suave). Como la
+     prioridad es que se sienta igual de fluido que antes, se volvio a
+     scrollIntoView -- pero con el problema de la inercia resuelto de
+     otra forma: en vez de tratar de detectar el instante exacto en que
+     termina la animacion (con "scrollend", propenso a la carrera con
+     eventos tardios), hay un enfriamiento (cooldown) de tiempo fijo
+     que arranca apenas se dispara un salto y dura mas que la animacion
+     Y que la cola tipica de inercia de un trackpad -- mientras dura,
+     cualquier "wheel" se ignora (se le hace preventDefault igual, para
+     que tampoco se cuele scroll libre por encima). Al ser un simple
+     "todavia no paso tanto tiempo", no depende de que ningun evento
+     del navegador se dispare para liberarse: no se puede quedar
+     trabado. */
+
+  var heroEl = document.querySelector(".hero");
+  var projectsEl = document.getElementById("projects");
+  var contactEl = document.getElementById("contact");
+
+  if (heroEl && projectsEl && contactEl && !reduceMotion.matches) {
+    function navClearance() {
+      var root = getComputedStyle(document.documentElement);
+      var pxPerRem = parseFloat(root.fontSize) || 16;
+      var navH = (parseFloat(root.getPropertyValue("--nav-h")) || 4.5) * pxPerRem;
+      var gap = (parseFloat(root.getPropertyValue("--sp-4")) || 1) * pxPerRem;
+      return navH + gap;
+    }
+
+    /* Cubre la animacion en si (unos 400-600ms tipico para un salto de
+       una pantalla entera) mas un colchon generoso para la cola de
+       inercia de un trackpad real. Si algun dia esto se vuelve a sentir
+       trabado o, al reves, tarda de mas en responder a un scroll nuevo
+       genuino, este es el numero para ajustar. */
+    var WHEEL_COOLDOWN_MS = 900;
+    var cooldownUntil = 0;
+
+    function snapTo(el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      cooldownUntil = Date.now() + WHEEL_COOLDOWN_MS;
+    }
+
+    window.addEventListener("wheel", function (e) {
+      if (window.innerWidth <= 900) return;
+      if (Date.now() < cooldownUntil) { e.preventDefault(); return; }
+
+      var clearance = navClearance();
+      var y = window.scrollY;
+      var projectsSnap = projectsEl.offsetTop - clearance;
+      var contactSnap = contactEl.offsetTop - clearance;
+
+      /* Los 3 tramos (reel / Selected Works / Contact) quedan enganchados
+         de a pares, en las dos direcciones -- ya no hay tramo libre
+         entre Selected Works y Contact. Una vez "adentro" de Contact de
+         verdad, scrollear mas para abajo (footer, etc.) si queda libre:
+         no hay un cuarto punto al que engancharse. */
+      if (e.deltaY > 0 && y < projectsSnap - 4) {
+        /* Reel, para abajo: a Selected Works. */
+        e.preventDefault();
+        snapTo(projectsEl);
+      } else if (e.deltaY > 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
+        /* Selected Works, para abajo: a Contact. */
+        e.preventDefault();
+        snapTo(contactEl);
+      } else if (e.deltaY < 0 && y >= contactSnap - 4) {
+        /* Contact (o mas abajo), para arriba: frena en Selected Works --
+           nunca salta directo al reel de un salto. Si se sigue
+           scrolleando para arriba una vez ahi, la rama de abajo es la
+           que despues sí lleva al reel. */
+        e.preventDefault();
+        snapTo(projectsEl);
+      } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
+        /* Selected Works, para arriba: al reel. */
+        e.preventDefault();
+        snapTo(heroEl);
+      }
+    }, { passive: false });
+  }
 
   /* El pie de pagina no es hijo de #contact (es un solo elemento que
      vive despues de <main>, compartido por todas las paginas -- ver

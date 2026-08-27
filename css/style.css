@@ -364,20 +364,9 @@ p { text-wrap: pretty; }
   align-items: center;
   background: transparent;
   border-bottom: 1px solid transparent;
-  /* 450ms, no var(--dur-slow) (250ms): este colapso pasa AL MISMO TIEMPO
-     que el scroll forzado de "6. SCROLL FORZADO..." en js/main.js lleva
-     del reel a Selected Works (scroll-snap nativo, sin curva propia que
-     se pueda leer de CSS -- en Chrome, un scroll de una pantalla entera
-     ronda los 400-500ms). Con --dur-slow la barra terminaba de encogerse
-     bastante antes de que el scroll de la pagina terminara de deslizar,
-     y esa desincronizacion se sentia como un salto brusco justo en ese
-     tramo (no en Selected Works<->Contact, donde la barra ya esta
-     encogida de antes y no anima nada). No es un valor exacto -- si en
-     tu maquina el scroll tarda mas o menos, este numero es el que hay
-     que ajustar. */
-  transition: padding-block 450ms var(--ease),
-              background 450ms var(--ease),
-              border-color 450ms var(--ease);
+  transition: padding-block var(--dur-slow) var(--ease),
+              background var(--dur-slow) var(--ease),
+              border-color var(--dur-slow) var(--ease);
 }
 
 .nav.is-stuck {
@@ -409,9 +398,13 @@ p { text-wrap: pretty; }
    el clamp gigante pensado para flotar solo sobre el reel.
    margin-right:auto la empuja a la izquierda del todo sin tocar el
    justify-content compartido de .nav__inner (que .nav__brand no usa,
-   por ser position:absolute). */
+   por ser position:absolute).
+   Aparece/desaparece con opacity+visibility, no con display -- display
+   no se puede animar (cambia de golpe, sin fundido posible), y esto
+   tiene que entrar y salir con un fade suave igual que .nav__brand
+   (mismo patron: siempre ocupa su lugar en el flex, pointer-events la
+   saca de la navegacion por teclado/mouse mientras esta invisible). */
 .nav__project-brand {
-  display: none;
   font-family: var(--font-name);
   font-size: var(--fs-xl);
   font-weight: 900;
@@ -419,11 +412,21 @@ p { text-wrap: pretty; }
   white-space: nowrap;
   text-decoration: none;
   margin-right: auto;
-  transition: color var(--dur) var(--ease);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow), color var(--dur) var(--ease);
 }
 .nav__project-brand:hover { color: var(--c-accent-soft); }
-@media (min-width: 901px) {
-  .nav.is-stuck .nav__project-brand { display: block; }
+.nav.is-stuck .nav__project-brand {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s, color var(--dur) var(--ease);
+}
+/* En celular/tablet no existe: el equivalente ahi es .hero__welcome. */
+@media (max-width: 900px) {
+  .nav__project-brand { display: none; }
 }
 
 .nav__brand {
@@ -434,15 +437,12 @@ p { text-wrap: pretty; }
   text-align: center;
   opacity: 1;
   visibility: visible;
-  /* 450ms: ver el comentario largo en .nav (mas arriba) sobre por que
-     esto no usa var(--dur-slow) -- este fade tiene que tardar mas o
-     menos lo mismo que el scroll forzado reel<->Selected Works. */
-  transition: opacity 450ms var(--ease), visibility 0s linear 0s;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
 }
 .nav.is-stuck .nav__brand {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 450ms var(--ease), visibility 0s linear 450ms;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
 }
 
 .nav__brand-name {
@@ -2107,29 +2107,12 @@ p { text-wrap: pretty; }
 }
 
 /* --- Escritorio (mas de 900px): "Selected Works" entra completa en una
-   sola pantalla, centrada verticalmente. En celular no se toca nada de
-   esto. --- */
-/* --- Scroll forzado entre Reel / Selected Works / Contact (solo
-   escritorio) -- ver "6. SCROLL FORZADO..." en js/main.js para el
-   historial completo de por que esto termino siendo scroll-snap
-   NATIVO del navegador en vez de JS a mano (los intentos con JS
-   tuvieron varios bugs reales entre rondas, el ultimo dejaba la rueda
-   sin responder del todo). Con "mandatory" el scroll siempre termina
-   asentado en una de las tres secciones, nunca a mitad de camino;
-   "scroll-snap-stop: always" evita que un scroll rapido (o con la
-   inercia de un trackpad) salte una entera de largo, por ejemplo del
-   reel directo a Contact sin pasar por Selected Works. En su propio
-   media query, aparte del resto de las reglas de escritorio de aca
-   abajo, porque tambien tiene que respetar "menos movimiento": quien
-   pidio esa preferencia navega 100% libre, sin ningun enganche. --- */
-@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-  html { scroll-snap-type: y mandatory; }
-  .hero, #projects, #contact {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-}
-
+   sola pantalla, centrada verticalmente. El scroll forzado del reel hacia
+   esta seccion (con scrollIntoView + un enfriamiento por tiempo para no
+   pelearse con la inercia de un trackpad) se hace por JavaScript, ver
+   "6. SCROLL FORZADO..." en js/main.js -- ahi esta el historial completo
+   de las versiones anteriores de este mecanismo. En celular no se toca
+   nada de esto. --- */
 @media (min-width: 901px) {
   #projects {
     min-height: 100svh;
