@@ -37,7 +37,6 @@
   if (!pages.length) return;
 
   var siteName = document.body.dataset.siteName || "Ian Iacono";
-  var navEl = document.querySelector(".nav");
   var homeId = pages[0].id;
 
   /* Ids que no son paginas sino puntos de la pagina de inicio */
@@ -83,12 +82,6 @@
        aunque haya varias pestanas abiertas. */
     var pageTitle = next.dataset.title;
     document.title = pageTitle ? siteName + " — " + pageTitle : siteName;
-
-    /* "Ian Iacono" a la izquierda de la barra fija, solo en escritorio
-       y solo en las paginas de proyecto (ver ".nav__project-brand" en
-       "05. NAVEGACION" de css/style.css) -- en el home ya esta el
-       nombre grande centrado (.nav__brand), no hace falta duplicarlo. */
-    if (navEl) navEl.classList.toggle("is-project-page", next.id !== homeId);
 
     document.dispatchEvent(new CustomEvent("page:change", { detail: { id: next.id, page: next } }));
 

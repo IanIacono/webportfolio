@@ -91,12 +91,14 @@
          ========================================================================== -->
   <header class="nav">
     <div class="nav__inner">
-      <!-- "Ian Iacono" a la izquierda de la barra: SOLO en las paginas de
-           proyecto (.nav.is-project-page, prendido por JS en main.js al
-           cambiar de pagina) y SOLO en escritorio -- ver
-           ".nav__project-brand" en css/style.css. En el home no hace
-           falta: ya esta el nombre grande centrado, mas abajo. -->
-      <p class="nav__project-brand">Ian Iacono</p>
+      <!-- "Ian Iacono" a la izquierda de la barra, link de vuelta al
+           reel: aparece siempre que la barra esta en su version chica
+           (.nav.is-stuck -- en cualquier pagina de proyecto, o en el
+           home despues de scrollear) y SOLO en escritorio -- ver
+           ".nav__project-brand" en css/style.css. Arriba de todo del
+           home no hace falta: ya esta el nombre grande centrado, mas
+           abajo, y ese no es link porque ahi ya estas en el reel. -->
+      <a class="nav__project-brand" href="#home">Ian Iacono</a>
 
       <!-- MARCA GRANDE: SOLO ESCRITORIO (mas de 900px). Se ve arriba de
            todo del home (nombre + subtitulo, centrados); al scrollear --

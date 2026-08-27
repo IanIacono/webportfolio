@@ -364,9 +364,20 @@ p { text-wrap: pretty; }
   align-items: center;
   background: transparent;
   border-bottom: 1px solid transparent;
-  transition: padding-block var(--dur-slow) var(--ease),
-              background var(--dur-slow) var(--ease),
-              border-color var(--dur-slow) var(--ease);
+  /* 450ms, no var(--dur-slow) (250ms): este colapso pasa AL MISMO TIEMPO
+     que el scroll forzado de "6. SCROLL FORZADO..." en js/main.js lleva
+     del reel a Selected Works (scroll-snap nativo, sin curva propia que
+     se pueda leer de CSS -- en Chrome, un scroll de una pantalla entera
+     ronda los 400-500ms). Con --dur-slow la barra terminaba de encogerse
+     bastante antes de que el scroll de la pagina terminara de deslizar,
+     y esa desincronizacion se sentia como un salto brusco justo en ese
+     tramo (no en Selected Works<->Contact, donde la barra ya esta
+     encogida de antes y no anima nada). No es un valor exacto -- si en
+     tu maquina el scroll tarda mas o menos, este numero es el que hay
+     que ajustar. */
+  transition: padding-block 450ms var(--ease),
+              background 450ms var(--ease),
+              border-color 450ms var(--ease);
 }
 
 .nav.is-stuck {
@@ -389,14 +400,16 @@ p { text-wrap: pretty; }
   gap: var(--sp-5);
 }
 
-/* "Ian Iacono" a la izquierda de la barra: solo en paginas de proyecto,
-   solo escritorio (.nav.is-project-page, ver "1. ROUTER" en js/main.js).
-   Misma tipografia/peso que .nav__brand-name (la firma del home, mas
-   abajo) pero a un tamano que entra comodo en la barra chica -- no el
-   clamp gigante pensado para flotar solo sobre el reel. margin-right:auto
-   la empuja a la izquierda del todo sin tocar el justify-content
-   compartido de .nav__inner (que .nav__brand no usa, por ser position:
-   absolute). */
+/* "Ian Iacono" a la izquierda de la barra, link de vuelta al reel:
+   aparece siempre que la barra esta en su version chica/"is-stuck"
+   (paginas de proyecto siempre, o el home despues de scrollear -- ver
+   ".is-stuck" mas abajo y "3. BARRA DE ARRIBA" en js/main.js) y solo
+   en escritorio. Misma tipografia/peso que .nav__brand-name (la firma
+   del home) pero a un tamano que entra comodo en la barra chica -- no
+   el clamp gigante pensado para flotar solo sobre el reel.
+   margin-right:auto la empuja a la izquierda del todo sin tocar el
+   justify-content compartido de .nav__inner (que .nav__brand no usa,
+   por ser position:absolute). */
 .nav__project-brand {
   display: none;
   font-family: var(--font-name);
@@ -404,10 +417,13 @@ p { text-wrap: pretty; }
   font-weight: 900;
   color: var(--c-text);
   white-space: nowrap;
+  text-decoration: none;
   margin-right: auto;
+  transition: color var(--dur) var(--ease);
 }
+.nav__project-brand:hover { color: var(--c-accent-soft); }
 @media (min-width: 901px) {
-  .nav.is-project-page .nav__project-brand { display: block; }
+  .nav.is-stuck .nav__project-brand { display: block; }
 }
 
 .nav__brand {
@@ -418,12 +434,15 @@ p { text-wrap: pretty; }
   text-align: center;
   opacity: 1;
   visibility: visible;
-  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s;
+  /* 450ms: ver el comentario largo en .nav (mas arriba) sobre por que
+     esto no usa var(--dur-slow) -- este fade tiene que tardar mas o
+     menos lo mismo que el scroll forzado reel<->Selected Works. */
+  transition: opacity 450ms var(--ease), visibility 0s linear 0s;
 }
 .nav.is-stuck .nav__brand {
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow);
+  transition: opacity 450ms var(--ease), visibility 0s linear 450ms;
 }
 
 .nav__brand-name {
