@@ -1531,7 +1531,7 @@ p { text-wrap: pretty; }
 .contact-form__status--error { color: var(--c-text); }
 
 .contact-form__links {
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-2);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
