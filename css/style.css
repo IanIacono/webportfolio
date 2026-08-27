@@ -1472,8 +1472,17 @@ p { text-wrap: pretty; }
 
 /* .page__head (el titulo "Contact") comparte clase con el de cada pagina
    de proyecto -- se achica el espacio solo aca, no en esas otras (ahi
-   var(--sp-8) se queda igual). */
-#contact .page__head { margin-bottom: var(--sp-4); }
+   var(--sp-8) se queda igual). Ademas, solo aca, deja de estar centrado:
+   el titulo va alineado a la izquierda y los iconos de redes se acomodan
+   a su derecha, en la misma fila, centrados verticalmente con el texto. */
+#contact .page__head {
+  margin-bottom: var(--sp-4);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  text-align: left;
+}
 
 /* Mismo caso para el padding-bottom: .page__body trae var(--sp-10),
    pensado para una pagina de proyecto que termina sola. Contact termina
@@ -1530,11 +1539,12 @@ p { text-wrap: pretty; }
 }
 .contact-form__status--error { color: var(--c-text); }
 
+/* Ahora vive adentro de #contact .page__head, al lado del titulo (ver
+   "10b. FORMULARIO DE CONTACTO" mas arriba) -- ya no necesita su propio
+   margin-top ni centrado, los hereda de ese contenedor flex. */
 .contact-form__links {
-  margin-top: var(--sp-2);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   gap: var(--sp-3);
 }
 
@@ -1820,6 +1830,14 @@ p { text-wrap: pretty; }
 
 /* --- Tablet y abajo (hasta 900px) --- */
 @media (max-width: 900px) {
+  /* En mobile, los bloques ya aparecen enteros -- nada de fade-in al
+     scrollear hasta ellos. Esto es puramente visual (la animacion de
+     ".reveal" no retrasa ninguna descarga real: el HTML de cada
+     bloque ya esta en la pagina desde el principio, solo se anima su
+     opacity/transform), asi que apagarla aca no cuesta nada de
+     rendimiento -- es al reves de un lazy-load. */
+  .reveal { opacity: 1; transform: none; }
+
   /* Deja lugar arriba de .hero para ".hero__welcome" (nombre + subtitulo
      + links + boton de sonido, ver "07. HERO / REEL") -- ese bloque
      ahora vive DENTRO del reel, no en la barra fija (ver mas abajo por
