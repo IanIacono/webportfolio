@@ -1293,6 +1293,63 @@ p { text-wrap: pretty; }
   border: 0;
 }
 
+/* Boton "facade": en vez de cargar el iframe pesado de YouTube apenas se
+   entra al proyecto (dejaba la caja en blanco varios segundos, sobre todo
+   en mobile), se muestra la miniatura del video con un boton de play; el
+   iframe real (con autoplay) recien se crea al tocarlo -- ver
+   js/embed-lazy.js */
+.embed__facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.embed__facade-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.embed__facade-play {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--tap) + 14px);
+  height: calc(var(--tap) + 14px);
+  border-radius: var(--r-full);
+  border: 1px solid var(--c-line-strong);
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--c-text);
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 70%, transparent);
+  transition: background var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.embed__facade-play svg { width: 20px; height: 20px; margin-left: 2px; pointer-events: none; }
+@media (hover: hover) {
+  .embed__facade:hover .embed__facade-play {
+    background: var(--c-text);
+    border-color: var(--c-text);
+    color: #0a0910;
+    box-shadow: 0 0 22px -1px color-mix(in srgb, var(--c-accent) 85%, transparent);
+  }
+}
+
 /* Marco para los reproductores de Spotify (son altos, no 16:9) */
 .embed--audio {
   aspect-ratio: auto;
