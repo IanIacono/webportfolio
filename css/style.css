@@ -1850,8 +1850,19 @@ p { text-wrap: pretty; }
      padding-top) esta pensada para cuando la barra fija ya no tapa nada
      -- pero en este ancho, al tocar "Projects" en el nav (o al scrollear
      hasta ahi), quedaba MUCHO aire antes del titulo "Selected Works".
-     Achicado especificamente para celular/tablet. */
-  #projects { padding-top: var(--sp-5); }
+     Achicado especificamente para celular/tablet.
+     El padding-top no es tan chico como parece: hace falta ese colchon
+     extra para que "Selected Works" nunca asome en la pantalla del
+     reel -- .hero mide 100svh (el alto "chico" de la pantalla, cuando
+     la barra del navegador esta desplegada), pero muchos celulares
+     arrancan la carga con esa barra ya colapsada, con lo cual el alto
+     real visible es mayor al 100svh calculado y el contenido de
+     despues del reel queda asomando un poco. Este aire de mas absorbe
+     esa diferencia. El padding-bottom, en cambio, se achica: heredaba
+     el de .page__body (pensado para paginas de proyecto, mucho mas
+     alto) y dejaba demasiada distancia entre la ultima tarjeta y
+     Contact. */
+  #projects { padding-top: var(--sp-9); padding-bottom: var(--sp-5); }
 
   /* Una sola columna: las tarjetas (Sound y Audiovisual, cada una en su
      pestana) van apiladas una debajo de la otra, sin compartir fila. */
