@@ -2110,6 +2110,23 @@ p { text-wrap: pretty; }
      si "La Llamada Fatal" sigue sin entrar en tu pantalla, avisame el
      alto de tu ventana y lo resolvemos con otro numero, no con este
      mecanismo. */
+
+  /* Mismo motivo que #projects arriba, pero aca ademas rompia el scroll
+     forzado: sin este alto minimo, Contact + el pie de pagina no
+     llegaban a ocupar una pantalla completa, asi que el navegador nunca
+     podia scrollear lo suficiente como para dejar a Contact pegado
+     arriba del todo -- se seguian viendo las ultimas tarjetas de
+     Selected Works asomando arriba, Y el punto de enganche de Contact
+     (contactSnap en js/main.js) quedaba mas abajo de lo que el scroll
+     llegaba a alcanzar nunca, asi que ese codigo no reconocia "estoy en
+     Contact" y, al scrollear para arriba desde ahi, saltaba directo al
+     reel salteando Selected Works. */
+  #contact {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
