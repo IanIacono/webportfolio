@@ -2120,9 +2120,21 @@ p { text-wrap: pretty; }
      (contactSnap en js/main.js) quedaba mas abajo de lo que el scroll
      llegaba a alcanzar nunca, asi que ese codigo no reconocia "estoy en
      Contact" y, al scrollear para arriba desde ahi, saltaba directo al
-     reel salteando Selected Works. */
+     reel salteando Selected Works.
+     Un 100svh completo dejaba al pie de pagina fuera de esa pantalla
+     (habia que scrollear un poco mas para verlo) -- la idea es que
+     "estar en Contact" sea ya el final de la pagina, formulario Y pie
+     de pagina juntos en la misma pantalla, no solo el formulario. Por
+     eso el alto minimo le resta el alto real del pie (medido por JS,
+     ver "6. SCROLL FORZADO..." en js/main.js -- el pie no es hijo de
+     #contact, asi que CSS solo no puede restarlo) Y el clearance de la
+     barra fija (lo mismo que "scroll-padding-top" mas arriba: sin
+     restar esto tambien, el pie quedaba empujado esos mismos px mas
+     abajo del final de la pantalla). El resto sobrante (si el
+     formulario es mas bajo que eso) queda como aire entre el
+     formulario y el pie, no despues del pie. */
   #contact {
-    min-height: 100svh;
+    min-height: calc(100svh - var(--footer-h, 66px) - var(--nav-h) - var(--sp-4));
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

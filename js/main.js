@@ -474,8 +474,36 @@
       return navH + gap;
     }
 
+    /* Candado contra scroll "trabado": un gesto de wheel real dispara
+       muchos eventos seguidos, y evaluar window.scrollY en cada uno
+       podia lanzar un scrollIntoView() nuevo mientras el anterior
+       todavia estaba animando -- si en el medio de un scroll hacia
+       Contact el usuario se arrepentia y volvia a scrollear para
+       arriba, ese segundo scroll interrumpia al primero a mitad de
+       camino, y asi sucesivamente: la rueda dejaba de responder.
+       Mientras isSnapping esta activo, los wheel que lleguen se
+       ignoran (preventDefault igual, para que tampoco se cuele scroll
+       libre por encima) hasta que el scroll en curso termina de
+       verdad ("scrollend", con un tiempo maximo de respaldo por si el
+       navegador no lo llega a disparar). */
+    var isSnapping = false;
+    var snapSafety = null;
+
+    function snapTo(el) {
+      isSnapping = true;
+      if (snapSafety) window.clearTimeout(snapSafety);
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      var release = function () {
+        isSnapping = false;
+        window.removeEventListener("scrollend", release);
+      };
+      window.addEventListener("scrollend", release);
+      snapSafety = window.setTimeout(release, 1000);
+    }
+
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
+      if (isSnapping) { e.preventDefault(); return; }
 
       var clearance = navClearance();
       var y = window.scrollY;
@@ -490,26 +518,43 @@
       if (e.deltaY > 0 && y < projectsSnap - 4) {
         /* Reel, para abajo: a Selected Works. */
         e.preventDefault();
-        projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        snapTo(projectsEl);
       } else if (e.deltaY > 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
         /* Selected Works, para abajo: a Contact. */
         e.preventDefault();
-        contactEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        snapTo(contactEl);
       } else if (e.deltaY < 0 && y >= contactSnap - 4) {
         /* Contact (o mas abajo), para arriba: frena en Selected Works --
            nunca salta directo al reel de un salto. Si se sigue
            scrolleando para arriba una vez ahi, la rama de abajo es la
            que despues sí lleva al reel. */
         e.preventDefault();
-        projectsEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        snapTo(projectsEl);
       } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
         /* Selected Works, para arriba: al reel. */
         e.preventDefault();
-        heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        snapTo(heroEl);
       }
     }, { passive: false });
   }
 
+  /* El pie de pagina no es hijo de #contact (es un solo elemento que
+     vive despues de <main>, compartido por todas las paginas -- ver
+     index.html), asi que CSS no puede restarle su alto solo. Se mide
+     con JS y se deja en una variable para que #contact (min-height,
+     ver "14. RESPONSIVE" en css/style.css) pueda descontarselo: asi
+     "llegar a Contact" con el scroll forzado de arriba muestra el
+     formulario Y el pie juntos, el final real de la pagina, en vez de
+     dejar el pie una pantalla mas abajo. */
+  var siteFooter = document.querySelector(".site-footer");
+  if (siteFooter) {
+    var setFooterHeightVar = function () {
+      document.documentElement.style.setProperty("--footer-h", siteFooter.getBoundingClientRect().height + "px");
+    };
+    setFooterHeightVar();
+    window.addEventListener("resize", setFooterHeightVar);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(setFooterHeightVar);
+  }
 
   /* ======================================================================
      7. CENTRAR EL BOTON DE SONIDO DE LA BIENVENIDA MOVIL (.hero__welcome)
