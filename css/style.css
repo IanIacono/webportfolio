@@ -1475,6 +1475,12 @@ p { text-wrap: pretty; }
    var(--sp-8) se queda igual). */
 #contact .page__head { margin-bottom: var(--sp-4); }
 
+/* Mismo caso para el padding-bottom: .page__body trae var(--sp-10),
+   pensado para una pagina de proyecto que termina sola. Contact termina
+   en el pie de pagina, no en el vacio, asi que le sobraba aire antes del
+   pie. */
+#contact .page__body { padding-bottom: var(--sp-7); }
+
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -1525,7 +1531,7 @@ p { text-wrap: pretty; }
 .contact-form__status--error { color: var(--c-text); }
 
 .contact-form__links {
-  margin-top: var(--sp-6);
+  margin-top: var(--sp-4);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -1861,8 +1867,9 @@ p { text-wrap: pretty; }
      esa diferencia. El padding-bottom, en cambio, se achica: heredaba
      el de .page__body (pensado para paginas de proyecto, mucho mas
      alto) y dejaba demasiada distancia entre la ultima tarjeta y
-     Contact. */
-  #projects { padding-top: var(--sp-9); padding-bottom: var(--sp-5); }
+     Contact. Ligeramente mas grande que el primer achique: quedaba
+     un poco demasiado pegado. */
+  #projects { padding-top: var(--sp-9); padding-bottom: var(--sp-6); }
 
   /* Una sola columna: las tarjetas (Sound y Audiovisual, cada una en su
      pestana) van apiladas una debajo de la otra, sin compartir fila. */
