@@ -91,6 +91,13 @@
          ========================================================================== -->
   <header class="nav">
     <div class="nav__inner">
+      <!-- "Ian Iacono" a la izquierda de la barra: SOLO en las paginas de
+           proyecto (.nav.is-project-page, prendido por JS en main.js al
+           cambiar de pagina) y SOLO en escritorio -- ver
+           ".nav__project-brand" en css/style.css. En el home no hace
+           falta: ya esta el nombre grande centrado, mas abajo. -->
+      <p class="nav__project-brand">Ian Iacono</p>
+
       <!-- MARCA GRANDE: SOLO ESCRITORIO (mas de 900px). Se ve arriba de
            todo del home (nombre + subtitulo, centrados); al scrollear --
            o en cualquier otra pagina -- se desvanece y la barra queda en
@@ -538,12 +545,6 @@
         <div class="project">
         <div class="project__media reveal">
           <div class="embed">
-            <iframe src="https://www.youtube.com/embed/2TYgE3qMO4k?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
-                    title="The Carbon Case — trailer" loading="lazy"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          </div>
-          <div class="embed">
             <iframe src="https://www.youtube.com/embed/CfW4vJMptVc?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
                     title="The Carbon Case — official trailer" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -696,19 +697,19 @@
       <div class="wrap page__body">
         <div class="project">
         <div class="project__media reveal">
-          <div class="embed embed--audio">
+          <div class="embed embed--audio embed--audio--compact">
             <iframe src="https://open.spotify.com/embed/episode/3gu56XUbJWXSjcrw7pOc3g?utm_source=generator&amp;theme=0"
-                    title="La Llamada Fatal — episode on Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    title="La Llamada Fatal — episode on Spotify" loading="lazy" width="100%" height="152" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
-          <div class="embed embed--audio">
+          <div class="embed embed--audio embed--audio--compact">
             <iframe src="https://open.spotify.com/embed/episode/5DJchpRlyf3DZMsiWbYLJX?utm_source=generator&amp;theme=0"
-                    title="La Llamada Fatal — second episode on Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    title="La Llamada Fatal — second episode on Spotify" loading="lazy" width="100%" height="152" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
-          <div class="embed embed--audio">
+          <div class="embed embed--audio embed--audio--compact">
             <iframe src="https://open.spotify.com/embed/episode/6qlD3El6SVTRuBnmR348g3?utm_source=generator&amp;theme=0"
-                    title="La Llamada Fatal — third episode on Spotify" loading="lazy" width="100%" height="352" frameborder="0"
+                    title="La Llamada Fatal — third episode on Spotify" loading="lazy" width="100%" height="152" frameborder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
           </div>
         </div>
@@ -955,11 +956,11 @@
           <div class="project__text">
             <div class="lang">
               <p class="label lang__label">ESP</p>
-              <p class="prose" lang="es">Juleriaque es una cadena de perfumerías con 40 años en Argentina. Beauty Ride es su ciclo de contenido de belleza, y este episodio, conducido por Juana Viale, está pensado para el Día del Padre. Edité el video para YouTube y para Instagram Reels, y la pieza también se proyectó en los locales de la marca.</p>
+              <p class="prose" lang="es">Juleriaque es una cadena de perfumerías con 40 años en Argentina. Beauty Ride es su ciclo de contenido de belleza, y para el Día del Padre fue una campaña con una serie de episodios conducidos por Juana Viale. Edité los videos para YouTube y para Instagram Reels, y las piezas también se proyectaron en los locales de la marca.</p>
             </div>
             <div class="lang">
               <p class="label lang__label">ENG</p>
-              <p class="prose">Juleriaque is an Argentine perfumery chain with 40 years in the market. Beauty Ride is their beauty content series, and this episode, hosted by Juana Viale, was built around Father&#39;s Day. I edited the video for YouTube and Instagram Reels, and the piece also played in the brand&#39;s physical stores.</p>
+              <p class="prose">Juleriaque is an Argentine perfumery chain with 40 years in the market. Beauty Ride is their beauty content series, and for Father&#39;s Day it became a campaign with a series of episodes hosted by Juana Viale. I edited the videos for YouTube and Instagram Reels, and the pieces also played in the brand&#39;s physical stores.</p>
             </div>
           </div>
 

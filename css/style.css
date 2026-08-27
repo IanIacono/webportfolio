@@ -389,6 +389,27 @@ p { text-wrap: pretty; }
   gap: var(--sp-5);
 }
 
+/* "Ian Iacono" a la izquierda de la barra: solo en paginas de proyecto,
+   solo escritorio (.nav.is-project-page, ver "1. ROUTER" en js/main.js).
+   Misma tipografia/peso que .nav__brand-name (la firma del home, mas
+   abajo) pero a un tamano que entra comodo en la barra chica -- no el
+   clamp gigante pensado para flotar solo sobre el reel. margin-right:auto
+   la empuja a la izquierda del todo sin tocar el justify-content
+   compartido de .nav__inner (que .nav__brand no usa, por ser position:
+   absolute). */
+.nav__project-brand {
+  display: none;
+  font-family: var(--font-name);
+  font-size: var(--fs-xl);
+  font-weight: 900;
+  color: var(--c-text);
+  white-space: nowrap;
+  margin-right: auto;
+}
+@media (min-width: 901px) {
+  .nav.is-project-page .nav__project-brand { display: block; }
+}
+
 .nav__brand {
   position: absolute;
   left: 50%;
@@ -2067,11 +2088,29 @@ p { text-wrap: pretty; }
 }
 
 /* --- Escritorio (mas de 900px): "Selected Works" entra completa en una
-   sola pantalla, centrada verticalmente. El scroll forzado del reel hacia
-   esta seccion (con una curva de velocidad propia, mas fluida que el
-   scroll-snap nativo del navegador -- ese no deja elegir la curva ni la
-   duracion) se hace por JavaScript, ver "6. SCROLL FORZADO..." en
-   js/main.js. En celular no se toca nada de esto. --- */
+   sola pantalla, centrada verticalmente. En celular no se toca nada de
+   esto. --- */
+/* --- Scroll forzado entre Reel / Selected Works / Contact (solo
+   escritorio) -- ver "6. SCROLL FORZADO..." en js/main.js para el
+   historial completo de por que esto termino siendo scroll-snap
+   NATIVO del navegador en vez de JS a mano (los intentos con JS
+   tuvieron varios bugs reales entre rondas, el ultimo dejaba la rueda
+   sin responder del todo). Con "mandatory" el scroll siempre termina
+   asentado en una de las tres secciones, nunca a mitad de camino;
+   "scroll-snap-stop: always" evita que un scroll rapido (o con la
+   inercia de un trackpad) salte una entera de largo, por ejemplo del
+   reel directo a Contact sin pasar por Selected Works. En su propio
+   media query, aparte del resto de las reglas de escritorio de aca
+   abajo, porque tambien tiene que respetar "menos movimiento": quien
+   pidio esa preferencia navega 100% libre, sin ningun enganche. --- */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  html { scroll-snap-type: y mandatory; }
+  .hero, #projects, #contact {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
+
 @media (min-width: 901px) {
   #projects {
     min-height: 100svh;

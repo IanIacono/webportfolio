@@ -37,6 +37,7 @@
   if (!pages.length) return;
 
   var siteName = document.body.dataset.siteName || "Ian Iacono";
+  var navEl = document.querySelector(".nav");
   var homeId = pages[0].id;
 
   /* Ids que no son paginas sino puntos de la pagina de inicio */
@@ -82,6 +83,12 @@
        aunque haya varias pestanas abiertas. */
     var pageTitle = next.dataset.title;
     document.title = pageTitle ? siteName + " — " + pageTitle : siteName;
+
+    /* "Ian Iacono" a la izquierda de la barra fija, solo en escritorio
+       y solo en las paginas de proyecto (ver ".nav__project-brand" en
+       "05. NAVEGACION" de css/style.css) -- en el home ya esta el
+       nombre grande centrado (.nav__brand), no hace falta duplicarlo. */
+    if (navEl) navEl.classList.toggle("is-project-page", next.id !== homeId);
 
     document.dispatchEvent(new CustomEvent("page:change", { detail: { id: next.id, page: next } }));
 
@@ -427,116 +434,26 @@
 
 
   /* ======================================================================
-     6. SCROLL FORZADO: ENTRE EL REEL Y SELECTED WORKS (SOLO ESCRITORIO)
-     Mientras se ve el reel, la rueda del mouse/trackpad hacia abajo no
-     scrollea libre: salta directo hasta el arranque de "Selected Works".
-     Al reves tambien: scrolleando para arriba mientras se esta dentro de
-     Selected Works (todavia sin llegar a Contact), vuelve directo al
-     reel. Cruzando hacia Contact (para abajo) o volviendo desde Contact
-     hacia Selected Works (para arriba), el scroll es 100% libre -- el
-     enganche es unicamente en el limite reel/Selected Works, en los dos
-     sentidos, y unicamente en pantallas de mas de 900px.
+     6. SCROLL FORZADO: REEL / SELECTED WORKS / CONTACT (SOLO ESCRITORIO)
+     Las primeras dos versiones de esto interceptaban el evento "wheel"
+     a mano (primero con requestAnimationFrame, despues con
+     scrollIntoView() + limites en pixeles) para decidir cuando saltar
+     de una seccion a otra. Las dos tuvieron bugs reales entre rondas:
+     pelearon con "scroll-behavior: smooth", con la "zona fantasma" que
+     dejaba scroll-padding-top, y por ultimo la rueda quedaba
+     directamente sin responder ("se traba") porque un trackpad real no
+     manda un solo evento "wheel" por gesto sino decenas -- con inercia,
+     que puede seguir mandando eventos varios segundos despues de que
+     el dedo ya se levanto -- y volver a evaluar "hacia donde voy" en
+     cada uno de esos eventos, mientras el scroll anterior todavia
+     estaba animando, terminaba en resultados impredecibles.
 
-     Un intento anterior reimplementaba el scroll suave a mano (con
-     requestAnimationFrame y una curva propia): se sentia trabado, porque
-     el <html> ya tiene "scroll-behavior: smooth" puesto (para los links
-     con ancla) y cada llamado de esa animacion terminaba peleando con el
-     scroll suave nativo del navegador por encima. Esta version usa
-     directamente scrollIntoView(), que es el scroll suave DEL NAVEGADOR
-     -- mas robusto y mas fluido de verdad que reinventarlo.
-
-     BUG que corrige esta version: los limites de zona se comparaban
-     contra projectsEl.offsetTop / contactEl.offsetTop "en crudo", pero
-     css/style.css tiene "scroll-padding-top" puesto (dejar lugar a la
-     barra fija) -- eso hace que scrollIntoView() NUNCA lleve el scroll
-     exactamente a offsetTop, sino a offsetTop MENOS ese margen (~88px).
-     Con los limites sin ese descuento, apenas se llegaba a Selected
-     Works el scroll quedaba en una "zona fantasma" que el codigo todavia
-     consideraba "reel" -- por eso scrollear para arriba no volvia al
-     reel (no entraba en la condicion de abajo) y scrollear para abajo de
-     nuevo volvia a saltar a Selected Works en vez de dejar avanzar hacia
-     Contact. Restando ese mismo margen a los limites, coinciden con
-     donde el scroll realmente se asienta. */
-
-  var heroEl = document.querySelector(".hero");
-  var projectsEl = document.getElementById("projects");
-  var contactEl = document.getElementById("contact");
-
-  /* Los 3 requeridos (no solo heroEl/projectsEl): con el enganche ahora
-     tambien entre Selected Works y Contact, el codigo de abajo llama a
-     contactEl.scrollIntoView() sin volver a chequear que exista. */
-  if (heroEl && projectsEl && contactEl && !reduceMotion.matches) {
-    function navClearance() {
-      var root = getComputedStyle(document.documentElement);
-      var pxPerRem = parseFloat(root.fontSize) || 16;
-      var navH = (parseFloat(root.getPropertyValue("--nav-h")) || 4.5) * pxPerRem;
-      var gap = (parseFloat(root.getPropertyValue("--sp-4")) || 1) * pxPerRem;
-      return navH + gap;
-    }
-
-    /* Candado contra scroll "trabado": un gesto de wheel real dispara
-       muchos eventos seguidos, y evaluar window.scrollY en cada uno
-       podia lanzar un scrollIntoView() nuevo mientras el anterior
-       todavia estaba animando -- si en el medio de un scroll hacia
-       Contact el usuario se arrepentia y volvia a scrollear para
-       arriba, ese segundo scroll interrumpia al primero a mitad de
-       camino, y asi sucesivamente: la rueda dejaba de responder.
-       Mientras isSnapping esta activo, los wheel que lleguen se
-       ignoran (preventDefault igual, para que tampoco se cuele scroll
-       libre por encima) hasta que el scroll en curso termina de
-       verdad ("scrollend", con un tiempo maximo de respaldo por si el
-       navegador no lo llega a disparar). */
-    var isSnapping = false;
-    var snapSafety = null;
-
-    function snapTo(el) {
-      isSnapping = true;
-      if (snapSafety) window.clearTimeout(snapSafety);
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      var release = function () {
-        isSnapping = false;
-        window.removeEventListener("scrollend", release);
-      };
-      window.addEventListener("scrollend", release);
-      snapSafety = window.setTimeout(release, 1000);
-    }
-
-    window.addEventListener("wheel", function (e) {
-      if (window.innerWidth <= 900) return;
-      if (isSnapping) { e.preventDefault(); return; }
-
-      var clearance = navClearance();
-      var y = window.scrollY;
-      var projectsSnap = projectsEl.offsetTop - clearance;
-      var contactSnap = contactEl.offsetTop - clearance;
-
-      /* Los 3 tramos (reel / Selected Works / Contact) quedan enganchados
-         de a pares, en las dos direcciones -- como pediste, ya no hay
-         tramo libre entre Selected Works y Contact. Una vez "adentro" de
-         Contact de verdad, scrollear mas para abajo (footer, etc.) si
-         queda libre: no hay un cuarto punto al que engancharse. */
-      if (e.deltaY > 0 && y < projectsSnap - 4) {
-        /* Reel, para abajo: a Selected Works. */
-        e.preventDefault();
-        snapTo(projectsEl);
-      } else if (e.deltaY > 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
-        /* Selected Works, para abajo: a Contact. */
-        e.preventDefault();
-        snapTo(contactEl);
-      } else if (e.deltaY < 0 && y >= contactSnap - 4) {
-        /* Contact (o mas abajo), para arriba: frena en Selected Works --
-           nunca salta directo al reel de un salto. Si se sigue
-           scrolleando para arriba una vez ahi, la rama de abajo es la
-           que despues sí lleva al reel. */
-        e.preventDefault();
-        snapTo(projectsEl);
-      } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
-        /* Selected Works, para arriba: al reel. */
-        e.preventDefault();
-        snapTo(heroEl);
-      }
-    }, { passive: false });
-  }
+     Esta version no interpreta "wheel" en absoluto: usa scroll-snap
+     nativo del navegador (ver ".hero, #projects, #contact" en
+     "14. RESPONSIVE" de css/style.css). El motor de scroll del
+     navegador mismo decide donde frenar, y ya sabe manejar mouse,
+     trackpad (con toda su inercia), touch y teclado correctamente, sin
+     que haga falta reimplementar nada de eso a mano. */
 
   /* El pie de pagina no es hijo de #contact (es un solo elemento que
      vive despues de <main>, compartido por todas las paginas -- ver
@@ -595,26 +512,52 @@
 
   /* ======================================================================
      8. BOTON "VOLVER AL REEL"
-     Flotante, abajo a la derecha. Aparece con un respiro de 0.7s desde
-     que Contact entra en pantalla (asi no aparece de golpe si solo se
-     esta pasando de largo) y desaparece apenas se deja de ver Contact,
-     sea porque se subio scrolleando o porque se navego a otra pagina.
-     ====================================================================== */
+     Flotante, abajo a la derecha. Aparece con un respiro (para no
+     aparecer de golpe si solo se esta pasando de largo) y desaparece
+     apenas deja de cumplirse la condicion, sea porque se subio
+     scrolleando o porque se navego a otra pagina.
+
+     Dos condiciones distintas para "mostrar", una por dispositivo:
+     - Escritorio: al llegar a Contact (respiro de 700ms).
+     - Celular/tablet: al llegar a Contact, IGUAL QUE ARRIBA, o ya desde
+       antes -- al pasar la mitad de "Selected Works" (respiro de
+       500ms, mas corto porque en celular el scroll hasta ahi ya es
+       largo de por si). Projects en celular es una sola columna larga
+       de tarjetas, mucho mas alta que la pantalla, asi que a mitad de
+       camino tiene sentido ofrecer el atajo. En escritorio "Selected
+       Works" entra entera en una pantalla (ver "14. RESPONSIVE"), asi
+       que ahi esa condicion nunca llega a cumplirse antes que Contact
+       de todos modos -- no hace falta excluirla a mano. */
 
   var backToReel = document.querySelector(".back-to-reel");
   var contactSection = document.getElementById("contact");
+  var projectsSection = document.getElementById("projects");
   var heroSection = document.querySelector(".hero");
 
-  if (backToReel && contactSection && heroSection && "IntersectionObserver" in window) {
+  if (backToReel && contactSection && projectsSection && heroSection) {
     var backToReelTimer = null;
+    var backToReelEligible = false;
+    var contactIntersecting = false;
 
-    var contactObserver = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) {
+    function projectsHalfwayReached() {
+      if (window.innerWidth > 900) return false;
+      var viewportMid = window.scrollY + window.innerHeight / 2;
+      var projectsMid = projectsSection.offsetTop + projectsSection.offsetHeight / 2;
+      return viewportMid >= projectsMid;
+    }
+
+    function evaluateBackToReel() {
+      var eligible = contactIntersecting || projectsHalfwayReached();
+      if (eligible === backToReelEligible) return;
+      backToReelEligible = eligible;
+
+      if (eligible) {
         if (backToReelTimer === null) {
+          var delay = window.innerWidth <= 900 ? 500 : 700;
           backToReelTimer = window.setTimeout(function () {
             backToReel.classList.add("is-visible");
             backToReelTimer = null;
-          }, 700);
+          }, delay);
         }
       } else {
         if (backToReelTimer !== null) {
@@ -623,9 +566,18 @@
         }
         backToReel.classList.remove("is-visible");
       }
-    }, { threshold: 0 });
+    }
 
-    contactObserver.observe(contactSection);
+    if ("IntersectionObserver" in window) {
+      var contactObserver = new IntersectionObserver(function (entries) {
+        contactIntersecting = entries[0].isIntersecting;
+        evaluateBackToReel();
+      }, { threshold: 0 });
+      contactObserver.observe(contactSection);
+    }
+
+    window.addEventListener("scroll", evaluateBackToReel, { passive: true });
+    window.addEventListener("resize", evaluateBackToReel);
 
     backToReel.addEventListener("click", function () {
       heroSection.scrollIntoView({
