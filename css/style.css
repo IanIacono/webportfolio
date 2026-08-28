@@ -1567,6 +1567,42 @@ p { text-wrap: pretty; }
 
 
 /* ==========================================================================
+   10a. SOBRE MI  (#about)
+   Va entre Selected Works y Contact, y en escritorio es una "pantalla"
+   mas del scroll forzado (ver "14. RESPONSIVE" para el alto y
+   "6. SCROLL FORZADO..." en js/main.js para el enganche).
+   ========================================================================== */
+
+/* El titulo va alineado a la izquierda, como el de Contact y el de
+   Selected Works -- el centrado que trae .page__head por defecto es para
+   las paginas de proyecto. */
+#about .page__head {
+  margin-bottom: var(--sp-6);
+  text-align: left;
+}
+#about .page__head .project__title { margin-bottom: 0; }
+
+/* Las dos versiones, una al lado de la otra. En celular la grilla cae a una
+   sola columna sola (auto-fit + un ancho minimo), sin necesidad de un
+   media query: cuando no entran dos columnas de 22rem, pasa a una. */
+.about__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--sp-7) var(--sp-8);
+}
+.about__cols .lang + .lang { margin-top: 0; }
+.about__cols .prose + .prose { margin-top: var(--sp-5); }
+
+/* Centrado debajo de las dos columnas, no dentro de ninguna: es el cierre
+   de las dos por igual. */
+.about__cta {
+  margin-top: var(--sp-8);
+  text-align: center;
+  font-size: var(--fs-lg);
+}
+
+
+/* ==========================================================================
    10b. FORMULARIO DE CONTACTO
    ========================================================================== */
 
@@ -2304,6 +2340,25 @@ p { text-wrap: pretty; }
      si "La Llamada Fatal" sigue sin entrar en tu pantalla, avisame el
      alto de tu ventana y lo resolvemos con otro numero, no con este
      mecanismo. */
+
+  /* Sobre mi es una pantalla mas del scroll forzado, asi que ocupa una
+     pantalla entera igual que Selected Works: estando parado aca no se ve
+     ni la grilla arriba ni el formulario abajo. El contenido va centrado
+     verticalmente porque es poco texto -- pegado al techo se veria
+     desbalanceado con todo el aire debajo. El scroll-margin-top negativo
+     se lleva TODO el respiro de 16px que reserva "scroll-padding-top" (no
+     la mitad, como hace #projects): asi el techo de la seccion cae justo
+     en el borde de abajo de la barra fija y no queda ni un hilo de
+     Selected Works asomando entre las dos. */
+  #about {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+    scroll-margin-top: calc(var(--sp-4) * -1);
+  }
 
   /* Mismo motivo que #projects arriba, pero aca ademas rompia el scroll
      forzado: sin este alto minimo, Contact + el pie de pagina no

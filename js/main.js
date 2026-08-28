@@ -42,6 +42,7 @@
   /* Ids que no son paginas sino puntos de la pagina de inicio */
   var anchors = {
     projects: { page: homeId, target: "projects" },
+    about: { page: homeId, target: "about" },
     contact: { page: homeId, target: "contact" }
   };
 
@@ -474,9 +475,10 @@
 
   var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
+  var aboutEl = document.getElementById("about");
   var contactEl = document.getElementById("contact");
 
-  if (heroEl && projectsEl && contactEl && !reduceMotion.matches) {
+  if (heroEl && projectsEl && aboutEl && contactEl && !reduceMotion.matches) {
     function navClearance() {
       var root = getComputedStyle(document.documentElement);
       var pxPerRem = parseFloat(root.fontSize) || 16;
@@ -488,7 +490,7 @@
     /* En vez de un tiempo de espera fijo despues de cada salto (versiones
        anteriores probaron 900ms, despues 550ms), esto chequea la POSICION
        real para decidir si el scroll "ya llego": mientras todavia esta en
-       pleno vuelo (ni cerca del reel, ni de Selected Works, ni de Contact)
+       pleno vuelo (lejos de todas las secciones enganchables)
        un "wheel" en la direccion CONTRARIA a la que ya se esta animando se
        ignora, exactamente como antes -- eso es lo que evita el bug viejo
        de la rueda trabada (una reversa a mitad de camino interrumpiendo el
@@ -519,7 +521,7 @@
        a reconocer como "asentado" ahi -- efectivamente trababa la rueda
        para siempre despues del primer salto. 24px cubre esa diferencia con
        margen de sobra sin arriesgarse a confundir un punto con otro (las
-       tres secciones estan a cientos de pixeles de distancia entre si). */
+       secciones estan a cientos de pixeles de distancia entre si). */
     var SNAP_TOLERANCE_PX = 24;
     var animationStartedAt = 0;
 
@@ -529,14 +531,17 @@
        window.scrollY cada vez) es lo que permite redirigir un salto en
        vuelo hacia el siguiente tramo sin tener que esperar a que la
        posicion real "llegue" a ningun lado. */
-    var ZONES = [heroEl, projectsEl, contactEl];
+    var ZONES = [heroEl, projectsEl, aboutEl, contactEl];
+    var LAST_ZONE = ZONES.length - 1;
 
     function restingZoneIndex() {
       var clearance = navClearance();
       var y = window.scrollY;
-      var positions = [0, projectsEl.offsetTop - clearance, contactEl.offsetTop - clearance];
-      for (var i = 0; i < positions.length; i++) {
-        if (Math.abs(y - positions[i]) < SNAP_TOLERANCE_PX) return i;
+      for (var i = 0; i < ZONES.length; i++) {
+        /* El reel arranca en 0; el resto se engancha a su propio techo,
+           descontando lo que tapa la barra fija. */
+        var target = i === 0 ? 0 : ZONES[i].offsetTop - clearance;
+        if (Math.abs(y - target) < SNAP_TOLERANCE_PX) return i;
       }
       return -1;
     }
@@ -579,17 +584,17 @@
         e.preventDefault();
         if (direction === animDirection) {
           var next = currentIndex + direction;
-          if (next >= 0 && next <= 2) snapTo(next);
+          if (next >= 0 && next <= LAST_ZONE) snapTo(next);
         }
         return;
       }
 
       /* Asentado de verdad: la logica de siempre, de a un tramo por vez,
-         en las dos direcciones -- ya no hay tramo libre entre Selected
-         Works y Contact. Contact hacia abajo (footer, etc.) y Reel hacia
+         en las dos direcciones -- ya no hay tramo libre entre una seccion
+         y la siguiente. Contact hacia abajo (footer, etc.) y Reel hacia
          arriba quedan libres a proposito: no hay un cuarto/menos-uno punto
          al que engancharse en esos casos, ninguna rama de abajo matchea. */
-      if (direction > 0 && restingAt < 2) {
+      if (direction > 0 && restingAt < LAST_ZONE) {
         e.preventDefault();
         snapTo(restingAt + 1);
       } else if (direction < 0 && restingAt > 0) {
