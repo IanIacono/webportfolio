@@ -406,6 +406,16 @@ p { text-wrap: pretty; }
    saca de la navegacion por teclado/mouse mientras esta invisible). */
 .nav__project-brand {
   font-family: var(--font-name);
+  /* Arriba de todo del home este nombre chico esta invisible, pero antes
+     seguia ocupando su ancho: eran ~180px muertos a la izquierda que
+     empujaban al volumen hacia el centro y le robaban largo al slider.
+     Con max-width en 0 (mas overflow:hidden, y el nowrap de mas abajo) no
+     ocupa nada hasta que hace falta, y el volumen arranca pegado al borde.
+     Al achicarse la barra vuelve a su ancho y corre al volumen a su
+     derecha -- animado, no de un salto, que es para lo que esta el
+     max-width en la transicion. */
+  max-width: 0;
+  overflow: hidden;
   font-size: var(--fs-xl);
   font-weight: 900;
   color: var(--c-text);
@@ -414,14 +424,17 @@ p { text-wrap: pretty; }
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow), color var(--dur) var(--ease);
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow),
+              max-width var(--dur-slow) var(--ease), color var(--dur) var(--ease);
 }
 .nav__project-brand:hover { color: var(--c-accent-soft); }
 .nav.is-stuck .nav__project-brand {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s, color var(--dur) var(--ease);
+  max-width: 20rem;
+  transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s,
+              max-width var(--dur-slow) var(--ease), color var(--dur) var(--ease);
 }
 /* En celular/tablet no existe: el equivalente ahi es .hero__welcome. */
 @media (max-width: 900px) {
@@ -671,9 +684,7 @@ p { text-wrap: pretty; }
   display: none;
   -webkit-appearance: none;
   appearance: none;
-  /* Acortada de 120px: el header tiene que entrar el nombre grande
-     centrado y cuatro links sin pisarse. */
-  width: 96px;
+  width: 140px;
   height: var(--tap);
   background: transparent;
   cursor: pointer;
