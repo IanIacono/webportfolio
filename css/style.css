@@ -1684,6 +1684,14 @@ p { text-wrap: pretty; }
               color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 .back-to-reel svg { width: 20px; height: 20px; pointer-events: none; }
+
+/* Entrada de las flechitas Back/Next de celular (ver "14. RESPONSIVE").
+   Mismo movimiento que .back-to-reel de aca arriba -- sube 8px mientras
+   aparece -- para que se sientan el mismo elemento. */
+@keyframes project-arrows-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
 @media (hover: hover) {
   .back-to-reel:hover {
     background: var(--c-text);
@@ -2017,6 +2025,74 @@ p { text-wrap: pretty; }
   /* Una sola columna: las tarjetas (Sound y Audiovisual, cada una en su
      pestana) van apiladas una debajo de la otra, sin compartir fila. */
   .grid { grid-template-columns: 1fr; gap: var(--sp-7) var(--sp-5); }
+
+  /* En celular se lee primero de que va el proyecto y despues se mira el
+     material: titulo, subtitulo, "Upcoming release" si lo hay, los textos
+     ESP/ENG, y recien al final los videos y embeds. En el HTML el bloque
+     multimedia viene primero (en escritorio es la columna izquierda, ver
+     "10. PAGINAS DE PROYECTO"), asi que aca se invierte con "order" en vez
+     de tocar el orden real del documento -- moverlo en el HTML le cambiaria
+     el lado en escritorio. */
+  .project__info  { order: 1; }
+  .project__media { order: 2; }
+
+  /* Los botones Back/Next dejan de ser dos botones con texto al final del
+     texto y pasan a ser dos flechitas flotantes, iguales a la de "volver
+     al reel" del inicio (mismo tamano, mismo borde, mismo fondo y a la
+     misma altura), una a cada lado de la pantalla. Son los MISMOS enlaces
+     de siempre, solo con otra pinta: asi no hay un segundo juego de
+     direcciones que mantener en sincronia (ver el comentario del orden de
+     los proyectos en index.html).
+
+     Al vivir dentro de la seccion del proyecto, desaparecen solas al salir
+     de el: el router esconde la seccion entera (display:none) y con ella se
+     va cualquier position:fixed de adentro.
+
+     El contenedor no recibe toques (pointer-events:none) porque ocupa todo
+     el ancho de la pantalla; solo las dos flechitas lo hacen. */
+  .project__actions {
+    position: fixed;
+    left: var(--sp-5);
+    right: var(--sp-5);
+    bottom: var(--sp-5);
+    z-index: 80;
+    margin-top: 0;
+    padding-top: 0;
+    pointer-events: none;
+    /* Aparecen recien a los 0.4s de entrar al proyecto. "both" es lo que
+       las mantiene invisibles DURANTE esa espera: sin eso se verian de
+       entrada y el retraso no serviria de nada. La animacion se reinicia
+       sola en cada proyecto, porque cada seccion pasa de display:none a
+       visible al mostrarse. */
+    animation: project-arrows-in var(--dur-slow) var(--ease) 400ms both;
+  }
+  .project__actions .btn {
+    pointer-events: auto;
+    width: var(--tap);
+    height: var(--tap);
+    min-height: 0;
+    padding: 0;
+    justify-content: center;
+    border-radius: var(--r-full);
+    border: 1.5px solid var(--c-text);
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--c-text);
+    box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 70%, transparent);
+  }
+  /* Las palabras "Back" y "Next" sobran: quedan dos flechas y se entiende
+     solo. El texto sigue en el HTML para quien navegue con lector de
+     pantalla. */
+  .project__actions .btn span {
+    position: absolute;
+    width: 1px; height: 1px;
+    margin: -1px; padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .project__actions .btn svg { width: 20px; height: 20px; }
 
   .project {
     grid-template-columns: minmax(0, 1fr);

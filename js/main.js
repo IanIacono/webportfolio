@@ -690,8 +690,19 @@
       return viewportMid >= projectsMid;
     }
 
+    /* Este boton sube al reel, asi que solo tiene sentido en el inicio.
+       Sin este chequeo se quedaba puesto al entrar a un proyecto teniendolo
+       en pantalla: #projects queda escondido (display:none) y un elemento
+       escondido mide 0, asi que projectsHalfwayReached() comparaba contra
+       una mitad de 0 y daba que si para cualquier posicion de scroll. */
+    var onHomePage = true;
+    document.addEventListener("page:change", function (event) {
+      onHomePage = event.detail.id === homeId;
+      evaluateBackToReel();
+    });
+
     function evaluateBackToReel() {
-      var eligible = contactIntersecting || projectsHalfwayReached();
+      var eligible = onHomePage && (contactIntersecting || projectsHalfwayReached());
       if (eligible === backToReelEligible) return;
       backToReelEligible = eligible;
 
