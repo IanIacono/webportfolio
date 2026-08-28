@@ -470,7 +470,25 @@
      rango la rueda no se toca, scroll normal del navegador; recien al
      llegar a un extremo se vuelve a enganchar el salto a la siguiente
      seccion. Ver el detalle en los comentarios de SETTLE_MS y
-     restingZoneIndex() mas abajo. */
+     restingZoneIndex() mas abajo.
+
+     Quinta version: probando la cuarta con un gesto de scroll comun (no
+     un scroll largo y sostenido, uno normal de varios eventos "wheel"
+     seguidos en un ratito, como manda cualquier trackpad/mouse real) se
+     vio el verdadero bug de fondo, el mismo que motivaba el reclamo
+     original de "los proyectos no scrollean": lo interrumpible de la
+     tercera version encadenaba a Contact con CUALQUIER evento en la
+     misma direccion mientras el salto anterior seguia asentando, sin
+     mirar cuanto se habia scrolleado en realidad -- asi que un scroll
+     normal desde el Reel (unos pocos eventos en 100-200ms) ya alcanzaba
+     para saltar Projects entero y caer directo en Contact, sin parar
+     nunca ahi. Ahora encadenar un SEGUNDO salto DURANTE la animacion del
+     primero (chainDelta mas abajo) exige haber scrolleado de verdad algo
+     cercano a una pantalla completa de distancia acumulada en esos
+     eventos -- el primer salto de cualquier gesto sigue siendo siempre
+     inmediato, esto solo frena el salto EXTRA. Un scroll normal (unos
+     cientos de pixeles) ya no alcanza esa distancia y se queda tranquilo
+     en Projects; uno realmente sostenido/fuerte si. */
 
   var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
@@ -561,7 +579,24 @@
       currentIndex = targetIndex;
       ZONES[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
       animationStartedAt = Date.now();
+      chainDelta = 0;
     }
+
+    /* Cuanto hace falta scrollear de VERDAD, sumando el tamaño de cada
+       evento "wheel" que llega MIENTRAS dura la animacion del salto
+       actual (chainDelta, reseteado en cada snapTo), para ganarse un
+       segundo salto encadenado sin esperar a que el primero asiente --
+       ver el comentario grande de la "quinta version" al principio de
+       esta seccion. No hace falta detectar "gesto nuevo" por pausas de
+       tiempo entre eventos: alcanza con que esta cuenta viva SOLO
+       adentro de la ventana de isAnimating() de cada salto (arranca en
+       0 en cada snapTo), asi que un salto viejo nunca deja sobras que
+       le faciliten de mas a uno posterior. Un scroll sostenido que siga
+       entero mas alla de esa ventana (sin haber juntado los 900px dentro
+       de ella) simplemente cae en la rama de abajo ("asentado") una vez
+       que el salto en curso ya asento del todo -- y ahi, como siempre,
+       cualquier scroll en esa direccion pide el siguiente tramo. */
+    var chainDelta = 0;
 
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
@@ -569,15 +604,22 @@
       var direction = e.deltaY > 0 ? 1 : -1;
 
       if (isAnimating()) {
-        /* En pleno vuelo. Misma direccion que el salto en curso: seguir
-           de largo al siguiente tramo (si hay uno) en vez de esperar a
-           que este termine de asentar -- esto es lo "interrumpible".
-           Direccion contraria: se ignora, igual que siempre (ahi es
-           donde se evitaba el bug de la rueda trabada). */
+        /* En pleno vuelo. Misma direccion que el salto en curso Y ya se
+           scrolleo lo suficiente durante esta animacion: seguir de largo
+           al siguiente tramo (si hay uno) en vez de esperar a que este
+           termine de asentar -- esto es lo "interrumpible", ahora sujeto
+           a una distancia real en vez de a cualquier evento suelto (ese
+           era el bug: un scroll comun de unos pocos eventos ya alcanzaba
+           para saltear Projects entero). Direccion contraria: se ignora,
+           igual que siempre (ahi es donde se evitaba el bug de la rueda
+           trabada). */
         e.preventDefault();
         if (direction === animDirection) {
-          var next = currentIndex + direction;
-          if (next >= 0 && next <= 2) snapTo(next);
+          chainDelta += Math.abs(e.deltaY);
+          if (chainDelta >= window.innerHeight) {
+            var next = currentIndex + direction;
+            if (next >= 0 && next <= 2) snapTo(next);
+          }
         }
         return;
       }
@@ -597,9 +639,12 @@
 
       /* Asentado de verdad (o en un extremo del rango libre de Projects):
          la logica de siempre, de a un tramo por vez, en las dos
-         direcciones. Contact hacia abajo (footer, etc.) y Reel hacia
-         arriba quedan libres a proposito: no hay un cuarto/menos-uno punto
-         al que engancharse en esos casos, ninguna rama de abajo matchea. */
+         direcciones, siempre inmediata -- esta es la unica rama que
+         arranca un salto "de la nada" (sin animacion previa en curso),
+         asi que no tiene sentido pedirle una distancia acumulada previa.
+         Contact hacia abajo (footer, etc.) y Reel hacia arriba quedan
+         libres a proposito: no hay un cuarto/menos-uno punto al que
+         engancharse en esos casos, ninguna rama de abajo matchea. */
       if (direction > 0 && restingAt < 2) {
         e.preventDefault();
         snapTo(restingAt + 1);
