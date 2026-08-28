@@ -1311,6 +1311,14 @@ p { text-wrap: pretty; }
   font-size: var(--fs-xs);
   color: var(--c-text-faint);
   letter-spacing: 0;
+  /* Es el pie del video de arriba, asi que va pegado a el y no flotando a
+     media distancia. El gap de .project__media (24px) esta pensado para
+     separar un video de OTRO -- ahi hace falta ese aire (Red Bull tiene dos
+     videos, La Llamada Fatal tres) -- pero aca separa de mas. En vez de
+     achicar el gap para todos, este margen negativo se lo descuenta solo a
+     este parrafo: 24 de gap menos 16 deja los 8px que se buscan. Hoy solo
+     lo usa Lumia. */
+  margin-top: calc(var(--sp-2) - var(--sp-5));
 }
 
 /* Marco 16:9 para los videos incrustados */
@@ -2098,7 +2106,15 @@ p { text-wrap: pretty; }
     grid-template-columns: minmax(0, 1fr);
     gap: var(--sp-7);
   }
-  .project__text { margin-top: 0; }
+  /* En escritorio el texto y el subtitulo estan en columnas distintas del
+     mismo bloque, asi que ese margen de arriba (var(--sp-8)) hace de aire
+     entre columnas y aca no venia al caso -- estaba en cero. Pero ahora que
+     en celular todo va apilado (titulo, subtitulo, badge y despues los
+     textos, ver "order" mas arriba), quedaban pegados sin ninguna
+     separacion. Se le da el mismo aire que separa al parrafo en espanol del
+     que esta en ingles (.lang + .lang), asi el ritmo vertical del bloque es
+     uno solo. */
+  .project__text { margin-top: var(--sp-6); }
 
   /* No entran el nombre grande, los links y el volumen juntos en una
      pantalla angosta -- se superponen. Ahi los links+volumen se quedan
