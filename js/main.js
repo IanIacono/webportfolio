@@ -472,59 +472,104 @@
       return navH + gap;
     }
 
-    /* Cubre la animacion en si (unos 400-600ms tipico para un salto de
-       una pantalla entera) con un colchon corto para la cola de inercia
-       de un trackpad real. Un numero mas alto (900ms en una version
-       anterior) protegia mejor contra la inercia, pero el enfriamiento
-       en si se sentia como que "el primer movimiento de la rueda no
-       hizo nada" -- si el usuario reintentaba scrollear durante esa
-       ventana (algo muy natural: recien se disparo el salto, todavia
-       no se nota que ya esta en marcha) ese segundo intento se
-       descartaba en silencio, y el que terminaba viendose en pantalla
-       era el primero, terminando de asentarse tarde. Si esto vuelve a
-       sentirse trabado con el scroll real de un trackpad, subir este
-       numero primero antes de tocar el resto de la logica. */
-    var WHEEL_COOLDOWN_MS = 550;
-    var cooldownUntil = 0;
+    /* En vez de un tiempo de espera fijo despues de cada salto (versiones
+       anteriores probaron 900ms, despues 550ms), esto chequea la POSICION
+       real para decidir si el scroll "ya llego": mientras todavia esta en
+       pleno vuelo (ni cerca del reel, ni de Selected Works, ni de Contact)
+       un "wheel" en la direccion CONTRARIA a la que ya se esta animando se
+       ignora, exactamente como antes -- eso es lo que evita el bug viejo
+       de la rueda trabada (una reversa a mitad de camino interrumpiendo el
+       salto en curso). Pero un "wheel" en la MISMA direccion en la que ya
+       se esta animando no espera a que termine de asentar: redirige el
+       salto en curso directo al siguiente tramo. Asi, scrolleando fuerte y
+       seguido, el reel pasa a Selected Works y de ahi a Contact en una
+       sola tirada, sin el "freno-pausa-freno" de antes entre los dos
+       saltos; scrolleando de a poco (un solo tirón, se suelta, se espera),
+       cada tramo se asienta antes de que el siguiente wheel decida hacia
+       donde ir, e igual se sigue frenando en cada seccion de a una.
 
-    function snapTo(el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      cooldownUntil = Date.now() + WHEEL_COOLDOWN_MS;
+       MIN_LOCK_MS aparte es solo para blindar el primerisimo instante de
+       cada salto: recien llamado a scrollIntoView(), el navegador todavia
+       no repinto ni un frame, asi que window.scrollY leido en ese instante
+       puede seguir marcando la posicion VIEJA -- sin este colchon corto,
+       un segundo evento de wheel llegando en la misma tanda que el primero
+       podria colarse como si el scroll ya hubiese terminado, cuando en
+       realidad recien esta arrancando. */
+    var MIN_LOCK_MS = 120;
+    /* No tan chico como parece necesario: las posiciones de abajo se
+       calculan solo con navClearance() (altura de la barra fija), pero el
+       punto donde el scroll REALMENTE queda quieto tambien depende de
+       "scroll-margin-top" de cada seccion (#projects tiene el suyo propio,
+       -8px, ver css/style.css) -- que este calculo no conoce. Con una
+       tolerancia de 6px eso alcanzaba a dejar a #projects justo AFUERA del
+       margen (una diferencia real y medida de 8px), asi que nunca se volvia
+       a reconocer como "asentado" ahi -- efectivamente trababa la rueda
+       para siempre despues del primer salto. 24px cubre esa diferencia con
+       margen de sobra sin arriesgarse a confundir un punto con otro (las
+       tres secciones estan a cientos de pixeles de distancia entre si). */
+    var SNAP_TOLERANCE_PX = 24;
+    var animationStartedAt = 0;
+
+    /* ZONES en orden de scroll (arriba a abajo). currentIndex es la zona
+       en la que se esta, O la que se esta animando en este momento --
+       animDirection es hacia donde. Guardar el INDICE (no re-derivarlo de
+       window.scrollY cada vez) es lo que permite redirigir un salto en
+       vuelo hacia el siguiente tramo sin tener que esperar a que la
+       posicion real "llegue" a ningun lado. */
+    var ZONES = [heroEl, projectsEl, contactEl];
+
+    function restingZoneIndex() {
+      var clearance = navClearance();
+      var y = window.scrollY;
+      var positions = [0, projectsEl.offsetTop - clearance, contactEl.offsetTop - clearance];
+      for (var i = 0; i < positions.length; i++) {
+        if (Math.abs(y - positions[i]) < SNAP_TOLERANCE_PX) return i;
+      }
+      return -1;
+    }
+
+    var currentIndex = Math.max(0, restingZoneIndex());
+    var animDirection = 0;
+
+    function snapTo(targetIndex) {
+      animDirection = targetIndex > currentIndex ? 1 : -1;
+      currentIndex = targetIndex;
+      ZONES[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
+      animationStartedAt = Date.now();
     }
 
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
-      if (Date.now() < cooldownUntil) { e.preventDefault(); return; }
+      if (Date.now() - animationStartedAt < MIN_LOCK_MS) { e.preventDefault(); return; }
 
-      var clearance = navClearance();
-      var y = window.scrollY;
-      var projectsSnap = projectsEl.offsetTop - clearance;
-      var contactSnap = contactEl.offsetTop - clearance;
+      var direction = e.deltaY > 0 ? 1 : -1;
+      var restingAt = restingZoneIndex();
 
-      /* Los 3 tramos (reel / Selected Works / Contact) quedan enganchados
-         de a pares, en las dos direcciones -- ya no hay tramo libre
-         entre Selected Works y Contact. Una vez "adentro" de Contact de
-         verdad, scrollear mas para abajo (footer, etc.) si queda libre:
-         no hay un cuarto punto al que engancharse. */
-      if (e.deltaY > 0 && y < projectsSnap - 4) {
-        /* Reel, para abajo: a Selected Works. */
+      if (restingAt === -1) {
+        /* En pleno vuelo. Misma direccion que el salto en curso: seguir
+           de largo al siguiente tramo (si hay uno) en vez de esperar a
+           que este termine de asentar -- esto es lo "interrumpible".
+           Direccion contraria: se ignora, igual que siempre (ahi es
+           donde se evitaba el bug de la rueda trabada). */
         e.preventDefault();
-        snapTo(projectsEl);
-      } else if (e.deltaY > 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
-        /* Selected Works, para abajo: a Contact. */
+        if (direction === animDirection) {
+          var next = currentIndex + direction;
+          if (next >= 0 && next <= 2) snapTo(next);
+        }
+        return;
+      }
+
+      /* Asentado de verdad: la logica de siempre, de a un tramo por vez,
+         en las dos direcciones -- ya no hay tramo libre entre Selected
+         Works y Contact. Contact hacia abajo (footer, etc.) y Reel hacia
+         arriba quedan libres a proposito: no hay un cuarto/menos-uno punto
+         al que engancharse en esos casos, ninguna rama de abajo matchea. */
+      if (direction > 0 && restingAt < 2) {
         e.preventDefault();
-        snapTo(contactEl);
-      } else if (e.deltaY < 0 && y >= contactSnap - 4) {
-        /* Contact (o mas abajo), para arriba: frena en Selected Works --
-           nunca salta directo al reel de un salto. Si se sigue
-           scrolleando para arriba una vez ahi, la rama de abajo es la
-           que despues sí lleva al reel. */
+        snapTo(restingAt + 1);
+      } else if (direction < 0 && restingAt > 0) {
         e.preventDefault();
-        snapTo(projectsEl);
-      } else if (e.deltaY < 0 && y >= projectsSnap - 4 && y < contactSnap - 4) {
-        /* Selected Works, para arriba: al reel. */
-        e.preventDefault();
-        snapTo(heroEl);
+        snapTo(restingAt - 1);
       }
     }, { passive: false });
   }
