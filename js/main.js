@@ -473,11 +473,18 @@
     }
 
     /* Cubre la animacion en si (unos 400-600ms tipico para un salto de
-       una pantalla entera) mas un colchon generoso para la cola de
-       inercia de un trackpad real. Si algun dia esto se vuelve a sentir
-       trabado o, al reves, tarda de mas en responder a un scroll nuevo
-       genuino, este es el numero para ajustar. */
-    var WHEEL_COOLDOWN_MS = 900;
+       una pantalla entera) con un colchon corto para la cola de inercia
+       de un trackpad real. Un numero mas alto (900ms en una version
+       anterior) protegia mejor contra la inercia, pero el enfriamiento
+       en si se sentia como que "el primer movimiento de la rueda no
+       hizo nada" -- si el usuario reintentaba scrollear durante esa
+       ventana (algo muy natural: recien se disparo el salto, todavia
+       no se nota que ya esta en marcha) ese segundo intento se
+       descartaba en silencio, y el que terminaba viendose en pantalla
+       era el primero, terminando de asentarse tarde. Si esto vuelve a
+       sentirse trabado con el scroll real de un trackpad, subir este
+       numero primero antes de tocar el resto de la logica. */
+    var WHEEL_COOLDOWN_MS = 550;
     var cooldownUntil = 0;
 
     function snapTo(el) {
