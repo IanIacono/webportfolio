@@ -1484,9 +1484,9 @@ p { text-wrap: pretty; }
 }
 
 /* Back a la izquierda, Next a la derecha (misma altura entre si).
-   Va justo debajo del texto, con el mismo margen que separa a los
-   demas bloques -- nada de pisos de altura artificiales que la manden
-   mas abajo de lo que su propio contenido necesita. */
+   En celular va justo debajo del texto, con el mismo margen que separa a
+   los demas bloques. En escritorio, ademas, todos los proyectos apoyan
+   estos botones a la misma altura -- ver mas abajo. */
 .project__actions {
   margin-top: var(--sp-8);
   display: flex;
@@ -1494,6 +1494,35 @@ p { text-wrap: pretty; }
   justify-content: space-between;
   gap: var(--sp-3);
   flex-wrap: wrap;
+}
+
+/* En escritorio los botones de TODOS los proyectos quedan a la misma
+   altura: la del proyecto con mas texto (hoy Detras Del Puesto), que es
+   el que los tiene mas abajo. Antes cada uno los dejaba donde caia su
+   propio texto y, pasando de uno a otro con Next, saltaban hasta ~290px.
+
+   La columna de texto recibe un alto minimo comun y se vuelve flexible en
+   vertical, asi "margin-top: auto" empuja los botones hasta el fondo de
+   ese alto. El margen de arriba pasa a ser padding porque el auto ocupa
+   el lugar del margin-top: sin el padding, en el proyecto mas largo (el
+   que justo llena el alto minimo, donde el auto vale 0) los botones
+   quedarian pegados al ultimo parrafo.
+
+   --project-info-min-h la mide y la escribe js/main.js (punto 9): CSS no
+   puede calcularla solo, porque cada proyecto es una seccion que esta en
+   display:none mientras se mira otra y ninguna puede leer el alto de las
+   demas. Si el JS no llegara a correr, la variable no existe, el alto
+   minimo cae en "auto" y queda el comportamiento de antes. */
+@media (min-width: 901px) {
+  .project__info {
+    display: flex;
+    flex-direction: column;
+    min-height: var(--project-info-min-h, auto);
+  }
+  .project__actions {
+    margin-top: auto;
+    padding-top: var(--sp-8);
+  }
 }
 
 

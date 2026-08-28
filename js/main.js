@@ -733,6 +733,93 @@
 
 
   /* ======================================================================
+     9. BOTONES "BACK"/"NEXT" SIEMPRE A LA MISMA ALTURA (SOLO ESCRITORIO)
+     Cada proyecto tiene distinta cantidad de texto, asi que sus botones
+     quedaban a alturas distintas: pasando de uno a otro con Next, saltaban
+     hasta ~290px. La idea es que todos queden donde los tiene el proyecto
+     mas largo (hoy Detras Del Puesto), que es el punto mas bajo.
+
+     El CSS solo no puede resolverlo: los proyectos son secciones que se
+     muestran de a una (display:none el resto, ver punto 1), asi que ninguna
+     puede "ver" el alto de las otras para igualarse. Y un numero fijo en el
+     CSS tampoco alcanza -- el alto que hace falta depende de como se corta
+     el texto, y va de 773px en una ventana de 1440 a 1025px en una de 960.
+
+     Asi que se mide con JS: se recorren las diez secciones, se toma el alto
+     natural de la columna de texto de cada una y el mayor se deja en la
+     variable --project-info-min-h. El CSS le pone ese alto minimo a la
+     columna y manda los botones al fondo (ver "10. PAGINAS DE PROYECTO" en
+     css/style.css). Si el JS no corre, la variable no existe, el alto
+     minimo queda en "auto" y todo se ve como antes: nada se rompe.
+
+     Para medir una seccion escondida hay que darle layout un instante. Se
+     la muestra con alto 0, overflow oculto y visibility:hidden: sus hijos
+     igual se acomodan con su alto real (que es lo que se lee), pero no
+     ocupa espacio ni se llega a pintar, asi que no hay ningun salto. Las
+     animaciones de entrada tampoco se disparan: solo se observan las de la
+     pagina que se muestra de verdad (observeReveals en el punto 1), asi que
+     una seccion que todavia no se visito no tiene ningun observador puesto.
+     ====================================================================== */
+
+  var projectPages = pages.filter(function (page) {
+    return page.querySelector(".project__info");
+  });
+
+  if (projectPages.length) {
+    var equalizeActions = function () {
+      /* En celular la columna es una sola y se scrollea: igualar alturas
+         solo agregaria huecos enormes. El CSS de abajo esta limitado a
+         escritorio igual, pero asi tampoco se gasta el trabajo de medir. */
+      if (window.innerWidth <= 900) {
+        document.documentElement.style.removeProperty("--project-info-min-h");
+        return;
+      }
+
+      /* Primero en cero: si quedara el valor de la medicion anterior,
+         estariamos midiendo el alto que nosotros mismos impusimos, y el
+         numero nunca podria volver a bajar. */
+      document.documentElement.style.setProperty("--project-info-min-h", "0px");
+
+      var tallest = 0;
+      projectPages.forEach(function (page) {
+        var info = page.querySelector(".project__info");
+        var wasHidden = page.hidden;
+        var prevStyle = page.getAttribute("style");
+
+        if (wasHidden) {
+          page.hidden = false;
+          page.style.height = "0";
+          page.style.overflow = "hidden";
+          page.style.visibility = "hidden";
+        }
+
+        tallest = Math.max(tallest, info.offsetHeight);
+
+        if (wasHidden) {
+          page.hidden = true;
+          if (prevStyle === null) page.removeAttribute("style");
+          else page.setAttribute("style", prevStyle);
+        }
+      });
+
+      document.documentElement.style.setProperty("--project-info-min-h", tallest + "px");
+    };
+
+    equalizeActions();
+
+    /* El texto cambia de alto cuando termina de cargar la tipografia, y
+       vuelve a cambiar si se reacomoda la ventana. */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeActions);
+
+    var equalizeTimer = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(equalizeTimer);
+      equalizeTimer = setTimeout(equalizeActions, 150);
+    });
+  }
+
+
+  /* ======================================================================
      Arranque
      ====================================================================== */
 
