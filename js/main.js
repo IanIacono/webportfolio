@@ -457,7 +457,20 @@
      que tampoco se cuele scroll libre por encima). Al ser un simple
      "todavia no paso tanto tiempo", no depende de que ningun evento
      del navegador se dispare para liberarse: no se puede quedar
-     trabado. */
+     trabado.
+
+     Cuarta version: lo de arriba asumia que "estar en Projects" es un
+     PUNTO (la grilla de tarjetas siempre entra en una sola pantalla) --
+     pero a algunas alturas de ventana la grilla es un poco mas alta que
+     la pantalla, y con esa version cualquier scroll hacia abajo estando
+     en Projects saltaba derecho a Contact sin dejar ver nunca las
+     tarjetas tapadas debajo del borde ("los proyectos no scrollean").
+     Se resuelve mas abajo tratando "estar en Projects" como un RANGO
+     (de su techo a su piso real) en vez de un punto: adentro de ese
+     rango la rueda no se toca, scroll normal del navegador; recien al
+     llegar a un extremo se vuelve a enganchar el salto a la siguiente
+     seccion. Ver el detalle en los comentarios de SETTLE_MS y
+     restingZoneIndex() mas abajo. */
 
   var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
@@ -472,41 +485,33 @@
       return navH + gap;
     }
 
-    /* En vez de un tiempo de espera fijo despues de cada salto (versiones
-       anteriores probaron 900ms, despues 550ms), esto chequea la POSICION
-       real para decidir si el scroll "ya llego": mientras todavia esta en
-       pleno vuelo (ni cerca del reel, ni de Selected Works, ni de Contact)
-       un "wheel" en la direccion CONTRARIA a la que ya se esta animando se
-       ignora, exactamente como antes -- eso es lo que evita el bug viejo
-       de la rueda trabada (una reversa a mitad de camino interrumpiendo el
-       salto en curso). Pero un "wheel" en la MISMA direccion en la que ya
-       se esta animando no espera a que termine de asentar: redirige el
-       salto en curso directo al siguiente tramo. Asi, scrolleando fuerte y
-       seguido, el reel pasa a Selected Works y de ahi a Contact en una
-       sola tirada, sin el "freno-pausa-freno" de antes entre los dos
-       saltos; scrolleando de a poco (un solo tirón, se suelta, se espera),
-       cada tramo se asienta antes de que el siguiente wheel decida hacia
-       donde ir, e igual se sigue frenando en cada seccion de a una.
+    /* "En pleno vuelo" ya no se decide mirando la POSICION (ver mas abajo
+       por que), sino con un tiempo fijo que arranca en cada salto y dura
+       mas que cualquier animacion real de scrollIntoView -- mientras
+       dura, un "wheel" en la direccion CONTRARIA a la que ya se esta
+       animando se ignora (eso es lo que evita el bug viejo de la rueda
+       trabada: una reversa a mitad de camino interrumpiendo el salto en
+       curso), pero uno en la MISMA direccion redirige el salto en curso
+       directo al siguiente tramo sin esperar a que este termine de
+       asentar -- eso es lo "interrumpible", y no se vuelve mas lento por
+       este cambio: solo importa para el caso de una reversa a mitad de
+       camino, que de cualquier forma ya se ignoraba. Cubre tambien, sin
+       necesidad de una constante aparte, el primerisimo instante de cada
+       salto (recien llamado scrollIntoView() el navegador todavia no
+       repinto ni un frame, asi que window.scrollY leido en ese instante
+       puede seguir marcando la posicion VIEJA). */
+    var SETTLE_MS = 600;
+    function isAnimating() {
+      return Date.now() - animationStartedAt < SETTLE_MS;
+    }
 
-       MIN_LOCK_MS aparte es solo para blindar el primerisimo instante de
-       cada salto: recien llamado a scrollIntoView(), el navegador todavia
-       no repinto ni un frame, asi que window.scrollY leido en ese instante
-       puede seguir marcando la posicion VIEJA -- sin este colchon corto,
-       un segundo evento de wheel llegando en la misma tanda que el primero
-       podria colarse como si el scroll ya hubiese terminado, cuando en
-       realidad recien esta arrancando. */
-    var MIN_LOCK_MS = 120;
-    /* No tan chico como parece necesario: las posiciones de abajo se
-       calculan solo con navClearance() (altura de la barra fija), pero el
-       punto donde el scroll REALMENTE queda quieto tambien depende de
-       "scroll-margin-top" de cada seccion (#projects tiene el suyo propio,
-       -8px, ver css/style.css) -- que este calculo no conoce. Con una
-       tolerancia de 6px eso alcanzaba a dejar a #projects justo AFUERA del
-       margen (una diferencia real y medida de 8px), asi que nunca se volvia
-       a reconocer como "asentado" ahi -- efectivamente trababa la rueda
-       para siempre despues del primer salto. 24px cubre esa diferencia con
+    /* Las posiciones de abajo se calculan solo con navClearance() (altura
+       de la barra fija), pero el punto donde el scroll REALMENTE queda
+       quieto tambien depende de "scroll-margin-top" de cada seccion
+       (#projects tiene el suyo propio, -8px, ver css/style.css) -- que
+       este calculo no conoce. 24px cubre esa diferencia (medida, 8px) con
        margen de sobra sin arriesgarse a confundir un punto con otro (las
-       tres secciones estan a cientos de pixeles de distancia entre si). */
+       secciones estan a cientos de pixeles de distancia entre si). */
     var SNAP_TOLERANCE_PX = 24;
     var animationStartedAt = 0;
 
@@ -518,13 +523,33 @@
        posicion real "llegue" a ningun lado. */
     var ZONES = [heroEl, projectsEl, contactEl];
 
-    function restingZoneIndex() {
+    /* Techo y piso del rango "libre" de Projects (ver el comentario
+       grande al principio de esta seccion). El piso es el punto donde,
+       scrolleando una pantalla mas desde ahi, se llega justo al techo de
+       Contact -- si la grilla entra en una sola pantalla ese punto queda
+       por ENCIMA de su propio techo, por eso el Math.max (el rango nunca
+       "retrocede", como minimo mide 0). */
+    function projectsRange() {
       var clearance = navClearance();
+      var top = projectsEl.offsetTop - clearance;
+      var contactTop = contactEl.offsetTop - clearance;
+      return { top: top, bottom: Math.max(top, contactTop - window.innerHeight), contactTop: contactTop };
+    }
+
+    /* Devuelve en que zona esta EN REPOSO el scroll (0/1/2), o -1 si no
+       matchea ninguna -- solo se llama cuando !isAnimating(), asi que
+       esto ultimo deberia ser rarisimo (scroll libre nunca visitado por
+       ningun salto), no "en pleno vuelo" como en la version anterior. La
+       zona 1 (Projects) ya no es un punto sino el RANGO completo de
+       projectsRange(): asi, mientras el usuario scrollea libremente
+       DENTRO de ese rango (ver el wheel listener), sigue reconociendose
+       como "en Projects" en vez de devolver -1. */
+    function restingZoneIndex() {
       var y = window.scrollY;
-      var positions = [0, projectsEl.offsetTop - clearance, contactEl.offsetTop - clearance];
-      for (var i = 0; i < positions.length; i++) {
-        if (Math.abs(y - positions[i]) < SNAP_TOLERANCE_PX) return i;
-      }
+      var range = projectsRange();
+      if (Math.abs(y) < SNAP_TOLERANCE_PX) return 0;
+      if (Math.abs(y - range.contactTop) < SNAP_TOLERANCE_PX) return 2;
+      if (y > range.top - SNAP_TOLERANCE_PX && y < range.bottom + SNAP_TOLERANCE_PX) return 1;
       return -1;
     }
 
@@ -540,12 +565,10 @@
 
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
-      if (Date.now() - animationStartedAt < MIN_LOCK_MS) { e.preventDefault(); return; }
 
       var direction = e.deltaY > 0 ? 1 : -1;
-      var restingAt = restingZoneIndex();
 
-      if (restingAt === -1) {
+      if (isAnimating()) {
         /* En pleno vuelo. Misma direccion que el salto en curso: seguir
            de largo al siguiente tramo (si hay uno) en vez de esperar a
            que este termine de asentar -- esto es lo "interrumpible".
@@ -559,9 +582,22 @@
         return;
       }
 
-      /* Asentado de verdad: la logica de siempre, de a un tramo por vez,
-         en las dos direcciones -- ya no hay tramo libre entre Selected
-         Works y Contact. Contact hacia abajo (footer, etc.) y Reel hacia
+      var restingAt = restingZoneIndex();
+      if (restingAt === -1) return;
+
+      /* Adentro del rango libre de Projects, con lugar todavia para
+         scrollear en esa direccion sin salirse de el: no se toca la
+         rueda, scroll normal del navegador -- esto es lo que deja ver
+         las tarjetas que no entran en una sola pantalla. */
+      if (restingAt === 1) {
+        var range = projectsRange();
+        if (direction > 0 && window.scrollY < range.bottom - SNAP_TOLERANCE_PX) return;
+        if (direction < 0 && window.scrollY > range.top + SNAP_TOLERANCE_PX) return;
+      }
+
+      /* Asentado de verdad (o en un extremo del rango libre de Projects):
+         la logica de siempre, de a un tramo por vez, en las dos
+         direcciones. Contact hacia abajo (footer, etc.) y Reel hacia
          arriba quedan libres a proposito: no hay un cuarto/menos-uno punto
          al que engancharse en esos casos, ninguna rama de abajo matchea. */
       if (direction > 0 && restingAt < 2) {
