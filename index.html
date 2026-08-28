@@ -556,6 +556,27 @@
     </section>
 
     <!-- ==========================================================================
+         ORDEN DE LOS BOTONES "BACK" / "NEXT" DE LOS PROYECTOS
+
+         Next sigue el mismo orden en que se ven las tarjetas en la grilla de
+         "Selected Works", leyendo de izquierda a derecha y de arriba a abajo:
+         primero la pestana Audiovisual entera y despues la Sound. Back hace
+         exactamente lo mismo al reves. Es un ciclo cerrado: el ultimo vuelve
+         al primero.
+
+           Rèport Travel Media -> Detras Del Puesto -> Te Lo Aseguro ->
+           Juleriaque -> Polvora Podcast -> Playbook -> The Carbon Case ->
+           Lumia -> Red Bull Batallas -> La Llamada Fatal -> (vuelve a Rèport)
+
+         Los enlaces estan escritos a mano en cada proyecto (el href del boton
+         Back y el del Next, mas abajo en cada seccion). Si algun dia cambia
+         el orden de las tarjetas en la grilla, hay que reacomodar esos dos
+         enlaces en las DIEZ secciones para que el ciclo siga cerrado: si uno
+         solo queda mal, se puede terminar dando vueltas sin pasar por algun
+         proyecto.
+         ========================================================================== -->
+
+    <!-- ==========================================================================
          SECCION 2 de 11  —  PROYECTO: THE CARBON CASE   (direccion: #thecarboncase)
          ========================================================================== -->
     <!-- Para cambiar los textos de este proyecto edita: el <h1> (titulo),
@@ -574,7 +595,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">The Carbon Case</h1>
-          <p class="project__role">Sound design, Re-recording Mix &amp; Master</p>
+          <p class="project__role">Sound Design, Re-recording Mix &amp; Master</p>
           <p class="project__badge">Upcoming release</p>
 
           <div class="project__text">
@@ -624,7 +645,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Lumia</h1>
-          <p class="project__role">Sound design, Music &amp; Mix</p>
+          <p class="project__role">Sound Design, Music &amp; Mix</p>
           <p class="project__badge">Upcoming release</p>
 
           <div class="project__text">
@@ -736,7 +757,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">La Llamada Fatal</h1>
-          <p class="project__role">Sound editing, dialogue cleanup</p>
+          <p class="project__role">Sound Editing, Dialogue Cleanup</p>
           <p class="project__links"><a class="link" href="https://open.spotify.com/show/5O6b4MT62YUwcre4i4Ylb9" target="_blank" rel="noopener">Listen on Spotify</a></p>
 
           <div class="project__text">
@@ -756,7 +777,7 @@
             <a class="btn" href="#redbull"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#ddp">
+            <a class="btn" href="#reports">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -790,7 +811,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Detras Del Puesto</h1>
-          <p class="project__role">Music, logo animation &amp; audio branding</p>
+          <p class="project__role">Live Video Operation, Music, Logo Animation &amp; Audio Branding</p>
           <p class="project__links"><a class="link" href="https://www.instagram.com/detrasdelpuesto.podcast/" target="_blank" rel="noopener">Instagram</a></p>
 
           <div class="project__text">
@@ -807,7 +828,7 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#lallamada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#faiketen">
@@ -839,7 +860,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Te Lo Aseguro | Analipsis</h1>
-          <p class="project__role">Video editing</p>
+          <p class="project__role">Video Editing</p>
 
           <div class="project__text">
             <div class="lang">
@@ -858,7 +879,7 @@
             <a class="btn" href="#ddp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#reports">
+            <a class="btn" href="#juleriaque">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -887,7 +908,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Rèport Travel Media</h1>
-          <p class="project__role">Recording, Camera &amp; Sound Setup, Live Video Operation, Post Production</p>
+          <p class="project__role">Live Video Operation, Post Production</p>
 
           <div class="project__text">
             <div class="lang">
@@ -903,10 +924,10 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#faiketen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#lallamada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#juleriaque">
+            <a class="btn" href="#ddp">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -971,7 +992,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Juleriaque</h1>
-          <p class="project__role">Video editing</p>
+          <p class="project__role">Video Editing</p>
 
           <div class="project__text">
             <div class="lang">
@@ -987,7 +1008,7 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#faiketen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#section12">
@@ -1024,7 +1045,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Polvora Podcast</h1>
-          <p class="project__role">Camera &amp; Mic Setup, Video Editing</p>
+          <p class="project__role">Live Video Operation, Post Production</p>
 
           <div class="project__text">
             <div class="lang">
@@ -1077,7 +1098,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Playbook</h1>
-          <p class="project__role">Video editing</p>
+          <p class="project__role">Video Editing</p>
 
           <div class="project__text">
             <div class="lang">
