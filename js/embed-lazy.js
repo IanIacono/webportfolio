@@ -22,6 +22,11 @@
     document.querySelectorAll('.embed > iframe[src*="youtube.com/embed/"]')
   );
 
+  /* Un video abierto (ya cambiado de miniatura a iframe real) por cada
+     embed, para poder volver a cerrarlo al salir del proyecto -- ver el
+     listener de "page:change" al final. */
+  var opened = [];
+
   iframes.forEach(function (iframe) {
     var src = iframe.getAttribute("src");
     var match = src.match(/\/embed\/([^?&/]+)/);
@@ -50,6 +55,9 @@
     play.innerHTML = PLAY_ICON;
     facade.appendChild(play);
 
+    var entry = { facade: facade, live: null };
+    opened.push(entry);
+
     facade.addEventListener("click", function () {
       var real = document.createElement("iframe");
       real.src = src + (src.indexOf("?") > -1 ? "&" : "?") + "autoplay=1";
@@ -57,10 +65,39 @@
       if (allow) real.setAttribute("allow", allow);
       if (referrerPolicy) real.setAttribute("referrerpolicy", referrerPolicy);
       real.setAttribute("allowfullscreen", "");
+      entry.live = real;
       facade.replaceWith(real);
       real.focus({ preventScroll: true });
     });
 
     iframe.replaceWith(facade);
+  });
+
+  /* Al irse del proyecto (Next, Back, o volver al inicio) el video que
+     estaba puesto se cierra: se lo reemplaza de vuelta por su miniatura.
+     Hace falta hacerlo a mano porque el sitio no descarga nada al navegar
+     -- el router solo esconde la seccion (ver punto 1 de main.js), y una
+     seccion escondida sigue siendo un documento vivo: el iframe de YouTube
+     se queda reproduciendo detras, sin nada a la vista que lo delate. Peor
+     todavia, se iban acumulando: tres proyectos abiertos eran tres videos
+     sonando a la vez.
+
+     Sacar el iframe del todo (en vez de pausarlo) es lo que hace que
+     ademas quede "reiniciado": no hay forma de pausar un iframe de YouTube
+     desde afuera sin cargar su API entera, y volviendo a la miniatura el
+     video arranca de cero la proxima vez, que es lo que se espera al
+     volver a entrar. La miniatura es la misma de antes, con su listener
+     de click intacto, asi que se puede volver a reproducir sin mas.
+
+     Los <iframe> de YouTube que por algun motivo no hayan pasado por esta
+     miniatura (por ejemplo si su URL no matchea el patron de arriba)
+     quedan cubiertos aparte en player.js, que los manda a about:blank. */
+  document.addEventListener("page:change", function (event) {
+    var activePage = event.detail.page;
+    opened.forEach(function (entry) {
+      if (!entry.live || activePage.contains(entry.live)) return;
+      entry.live.replaceWith(entry.facade);
+      entry.live = null;
+    });
   });
 })();

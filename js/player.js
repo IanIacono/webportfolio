@@ -161,12 +161,22 @@
      antes de este evento) el navegador lo pide de una, como la primera vez.
      Los de Spotify (.embed--audio) quedan afuera: solo se pidio esto para
      YouTube. */
-  var ytFrames = Array.prototype.slice.call(document.querySelectorAll(".embed:not(.embed--audio) iframe"));
-  ytFrames.forEach(function (frame) { frame.dataset.embedSrc = frame.src; });
+  document.querySelectorAll(".embed:not(.embed--audio) iframe").forEach(function (frame) {
+    frame.dataset.embedSrc = frame.src;
+  });
 
   document.addEventListener("page:change", function (event) {
     var activePage = event.detail.page;
-    ytFrames.forEach(function (frame) {
+    /* Se busca en el documento AHORA, no una lista guardada al cargar la
+       pagina: embed-lazy.js reemplaza estos iframes por una miniatura
+       (y recien crea el iframe de verdad al tocarla), asi que una lista
+       vieja termina apuntando a elementos que ya no estan en la pagina --
+       cambiarles el src no hace absolutamente nada. El data-embed-src que
+       se marca arriba solo lo tienen los iframes originales del HTML, asi
+       que los que crea embed-lazy.js al tocar la miniatura no matchean y
+       quedan afuera a proposito: de esos se encarga el propio
+       embed-lazy.js, devolviendolos a su miniatura. */
+    document.querySelectorAll(".embed:not(.embed--audio) iframe").forEach(function (frame) {
       var original = frame.dataset.embedSrc;
       if (!original) return;
       if (activePage.contains(frame)) {
