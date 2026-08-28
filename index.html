@@ -326,7 +326,16 @@
           </a>
         </article>
         <article class="tile reveal" data-delay="0">
-          <a class="tile__link" href="#lallamada" aria-label="View project: La Llamada Fatal">
+          <!-- Es el unico proyecto sin video de hover (no hay
+               lallamada-hover.mp4). En su lugar, al pasar el mouse la
+               portada titila y suena un episodio del podcast: los dos
+               atributos de abajo son los que encienden eso, ver
+               "TARJETA CON TITILEO + SPOTIFY" en js/player.js. El episodio
+               es el mismo que ya esta incrustado en la pagina del
+               proyecto. -->
+          <a class="tile__link" href="#lallamada" aria-label="View project: La Llamada Fatal"
+             data-tile-flicker
+             data-tile-spotify="https://open.spotify.com/embed/episode/3gu56XUbJWXSjcrw7pOc3g">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/la-llamada-fatal-960.webp"
                    srcset="assets/img/la-llamada-fatal-480.webp 480w, assets/img/la-llamada-fatal-960.webp 960w, assets/img/la-llamada-fatal.webp 640w"

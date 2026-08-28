@@ -134,6 +134,120 @@
     link.addEventListener("blur", leave);
   });
 
+  /* ======================================================================
+     TARJETA CON TITILEO + SPOTIFY  (hoy solo La Llamada Fatal)
+     Es el unico proyecto que no tiene video de hover. En vez de eso, al
+     pasar el mouse por su tarjeta la portada titila -- como la luz de un
+     tubo que hace contacto flojo -- y arranca un episodio del podcast.
+
+     El titileo se hace por JavaScript y no con una animacion de CSS
+     porque tiene que ser IRREGULAR: una animacion es siempre el mismo
+     ciclo repitiendose, y a los pocos segundos se le ve el patron. Aca
+     cada destello elige un brillo y una duracion al azar, asi que no se
+     repite nunca.
+
+     Lo de Spotify tiene un limite que conviene tener presente: los
+     navegadores no dejan que algo empiece a sonar solo, sin que la
+     persona haya hecho un click en la pagina primero -- y pasar el mouse
+     no cuenta como click. Asi que el episodio va a arrancar si ya se
+     toco algo (por ejemplo el boton de sonido del header, que es lo
+     habitual en este sitio) y si no, no. El titileo funciona siempre,
+     independientemente de eso. El script de Spotify se pide recien la
+     primera vez que se pasa por esta tarjeta, no en cada visita al
+     sitio. */
+
+  var flickerLinks = Array.prototype.slice.call(document.querySelectorAll(".tile__link[data-tile-flicker]"));
+
+  flickerLinks.forEach(function (link) {
+    var poster = link.querySelector(".tile__poster");
+    if (!poster) return;
+
+    var flickerTimer = null;
+
+    var stopFlicker = function () {
+      if (flickerTimer !== null) { clearTimeout(flickerTimer); flickerTimer = null; }
+      /* Se borra el estilo puesto a mano para que vuelva a mandar el CSS
+         (el brillo normal y el de hover, ver .tile__poster). */
+      poster.style.filter = "";
+      link.classList.remove("is-flickering");
+    };
+
+    var flickerStep = function () {
+      /* Un rango angosto a proposito: tiene que leerse como un parpadeo
+         de la luz, no como que la imagen cambia de color. */
+      var brightness = 0.82 + Math.random() * 0.36;
+      poster.style.filter = "saturate(1) brightness(" + brightness.toFixed(3) + ")";
+      /* Tiempos tambien al azar: con un intervalo fijo, aunque el brillo
+         variara, el ojo igual encuentra el pulso. */
+      flickerTimer = window.setTimeout(flickerStep, 35 + Math.random() * 190);
+    };
+
+    var startFlicker = function () {
+      if (flickerTimer !== null) return;
+      link.classList.add("is-flickering");
+      flickerStep();
+    };
+
+    /* --- Episodio de Spotify --- */
+    var episodeUrl = link.dataset.tileSpotify;
+    var spotifyFrame = null;
+    var spotifyController = null;
+    var spotifyPending = false;
+
+    var buildSpotify = function () {
+      if (spotifyFrame || !episodeUrl) return;
+      /* Fuera de la vista: solo interesa el sonido, la tarjeta ya tiene su
+         propia portada. */
+      spotifyFrame = document.createElement("div");
+      spotifyFrame.className = "tile__spotify";
+      spotifyFrame.setAttribute("aria-hidden", "true");
+      link.appendChild(spotifyFrame);
+
+      var start = function (IFrameAPI) {
+        IFrameAPI.createController(spotifyFrame, { uri: episodeUrl, width: 300, height: 80 }, function (controller) {
+          spotifyController = controller;
+          if (spotifyPending) { spotifyPending = false; controller.play(); }
+        });
+      };
+
+      if (window.SpotifyIframeApi) { start(window.SpotifyIframeApi); return; }
+
+      var prev = window.onSpotifyIframeApiReady;
+      window.onSpotifyIframeApiReady = function (IFrameAPI) {
+        window.SpotifyIframeApi = IFrameAPI;
+        if (typeof prev === "function") prev(IFrameAPI);
+        start(IFrameAPI);
+      };
+
+      if (!document.querySelector('script[data-spotify-api]')) {
+        var s = document.createElement("script");
+        s.src = "https://open.spotify.com/embed/iframe-api/v1";
+        s.async = true;
+        s.setAttribute("data-spotify-api", "");
+        document.head.appendChild(s);
+      }
+    };
+
+    var enterTile = function () {
+      if (reduceMotion.matches || isTouch) return;
+      startFlicker();
+      buildSpotify();
+      if (spotifyController) spotifyController.play();
+      else spotifyPending = true;
+    };
+
+    var leaveTile = function () {
+      stopFlicker();
+      spotifyPending = false;
+      if (spotifyController) spotifyController.pause();
+    };
+
+    link.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") enterTile(); });
+    link.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse") leaveTile(); });
+    link.addEventListener("focus", enterTile);
+    link.addEventListener("blur", leaveTile);
+  });
+
   document.addEventListener("page:change", function (event) {
     var activePage = event.detail.page;
     tileLinks.forEach(function (link) {

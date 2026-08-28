@@ -980,6 +980,15 @@ p { text-wrap: pretty; }
    no se estreno" -- ver project__badge en build.py (project_page). */
 .project__badge {
   display: inline-block;
+  /* El inline-block de arriba alcanzaba hasta que .project__info paso a ser
+     un flex en columna (para poder mandar los botones Back/Next al fondo,
+     ver "10. PAGINAS DE PROYECTO"): en un flex los hijos se estiran al ancho
+     completo por defecto, asi que el cartel se convertia en una barra de
+     punta a punta en vez de rodear solo su texto. Esto lo achica de nuevo a
+     lo que mide su contenido, sin tocar a los demas hijos -- si en cambio se
+     le pusiera align-items al contenedor, tambien se encogerian el titulo y
+     los parrafos, y el texto dejaria de cortarse a lo ancho de la columna. */
+  align-self: flex-start;
   margin: var(--sp-2) 0 0;
   padding: 0.3em 0.85em;
   border: 1px solid var(--c-accent);
@@ -1151,6 +1160,29 @@ p { text-wrap: pretty; }
   filter: saturate(.86) brightness(.92);
 }
 .tile__video { opacity: 0; transition: opacity 320ms var(--ease); }
+
+/* Mientras la portada titila (ver "TARJETA CON TITILEO + SPOTIFY" en
+   js/player.js) el brillo lo va cambiando el JavaScript de un salto al
+   otro. La transicion de 340ms que tiene .tile__poster suavizaria justo
+   eso: cada destello llegaria tarde y desdibujado, y en vez de un
+   parpadeo se veria un latido lento. */
+.tile__link.is-flickering .tile__poster { transition: none; }
+
+/* El episodio de Spotify de esa misma tarjeta: interesa solo el sonido,
+   asi que el reproductor no se ve. No se usa display:none ni
+   visibility:hidden a proposito -- con cualquiera de los dos el navegador
+   puede decidir no reproducir nada. Queda presente pero transparente y
+   fuera del alcance del mouse. */
+.tile__spotify {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
 
 /* El video queda oculto hasta que realmente arranca a reproducirse: asi
    nunca se ve un cuadro negro mientras carga. */
