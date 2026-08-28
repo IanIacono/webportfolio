@@ -100,6 +100,30 @@
            abajo, y ese no es link porque ahi ya estas en el reel. -->
       <a class="nav__project-brand" href="#home">Ian Iacono</a>
 
+      <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
+           el sitio: prende o apaga el volumen de lo que se este
+           reproduciendo (el carrusel/reel, o el proyecto que estes
+           mirando en la grilla). Los navegadores exigen un click real
+           para permitir sonido, por eso arranca siempre en silencio.
+
+           Va a la IZQUIERDA, no con los links de la derecha: el nombre
+           grande del home esta centrado y es ancho, y con el volumen +
+           cuatro links apretados a la derecha se le venian encima (se
+           veia el boton de volumen pisando el apellido). De este lado
+           hay lugar de sobra. Queda justo despues de .nav__project-brand
+           a proposito: cuando la barra se achica y aparece el nombre
+           chico, el volumen queda a su derecha, y como el nombre ocupa
+           su lugar igual mientras esta invisible, el volumen no se
+           corre ni un pixel entre los dos estados. -->
+      <div class="audio-control audio-control--nav">
+        <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Turn on site sound">
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
+        </button>
+        <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
+               aria-label="Site volume" style="--level-num:80">
+      </div>
+      </div>
+
       <!-- MARCA GRANDE: SOLO ESCRITORIO (mas de 900px). Se ve arriba de
            todo del home (nombre + subtitulo, centrados); al scrollear --
            o en cualquier otra pagina -- se desvanece y la barra queda en
@@ -119,25 +143,14 @@
         <p class="nav__brand-role">Sound Designer &middot; Music Producer &middot; Mix &amp; Master &middot; Podcast Editor</p>
       </div>
 
-      <div class="nav__right">
-        <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
-             el sitio: prende o apaga el volumen de lo que se este
-             reproduciendo (el carrusel/reel, o el proyecto que estes
-             mirando en la grilla). Los navegadores exigen un click real
-             para permitir sonido, por eso arranca siempre en silencio. -->
-        <div class="audio-control">
-          <button type="button" class="audio-control__toggle" aria-pressed="false" aria-label="Turn on site sound">
-            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="m22 9-6 6M16 9l6 6"/></svg><svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6a8 8 0 0 1 0 12"/></svg>
-          </button>
-          <input type="range" class="audio-control__level" min="0" max="100" value="80" step="1"
-                 aria-label="Site volume" style="--level-num:80">
-        </div>
 
+      <div class="nav__right">
         <nav class="nav__links" aria-label="Main navigation">
           <!-- #home ya hace scroll instantaneo al toque del reel (ver el
                router en main.js) — no hace falta un ancla nueva. -->
           <a class="nav__link" href="#home">Showreel</a>
           <a class="nav__link" href="#projects">Projects</a>
+          <a class="nav__link" href="#about">About</a>
           <a class="nav__link" href="#contact">Contact</a>
         </nav>
       </div>
@@ -180,6 +193,7 @@
           <div class="nav__links hero__welcome-links">
             <a class="nav__link" href="#home">Showreel</a>
             <a class="nav__link" href="#projects">Projects</a>
+            <a class="nav__link" href="#about">About</a>
             <a class="nav__link" href="#contact">Contact</a>
           </div>
 

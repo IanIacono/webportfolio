@@ -411,7 +411,6 @@ p { text-wrap: pretty; }
   color: var(--c-text);
   white-space: nowrap;
   text-decoration: none;
-  margin-right: auto;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -472,6 +471,37 @@ p { text-wrap: pretty; }
   display: flex;
   align-items: center;
   gap: var(--sp-4);
+}
+
+@media (min-width: 901px) {
+  .audio-control--nav { margin-right: auto; }
+}
+
+/* Arriba de todo del home conviven tres cosas en la misma fila: el volumen
+   a la izquierda, el nombre grande centrado y los links a la derecha. El
+   nombre mide casi 500px y esta centrado en la PANTALLA (no en el hueco que
+   dejan los otros dos), asi que por debajo de ~1360px se le encimaban -- se
+   llego a ver el boton de volumen pisando el apellido. Debajo de ese ancho
+   se hace lo que el sitio ya hacia en celular: arriba de todo se ve solo el
+   nombre centrado, y el volumen y los links aparecen recien cuando la barra
+   se achica al scrollear (que es justo cuando el nombre grande se va).
+   El control de volumen se nombra aparte de .nav__right porque en escritorio
+   vive afuera, a la izquierda, al lado del nombre chico. */
+@media (max-width: 1359px) {
+  .nav__right,
+  .audio-control--nav {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
+  }
+  .nav.is-stuck .nav__right,
+  .nav.is-stuck .audio-control--nav {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
+  }
 }
 
 .nav__links {
@@ -556,7 +586,7 @@ p { text-wrap: pretty; }
    de volumen al lado) un poco mas chico que el tamano base de arriba --
    la copia de .nav__brand (la de la bienvenida movil) se queda con el
    tamano original. */
-.nav__right .audio-control__toggle {
+.audio-control--nav .audio-control__toggle {
   width: calc(var(--tap) - 2px);
   height: calc(var(--tap) - 2px);
 }
@@ -641,7 +671,9 @@ p { text-wrap: pretty; }
   display: none;
   -webkit-appearance: none;
   appearance: none;
-  width: 120px;
+  /* Acortada de 120px: el header tiene que entrar el nombre grande
+     centrado y cuatro links sin pisarse. */
+  width: 96px;
   height: var(--tap);
   background: transparent;
   cursor: pointer;
@@ -2184,34 +2216,21 @@ p { text-wrap: pretty; }
      uno solo. */
   .project__text { margin-top: var(--sp-6); }
 
-  /* No entran el nombre grande, los links y el volumen juntos en una
-     pantalla angosta -- se superponen. Ahi los links+volumen se quedan
-     ocultos hasta que se scrollea (como antes), igual que en celular. */
   .nav__right {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
     /* Mas chico que en desktop: con el tamano de link mas grande que le
-       pusimos a .nav__link en general, esta fila (boton + 3 links) ya no
-       entraba en una pantalla angosta y se salia por el costado. Aca
-       adentro, en esta barra compacta especificamente, vuelve a un
-       tamano chico -- .hero__welcome-links (la bienvenida, arriba de
-       todo) no se toca, se queda grande. */
+       pusimos a .nav__link en general, esta fila ya no entraba en una
+       pantalla angosta y se salia por el costado. Aca adentro, en esta
+       barra compacta especificamente, vuelve a un tamano chico --
+       .hero__welcome-links (la bienvenida, arriba de todo) no se toca,
+       se queda grande. */
     gap: var(--sp-2);
-  }
-  .nav.is-stuck .nav__right {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-    transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
   }
   .nav__right .nav__link {
     padding-inline: var(--sp-2);
     font-size: var(--fs-2xs);
   }
   .nav__right .nav__links { gap: var(--sp-1); }
-  .nav__right .audio-control__toggle {
+  .audio-control--nav .audio-control__toggle {
     width: calc(var(--tap) - 8px);
     height: calc(var(--tap) - 8px);
   }
