@@ -259,9 +259,11 @@
   if (portfolioTabs) {
     var tabs = Array.prototype.slice.call(portfolioTabs.querySelectorAll(".portfolio-tab"));
     var thumb = portfolioTabs.querySelector("[data-portfolio-thumb]");
-    var panelsWrap = document.querySelector(".portfolio-panels");
+    var projectGrid = document.querySelector("[data-portfolio-grid]");
+    var allTiles = projectGrid
+      ? Array.prototype.slice.call(projectGrid.querySelectorAll(".tile"))
+      : [];
     var activeTab = tabs[0];
-    var TRANSITION_MS = 250; /* debe coincidir con --dur-slow en css/style.css */
 
     function positionThumb(tab, skipTransition) {
       if (!thumb || !tab) return;
@@ -274,20 +276,16 @@
       }
     }
 
-    /* Cambia que grilla se ve. En vez de un salto seco, la que entra
-       viene con un slide+fade desde un lado y la que sale se va para el
-       otro -- la direccion depende de si la pestana nueva esta a la
-       derecha o a la izquierda de la que estaba activa, asi que "Sound
-       -> Audiovisual" y "Audiovisual -> Sound" van cada uno para su lado.
-       skipAnim se usa solo en la carga inicial de la pagina, donde no
-       hay "de donde" venir todavia. */
+    /* Antes habia DOS grillas y el selector cambiaba de una a la otra.
+       Ahora hay una sola con los diez proyectos (ver index.html) y el
+       selector filtra: "all" los muestra todos, y las otras dos dejan
+       solo los de su categoria (data-category en cada tarjeta).
+       Se esconden con [hidden] y no con una clase: asi tampoco quedan
+       en la navegacion por teclado ni para un lector de pantalla, que
+       es lo correcto para algo que no se esta mostrando. */
     function selectPortfolio(name, skipAnim) {
       var targetTab = tabs.filter(function (t) { return t.dataset.portfolioTarget === name; })[0];
-      if (!targetTab || (targetTab === activeTab && !skipAnim)) return;
-
-      var oldTab = activeTab;
-      var oldPanel = document.getElementById(oldTab.getAttribute("aria-controls"));
-      var forward = tabs.indexOf(targetTab) > tabs.indexOf(oldTab);
+      if (!targetTab) return;
 
       tabs.forEach(function (tab) {
         var active = tab === targetTab;
@@ -297,53 +295,30 @@
       activeTab = targetTab;
       positionThumb(activeTab, skipAnim);
 
-      var newPanel = document.getElementById(targetTab.getAttribute("aria-controls"));
-      if (!newPanel) return;
-
-      if (skipAnim || !panelsWrap || reduceMotion.matches) {
-        if (oldPanel && oldPanel !== newPanel) oldPanel.hidden = true;
-        newPanel.hidden = false;
-        observeReveals(newPanel);
-        return;
-      }
-
-      if (oldPanel === newPanel) return;
-
-      /* Arranca la grilla nueva ya visible pero corrida hacia el lado de
-         "entrada" y transparente, sin transicion todavia (asi no anima
-         este primer salto) -- forzar el reflow confirma ese punto de
-         partida antes de que, un frame despues, se le saque el
-         corrimiento CON la transicion prendida: ahi es donde se ve el
-         slide+fade. A la vieja se le hace lo mismo pero al lado opuesto. */
-      panelsWrap.classList.add("is-transitioning");
-      newPanel.hidden = false;
-      newPanel.classList.add(forward ? "is-offset-r" : "is-offset-l");
-      void newPanel.offsetWidth;
-
-      requestAnimationFrame(function () {
-        newPanel.classList.remove("is-offset-r", "is-offset-l");
-        if (oldPanel) oldPanel.classList.add(forward ? "is-offset-l" : "is-offset-r");
+      allTiles.forEach(function (tile) {
+        var show = name === "all" || tile.dataset.category === name;
+        tile.hidden = !show;
       });
 
-      observeReveals(newPanel);
+      /* Las tarjetas que vuelven a aparecer tienen que poder animar su
+         entrada otra vez; las que ya se habian mostrado se quedan como
+         estan (observeReveals ignora las que ya tienen is-visible). */
+      if (projectGrid) observeReveals(projectGrid);
 
-      window.setTimeout(function () {
-        if (oldPanel) {
-          oldPanel.hidden = true;
-          oldPanel.classList.remove("is-offset-l", "is-offset-r");
-        }
-        panelsWrap.classList.remove("is-transitioning");
-      }, TRANSITION_MS);
+      /* La grilla acaba de cambiar de alto, y de ese alto dependen los
+         puntos de enganche del scroll de escritorio (ver punto 6). */
+      document.dispatchEvent(new CustomEvent("projects:resize"));
     }
 
     tabs.forEach(function (tab) {
       tab.addEventListener("click", function () { selectPortfolio(tab.dataset.portfolioTarget); });
     });
 
-    /* Un link viejo a #audiovisual (por ejemplo, de un buscador) abre
-       directo en esa pestana en vez de la de Sound. */
-    if (currentHash() === "audiovisual") selectPortfolio("audiovisual", true);
-    else positionThumb(activeTab, true);
+    /* Un link viejo a #sound o #audiovisual (por ejemplo, de un buscador)
+       abre directo con ese filtro puesto; si no, arranca en "all". */
+    var startHash = currentHash();
+    if (startHash === "sound" || startHash === "audiovisual") selectPortfolio(startHash, true);
+    else selectPortfolio("all", true);
 
     /* Reubica la bolita sin animar si cambia el ancho de las pestanas
        (rotacion de pantalla, resize, o la fuente Alexandria que termina
@@ -428,50 +403,31 @@
 
 
   /* ======================================================================
-     6. SCROLL FORZADO: REEL / SELECTED WORKS / CONTACT (SOLO ESCRITORIO)
-     Tercera version de esto. La primera (requestAnimationFrame con una
-     curva a mano) peleaba contra "scroll-behavior: smooth". La segunda
-     (scrollIntoView + limites en pixeles, despues con un candado
-     "isSnapping" liberado por el evento "scrollend") corrigio esos
-     bugs pero termino con la rueda sin responder igual: un trackpad
-     real no manda un solo evento "wheel" por gesto sino decenas, con
-     inercia que sigue mandando eventos un buen rato despues de que el
-     dedo ya se levanto -- y esos eventos tardios, llegando justo
-     cuando "isSnapping" recien se habia liberado, se leian como un
-     pedido nuevo y disparaban otro salto no pedido.
+     6. SCROLL POR SECCIONES (SOLO ESCRITORIO)
+     Cuatro paradas: el reel, Selected Works, Sobre mi y Contact. La rueda
+     lleva de una a la otra de a una por vez.
 
-     Se probo tambien reemplazar todo esto por scroll-snap NATIVO del
-     navegador (scroll-snap-type/scroll-snap-align en CSS, sin JS) --
-     soluciona lo de la rueda trabada de raiz porque el motor de scroll
-     nativo ya sabe absorber la inercia de un trackpad, pero el
-     "asentamiento" final de ese scroll-snap no se sintio tan fluido
-     como el scrollIntoView({behavior:"smooth"}) de la version anterior
-     (Chrome no siempre le aplica la misma curva suave). Como la
-     prioridad es que se sienta igual de fluido que antes, se volvio a
-     scrollIntoView -- pero con el problema de la inercia resuelto de
-     otra forma: en vez de tratar de detectar el instante exacto en que
-     termina la animacion (con "scrollend", propenso a la carrera con
-     eventos tardios), hay un enfriamiento (cooldown) de tiempo fijo
-     que arranca apenas se dispara un salto y dura mas que la animacion
-     Y que la cola tipica de inercia de un trackpad -- mientras dura,
-     cualquier "wheel" se ignora (se le hace preventDefault igual, para
-     que tampoco se cuele scroll libre por encima). Al ser un simple
-     "todavia no paso tanto tiempo", no depende de que ningun evento
-     del navegador se dispare para liberarse: no se puede quedar
-     trabado.
+     Selected Works es distinta de las demas: con los diez proyectos
+     juntos la grilla es mas alta que la pantalla, asi que ahi adentro NO
+     hay enganche -- se scrollea libre, como en cualquier pagina. Tiene
+     dos bordes:
+       - el techo, que es donde se llega viniendo del reel (con el titulo
+         "Selected Works" arriba, igual que siempre), y
+       - el piso, que deja el final de la seccion apoyado en el borde de
+         abajo de la pantalla.
+     Entre esos dos bordes la rueda no se toca. Al llegar a un borde el
+     scroll FRENA ahi (para no pasarse de largo a Sobre mi sin querer); si
+     desde ahi se sigue scrolleando en la misma direccion, recien entonces
+     salta a la seccion siguiente.
 
-     OJO -- esto vale SOLO para la pagina de inicio, y hay que forzarlo a
-     mano (isHomePage, mas abajo). El sitio es de una sola pagina real:
-     cada "proyecto" es un <section class="page"> del mismo index.html que
-     el router muestra/esconde (ver punto 1), asi que este listener de
-     "wheel", que esta colgado de window, sigue vivo tambien mientras se
-     mira un proyecto. Ahi #projects y #contact estan escondidos (hidden),
-     asi que su offsetTop es 0, todo matchea como "estoy en el reel", y
-     cualquier scroll hacia abajo terminaba haciendo preventDefault() y
-     pidiendole scrollIntoView() a un elemento invisible: no pasaba nada
-     de nada, la rueda quedaba muerta y NINGUNA pagina de proyecto se
-     podia scrollear (era eso, y no un problema de alto de la grilla de
-     Selected Works, lo que estaba realmente roto). */
+     Sobre por que nunca se pierde el control de la rueda: en vez de
+     recordar "en que seccion estoy", cada evento mira la posicion REAL
+     del scroll y decide con eso. Asi, si alguien arrastra la barra de
+     scroll del navegador y suelta en cualquier lado -- por ejemplo justo
+     entre dos secciones, que antes dejaba la rueda muerta -- el ultimo
+     caso de mas abajo igual encuentra la parada mas cercana en la
+     direccion en la que se scrollea y va hacia ahi. No hay ningun estado
+     guardado que se pueda desincronizar de la pagina. */
 
   var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
@@ -487,122 +443,165 @@
       return navH + gap;
     }
 
-    /* En vez de un tiempo de espera fijo despues de cada salto (versiones
-       anteriores probaron 900ms, despues 550ms), esto chequea la POSICION
-       real para decidir si el scroll "ya llego": mientras todavia esta en
-       pleno vuelo (lejos de todas las secciones enganchables)
-       un "wheel" en la direccion CONTRARIA a la que ya se esta animando se
-       ignora, exactamente como antes -- eso es lo que evita el bug viejo
-       de la rueda trabada (una reversa a mitad de camino interrumpiendo el
-       salto en curso). Pero un "wheel" en la MISMA direccion en la que ya
-       se esta animando no espera a que termine de asentar: redirige el
-       salto en curso directo al siguiente tramo. Asi, scrolleando fuerte y
-       seguido, el reel pasa a Selected Works y de ahi a Contact en una
-       sola tirada, sin el "freno-pausa-freno" de antes entre los dos
-       saltos; scrolleando de a poco (un solo tirón, se suelta, se espera),
-       cada tramo se asienta antes de que el siguiente wheel decida hacia
-       donde ir, e igual se sigue frenando en cada seccion de a una.
-
-       MIN_LOCK_MS aparte es solo para blindar el primerisimo instante de
-       cada salto: recien llamado a scrollIntoView(), el navegador todavia
-       no repinto ni un frame, asi que window.scrollY leido en ese instante
-       puede seguir marcando la posicion VIEJA -- sin este colchon corto,
-       un segundo evento de wheel llegando en la misma tanda que el primero
-       podria colarse como si el scroll ya hubiese terminado, cuando en
-       realidad recien esta arrancando. */
-    var MIN_LOCK_MS = 120;
-    /* No tan chico como parece necesario: las posiciones de abajo se
-       calculan solo con navClearance() (altura de la barra fija), pero el
-       punto donde el scroll REALMENTE queda quieto tambien depende de
-       "scroll-margin-top" de cada seccion (#projects tiene el suyo propio,
-       -8px, ver css/style.css) -- que este calculo no conoce. Con una
-       tolerancia de 6px eso alcanzaba a dejar a #projects justo AFUERA del
-       margen (una diferencia real y medida de 8px), asi que nunca se volvia
-       a reconocer como "asentado" ahi -- efectivamente trababa la rueda
-       para siempre despues del primer salto. 24px cubre esa diferencia con
-       margen de sobra sin arriesgarse a confundir un punto con otro (las
-       secciones estan a cientos de pixeles de distancia entre si). */
+    /* Las posiciones se calculan con navClearance(), pero donde el scroll
+       queda REALMENTE quieto depende ademas del "scroll-margin-top" propio
+       de cada seccion (#projects y #about tienen el suyo, ver
+       css/style.css). 24px cubre esa diferencia de sobra sin llegar a
+       confundir una parada con otra. */
     var SNAP_TOLERANCE_PX = 24;
-    var animationStartedAt = 0;
+    /* Cuanto dura, como maximo, un salto. Mientras corre, la rueda no
+       arranca otro salto nuevo hacia atras; en la misma direccion si
+       encadena (ver mas abajo). Es un tiempo fijo y no un evento del
+       navegador a proposito: un tiempo no se puede "no disparar", asi que
+       esto no puede quedarse trabado nunca. */
+    var SETTLE_MS = 550;
 
-    /* ZONES en orden de scroll (arriba a abajo). currentIndex es la zona
-       en la que se esta, O la que se esta animando en este momento --
-       animDirection es hacia donde. Guardar el INDICE (no re-derivarlo de
-       window.scrollY cada vez) es lo que permite redirigir un salto en
-       vuelo hacia el siguiente tramo sin tener que esperar a que la
-       posicion real "llegue" a ningun lado. */
-    var ZONES = [heroEl, projectsEl, aboutEl, contactEl];
-    var LAST_ZONE = ZONES.length - 1;
+    /* Un scroll seguido (varios eventos con muy poca pausa entre si) cuenta
+       como UN gesto. Sirve para el freno de los bordes de Selected Works:
+       al llegar a un borde el gesto que llego hasta ahi se da por
+       terminado, y recien un gesto NUEVO sigue hacia la seccion
+       siguiente. Sin esto, un scroll fuerte se llevaba puesto el freno y
+       terminaba en Contact -- que es justo lo que el freno tiene que
+       evitar. */
+    var GESTURE_GAP_MS = 180;
+    var lastWheelAt = 0;
+    var edgeStopDir = 0;
 
-    function restingZoneIndex() {
-      var clearance = navClearance();
-      var y = window.scrollY;
-      for (var i = 0; i < ZONES.length; i++) {
-        /* El reel arranca en 0; el resto se engancha a su propio techo,
-           descontando lo que tapa la barra fija. */
-        var target = i === 0 ? 0 : ZONES[i].offsetTop - clearance;
-        if (Math.abs(y - target) < SNAP_TOLERANCE_PX) return i;
+    var animStartedAt = 0;
+    var animTarget = null;
+    var animDir = 0;
+
+    function isAnimating() { return Date.now() - animStartedAt < SETTLE_MS; }
+
+    /* Las cuatro paradas, en orden de scroll. Se recalculan en cada uso:
+       la grilla cambia de alto al filtrar por categoria, y la ventana
+       puede cambiar de tamano. */
+    function stops() {
+      var c = navClearance();
+      var projectsTop = projectsEl.offsetTop - c;
+      /* El piso deja el final de la seccion pegado al borde de abajo de la
+         pantalla. Si la grilla llegara a entrar entera (filtrada, o en una
+         pantalla muy alta) el piso queda por ENCIMA del techo -- de ahi el
+         Math.max: en ese caso las dos paradas son la misma y no hay tramo
+         libre, que es exactamente lo que corresponde. */
+      var projectsBottom = Math.max(
+        projectsTop,
+        projectsEl.offsetTop + projectsEl.offsetHeight - window.innerHeight
+      );
+      return {
+        hero: 0,
+        projectsTop: projectsTop,
+        projectsBottom: projectsBottom,
+        about: aboutEl.offsetTop - c,
+        contact: contactEl.offsetTop - c
+      };
+    }
+
+    function orderedStops(s) {
+      return [s.hero, s.projectsTop, s.projectsBottom, s.about, s.contact];
+    }
+
+    function snapTo(y, dir) {
+      animTarget = y;
+      animDir = dir;
+      animStartedAt = Date.now();
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+
+    /* La parada siguiente a "from" yendo en direccion "dir". */
+    function stopAfter(list, from, dir) {
+      if (dir > 0) {
+        for (var i = 0; i < list.length; i++) if (list[i] > from + 1) return list[i];
+      } else {
+        for (var j = list.length - 1; j >= 0; j--) if (list[j] < from - 1) return list[j];
       }
-      return -1;
+      return null;
     }
-
-    var currentIndex = Math.max(0, restingZoneIndex());
-    var animDirection = 0;
-
-    function snapTo(targetIndex) {
-      animDirection = targetIndex > currentIndex ? 1 : -1;
-      currentIndex = targetIndex;
-      ZONES[targetIndex].scrollIntoView({ behavior: "smooth", block: "start" });
-      animationStartedAt = Date.now();
-    }
-
-    /* Ver la advertencia grande al principio de esta seccion: sin esto,
-       este listener deja sin scroll a todas las paginas de proyecto. Al
-       volver al inicio se vuelve a sincronizar currentIndex, porque el
-       router pudo haber dejado el scroll en cualquier lado (por ejemplo
-       "Back" desde un proyecto entra directo a Selected Works). */
-    var isHomePage = true;
-    document.addEventListener("page:change", function (e) {
-      isHomePage = e.detail.id === homeId;
-      if (isHomePage) currentIndex = Math.max(0, restingZoneIndex());
-    });
 
     window.addEventListener("wheel", function (e) {
-      if (!isHomePage) return;
       if (window.innerWidth <= 900) return;
-      if (Date.now() - animationStartedAt < MIN_LOCK_MS) { e.preventDefault(); return; }
 
-      var direction = e.deltaY > 0 ? 1 : -1;
-      var restingAt = restingZoneIndex();
+      var dir = e.deltaY > 0 ? 1 : -1;
+      var now = Date.now();
+      var sameGesture = now - lastWheelAt < GESTURE_GAP_MS;
+      lastWheelAt = now;
+      /* Gesto nuevo: el freno del borde ya se cobro, vuelve a estar libre. */
+      if (!sameGesture) edgeStopDir = 0;
 
-      if (restingAt === -1) {
-        /* En pleno vuelo. Misma direccion que el salto en curso: seguir
-           de largo al siguiente tramo (si hay uno) en vez de esperar a
-           que este termine de asentar -- esto es lo "interrumpible".
-           Direccion contraria: se ignora, igual que siempre (ahi es
-           donde se evitaba el bug de la rueda trabada). */
+      var s = stops();
+      var list = orderedStops(s);
+      var y = window.scrollY;
+      var tol = SNAP_TOLERANCE_PX;
+
+      /* Salto en curso: en la misma direccion sigue de largo a la parada
+         siguiente (asi un scroll sostenido no se frena de a un tramo por
+         vez); en la contraria se ignora, que es lo que evita que una
+         reversa a mitad de camino deje la rueda peleando con el salto. */
+      if (isAnimating()) {
         e.preventDefault();
-        if (direction === animDirection) {
-          var next = currentIndex + direction;
-          if (next >= 0 && next <= LAST_ZONE) snapTo(next);
+        if (dir === animDir) {
+          var chained = stopAfter(list, animTarget, dir);
+          if (chained !== null) snapTo(chained, dir);
         }
         return;
       }
 
-      /* Asentado de verdad: la logica de siempre, de a un tramo por vez,
-         en las dos direcciones -- ya no hay tramo libre entre una seccion
-         y la siguiente. Contact hacia abajo (footer, etc.) y Reel hacia
-         arriba quedan libres a proposito: no hay un cuarto/menos-uno punto
-         al que engancharse en esos casos, ninguna rama de abajo matchea. */
-      if (direction > 0 && restingAt < LAST_ZONE) {
+      /* --- Adentro de Selected Works: scroll libre, con freno en los bordes --- */
+      if (y > s.projectsTop - tol && y < s.projectsBottom + tol) {
+        var room = dir > 0 ? s.projectsBottom - y : y - s.projectsTop;
+        if (room > tol) {
+          /* Hay lugar: no se toca la rueda, scrollea el navegador. Solo se
+             frena si ESTE evento se pasaria del borde, para que el freno
+             sea exacto y no quede a mitad de camino entre dos secciones.
+             Ahi tambien se marca el borde como "ya frenado" para este
+             gesto. */
+          if (Math.abs(e.deltaY) > room) {
+            e.preventDefault();
+            window.scrollTo({ top: dir > 0 ? s.projectsBottom : s.projectsTop, behavior: "auto" });
+            edgeStopDir = dir;
+          }
+          return;
+        }
+        /* Apoyado en un borde. Si el gesto que lo trajo hasta aca todavia
+           sigue (inercia del trackpad, o la rueda girando de corrido), se
+           queda quieto: eso es el freno. Un gesto nuevo en la misma
+           direccion si pasa a la seccion siguiente. */
         e.preventDefault();
-        snapTo(restingAt + 1);
-      } else if (direction < 0 && restingAt > 0) {
+        if (edgeStopDir === dir) return;
+        snapTo(dir > 0 ? s.about : s.hero, dir);
+        return;
+      }
+
+      /* --- Paradas de una sola posicion --- */
+      if (Math.abs(y - s.hero) < tol) {
+        if (dir > 0) { e.preventDefault(); snapTo(s.projectsTop, dir); }
+        return; /* hacia arriba desde el reel no hay nada: scroll normal */
+      }
+      if (Math.abs(y - s.about) < tol) {
         e.preventDefault();
-        snapTo(restingAt - 1);
+        snapTo(dir > 0 ? s.contact : s.projectsBottom, dir);
+        return;
+      }
+      if (Math.abs(y - s.contact) < tol) {
+        /* Hacia abajo queda libre a proposito: ahi esta el pie de pagina. */
+        if (dir < 0) { e.preventDefault(); snapTo(s.about, dir); }
+        return;
+      }
+
+      /* --- En ningun lado conocido --- */
+      /* Se llega aca sobre todo arrastrando la barra de scroll del
+         navegador y soltando entre dos secciones. Antes esto dejaba la
+         rueda sin efecto; ahora se busca la parada mas cercana hacia
+         donde se esta scrolleando y se va hacia ella. */
+      var target = stopAfter(list, y, dir);
+      if (target !== null) {
+        e.preventDefault();
+        snapTo(target, dir);
       }
     }, { passive: false });
   }
+
+
 
   /* El pie de pagina no es hijo de #contact (es un solo elemento que
      vive despues de <main>, compartido por todas las paginas -- ver

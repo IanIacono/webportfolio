@@ -135,10 +135,10 @@
   });
 
   /* ======================================================================
-     TARJETA CON TITILEO + SPOTIFY  (hoy solo La Llamada Fatal)
+     TARJETA CON TITILEO + SONIDO  (hoy solo La Llamada Fatal)
      Es el unico proyecto que no tiene video de hover. En vez de eso, al
      pasar el mouse por su tarjeta la portada titila -- como la luz de un
-     tubo que hace contacto flojo -- y arranca un episodio del podcast.
+     tubo que hace contacto flojo -- y suena un fragmento del podcast.
 
      El titileo se hace por JavaScript y no con una animacion de CSS
      porque tiene que ser IRREGULAR: una animacion es siempre el mismo
@@ -146,15 +146,15 @@
      cada destello elige un brillo y una duracion al azar, asi que no se
      repite nunca.
 
-     Lo de Spotify tiene un limite que conviene tener presente: los
-     navegadores no dejan que algo empiece a sonar solo, sin que la
-     persona haya hecho un click en la pagina primero -- y pasar el mouse
-     no cuenta como click. Asi que el episodio va a arrancar si ya se
-     toco algo (por ejemplo el boton de sonido del header, que es lo
-     habitual en este sitio) y si no, no. El titileo funciona siempre,
-     independientemente de eso. El script de Spotify se pide recien la
-     primera vez que se pasa por esta tarjeta, no en cada visita al
-     sitio. */
+     El sonido es un <audio> comun, no un embed de Spotify (que fue el
+     primer intento): asi pasa por el mismo control de volumen del header
+     que el resto del sitio -- se calla si el sitio esta en silencio y
+     sigue la barra de volumen -- y no depende de ningun script de
+     terceros ni de los permisos de autoplay de otro dominio.
+
+     El archivo no se pide hasta el primer hover ("preload: none" + load()
+     recien ahi), y como en celular no hay hover, nunca se descarga: son
+     ~870 KB que el telefono no gasta. */
 
   var flickerLinks = Array.prototype.slice.call(document.querySelectorAll(".tile__link[data-tile-flicker]"));
 
@@ -188,58 +188,41 @@
       flickerStep();
     };
 
-    /* --- Episodio de Spotify --- */
-    var episodeUrl = link.dataset.tileSpotify;
-    var spotifyFrame = null;
-    var spotifyController = null;
-    var spotifyPending = false;
+    /* --- Fragmento de audio --- */
+    var audioUrl = link.dataset.tileAudio;
+    var clip = null;
 
-    var buildSpotify = function () {
-      if (spotifyFrame || !episodeUrl) return;
-      /* Fuera de la vista: solo interesa el sonido, la tarjeta ya tiene su
-         propia portada. */
-      spotifyFrame = document.createElement("div");
-      spotifyFrame.className = "tile__spotify";
-      spotifyFrame.setAttribute("aria-hidden", "true");
-      link.appendChild(spotifyFrame);
-
-      var start = function (IFrameAPI) {
-        IFrameAPI.createController(spotifyFrame, { uri: episodeUrl, width: 300, height: 80 }, function (controller) {
-          spotifyController = controller;
-          if (spotifyPending) { spotifyPending = false; controller.play(); }
-        });
-      };
-
-      if (window.SpotifyIframeApi) { start(window.SpotifyIframeApi); return; }
-
-      var prev = window.onSpotifyIframeApiReady;
-      window.onSpotifyIframeApiReady = function (IFrameAPI) {
-        window.SpotifyIframeApi = IFrameAPI;
-        if (typeof prev === "function") prev(IFrameAPI);
-        start(IFrameAPI);
-      };
-
-      if (!document.querySelector('script[data-spotify-api]')) {
-        var s = document.createElement("script");
-        s.src = "https://open.spotify.com/embed/iframe-api/v1";
-        s.async = true;
-        s.setAttribute("data-spotify-api", "");
-        document.head.appendChild(s);
-      }
+    var buildClip = function () {
+      if (clip || !audioUrl) return;
+      clip = new Audio();
+      clip.preload = "none";
+      clip.loop = true;
+      clip.src = audioUrl;
+      clip.load();
     };
 
     var enterTile = function () {
       if (reduceMotion.matches || isTouch) return;
       startFlicker();
-      buildSpotify();
-      if (spotifyController) spotifyController.play();
-      else spotifyPending = true;
+      buildClip();
+      if (clip) {
+        try { clip.currentTime = 0; } catch (e) {}
+        var pr = clip.play();
+        if (pr && pr.catch) pr.catch(function () {});
+        /* Entra al mismo foco de sonido que los videos de las otras
+           tarjetas: focusVideo/applyAudio solo tocan .muted y .volume, asi
+           que sirven igual para un <audio> que para un <video>. */
+        focusVideo(clip);
+      }
     };
 
     var leaveTile = function () {
       stopFlicker();
-      spotifyPending = false;
-      if (spotifyController) spotifyController.pause();
+      if (clip) {
+        clip.pause();
+        try { clip.currentTime = 0; } catch (e) {}
+        blurVideo(clip);
+      }
     };
 
     link.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") enterTile(); });

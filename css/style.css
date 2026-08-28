@@ -1131,37 +1131,15 @@ p { text-wrap: pretty; }
    para que el brillo de una tarjeta no se meta con las de al lado.
    ========================================================================== */
 
-/* Envoltorio de las dos grillas (Sound/Audiovisual): las superpone en la
-   misma celda para que el cambio de pestana pueda ser un slide+fade en
-   vez de un salto -- ver "4. SELECTOR SOUND / AUDIOVISUAL" en js/main.js.
-   El alto de la celda lo pone la grilla mas alta de las dos (auto), asi
-   que no hace falta fijarlo a mano. */
-.portfolio-panels {
-  display: grid;
-}
-.portfolio-panels > .grid {
-  grid-area: 1 / 1;
-}
-/* Solo mientras dura el cambio de pestana: recorta el slide para que no
-   agregue una barra de scroll horizontal, y prende la transicion (si
-   estuviera prendida siempre, el primer "hidden -> visible" de cada
-   grilla al cargar la pagina se animaria tambien, y no queremos eso). */
-.portfolio-panels.is-transitioning {
-  overflow: hidden;
-}
-.portfolio-panels.is-transitioning > .grid {
-  transition: opacity var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease);
-}
-.portfolio-panels > .grid.is-offset-r { opacity: 0; transform: translateX(28px); }
-.portfolio-panels > .grid.is-offset-l { opacity: 0; transform: translateX(-28px); }
-
+/* Ya no hay dos grillas superpuestas: es una sola con los diez proyectos,
+   y el selector de arriba filtra sus tarjetas (ver "4. SELECTOR DE
+   CATEGORIA" en js/main.js). Las que no corresponden se esconden con
+   [hidden]; el fundido de las que quedan lo hace .tile de aca abajo. */
 .grid {
   display: grid;
-  /* 3 por fila en las dos pestanas (Sound y Audiovisual tienen 5
-     proyectos cada una): asi las dos grillas quedan con la misma forma
-     -- 3 columnas x 2 filas, la ultima con dos tarjetas -- en vez de
-     que cada pestana muestre una cantidad distinta de tarjetas por
-     fila. */
+  /* Tres por fila. Con los diez juntos ("all") son cuatro filas, y con
+     cada filtro puesto quedan dos o una -- la forma de la tarjeta no
+     cambia en ninguno de los casos. */
   grid-template-columns: repeat(3, 1fr);
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
@@ -1211,21 +1189,6 @@ p { text-wrap: pretty; }
    parpadeo se veria un latido lento. */
 .tile__link.is-flickering .tile__poster { transition: none; }
 
-/* El episodio de Spotify de esa misma tarjeta: interesa solo el sonido,
-   asi que el reproductor no se ve. No se usa display:none ni
-   visibility:hidden a proposito -- con cualquiera de los dos el navegador
-   puede decidir no reproducir nada. Queda presente pero transparente y
-   fuera del alcance del mouse. */
-.tile__spotify {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-}
 
 /* El video queda oculto hasta que realmente arranca a reproducirse: asi
    nunca se ve un cuadro negro mientras carga. */
