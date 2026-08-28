@@ -2178,8 +2178,38 @@ p { text-wrap: pretty; }
     min-height: calc(100svh - var(--footer-h, 66px) - var(--nav-h) - var(--sp-4));
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    /* El sobrante ya no queda todo abajo (entre el formulario y el pie):
+       se reparte arriba y abajo, asi el bloque entero -- titulo, iconos,
+       formulario -- queda centrado en la pantalla de Contact en vez de
+       apoyado contra el techo. Horizontalmente ya venia centrado, que es
+       lo que hace .wrap--narrow. */
+    justify-content: center;
   }
+  /* Para que ese centrado se VEA centrado hace falta que el aire de
+     arriba y el de abajo midan igual. .page__body trae un padding-top
+     grande (alto de la barra fija + sp-8) porque una pagina de proyecto
+     arranca en scroll 0, tapada por esa barra; Contact no; a esta altura
+     ya se llego scrolleando, y el hueco de la barra lo reserva
+     "scroll-padding-top" (ver "02. RESET Y BASE"). Ese padding de mas
+     empujaba todo el contenido hacia abajo del centro real.
+
+     Los tres clamp() de aca abajo son lo que permite que esta seccion
+     ocupe MAS alto sin romper lo de siempre: que el formulario y el pie
+     de pagina entren juntos en la misma pantalla. Con medidas fijas, el
+     campo nuevo (Subject) mas el textarea agrandado empujaban el pie 93px
+     afuera de la pantalla en un monitor de 768px de alto (el clasico
+     1366x768). Atandolos a svh, el aire y el textarea crecen en pantallas
+     altas -- que es donde sobraba espacio -- y se achican en las bajas,
+     donde no. El maximo de cada clamp es lo que se ve en una pantalla
+     grande; el minimo, el piso por debajo del cual ya se leeria apretado. */
+  #contact .page__body {
+    padding-top: clamp(var(--sp-4), 4svh, var(--sp-7));
+    padding-bottom: clamp(var(--sp-4), 4svh, var(--sp-7));
+  }
+  #contact .contact-form { gap: clamp(var(--sp-3), 2.4svh, var(--sp-5)); }
+  /* Pisa el alto que da rows="7" en el HTML (que queda igual como valor
+     de respaldo, y es el que usa el celular). */
+  #contact .contact-form textarea { height: clamp(7.5rem, 20svh, 15rem); }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */

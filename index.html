@@ -529,9 +529,23 @@
                 <input type="email" name="email" autocomplete="email" required>
               </label>
             </div>
+            <!-- Va suelto (no adentro de .contact-form__row, que es la
+                 grilla de dos columnas de Name/Email), asi ocupa el ancho
+                 completo igual que Message. Sin "required": el asunto
+                 ayuda pero no vale trabar el envio por eso. Se llama
+                 "subject" y no "_subject" a proposito: "_subject" es el
+                 campo con el que FormSubmit arma el asunto del mail
+                 (esta mas arriba, oculto, fijo en "New message from your
+                 portfolio"); si se repitiera el nombre, competirian por
+                 lo mismo. Asi, el asunto del mail sigue siendo siempre el
+                 mismo y esto llega como una fila mas del cuerpo. -->
+            <label class="contact-form__field">
+              <span class="label">Subject</span>
+              <input type="text" name="subject" autocomplete="off">
+            </label>
             <label class="contact-form__field">
               <span class="label">Message</span>
-              <textarea name="message" rows="5" required></textarea>
+              <textarea name="message" rows="7" required></textarea>
             </label>
             <button type="submit" class="btn btn--primary">Send</button>
             <p class="contact-form__status" data-contact-status role="status" aria-live="polite"></p>
