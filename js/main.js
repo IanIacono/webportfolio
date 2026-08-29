@@ -747,41 +747,40 @@
     window.addEventListener("resize", evaluateBackToReel);
 
     /* Antes esto era un scrollIntoView({behavior:"smooth"}) y en celular
-       fallaba justo cuando mas se lo usa: si la pagina venia con inercia
-       (el dedo ya se levanto pero sigue deslizandose), esa inercia pisaba
-       al scroll pedido y el boton parecia no hacer nada -- solo respondia
-       con la pagina completamente quieta.
+       fallaba justo cuando mas se lo usa: si la pagina venia deslizandose
+       sola (el dedo ya se levanto pero sigue andando), ese envion pisaba
+       al scroll pedido y el boton parecia no hacer nada.
 
        Ahora la subida se anima a mano: en cada cuadro se fija la posicion,
-       asi no hay nada con lo que competir -- la inercia no puede ganarle a
-       algo que se reescribe sesenta veces por segundo. El toque ademas la
-       corta de entrada (el scrollTo a la posicion actual, que es un freno
-       en seco sin mover nada). */
+       asi no hay nada con lo que competir -- el envion no puede ganarle a
+       algo que se reescribe sesenta veces por segundo. */
     var toTopRaf = null;
+    var rideStartedAt = 0;
+    var touchStartedY = 0;
     var docEl = document.documentElement;
 
     /* Mientras dura la subida apagamos el scroll suave del CSS. Si no, el
        scrollTo de CADA cuadro arranca su propia animacion del navegador y
        la nuestra termina persiguiendolas: medido, la subida tardaba 1,3s
-       y los primeros 0,6s no se movia un pixel -- justo el sintoma de
-       "toco y no pasa nada" que esto venia a arreglar. Apagado, los 520ms
-       son 520ms y el primer cuadro ya mueve la pagina. */
+       y los primeros 0,6s no se movia un pixel. Apagado, los 520ms son
+       520ms y el primer cuadro ya mueve la pagina. */
     var freezeSmooth = function () { docEl.style.scrollBehavior = "auto"; };
     var releaseSmooth = function () { docEl.style.removeProperty("scroll-behavior"); };
 
-    var stopMomentum = function () {
-      freezeSmooth();
-      window.scrollTo(0, window.scrollY);
-      /* Si al toque no le sigue un click (el dedo se fue del boton sin
-         soltar ahi), devolvemos el scroll suave en el cuadro siguiente. */
-      requestAnimationFrame(function () { if (toTopRaf === null) releaseSmooth(); });
+    var cancelRide = function () {
+      if (toTopRaf !== null) { cancelAnimationFrame(toTopRaf); toTopRaf = null; }
+      releaseSmooth();
     };
 
-    backToReel.addEventListener("pointerdown", stopMomentum);
-
-    backToReel.addEventListener("click", function () {
+    var rideToTop = function () {
+      /* Un mismo toque puede llegar por dos caminos (el toque y el click
+         que viene despues): el segundo no tiene que reiniciar la subida. */
+      if (Date.now() - rideStartedAt < 700) return;
+      rideStartedAt = Date.now();
       if (toTopRaf !== null) { cancelAnimationFrame(toTopRaf); toTopRaf = null; }
-      stopMomentum();
+
+      freezeSmooth();
+      window.scrollTo(0, window.scrollY); /* freno en seco, sin mover nada */
 
       if (reduceMotion.matches) { window.scrollTo(0, 0); releaseSmooth(); return; }
 
@@ -803,12 +802,50 @@
         }
       };
       toTopRaf = requestAnimationFrame(step);
+    };
+
+    /* En el celular la subida arranca con el TOQUE y no con el click.
+       Cuando la pagina viene deslizandose sola, el navegador se queda con
+       el primer toque para frenarla y el click nunca llega al boton: por
+       eso la flecha seguia sin responder justo en pleno scroll, que es
+       cuando mas se la usa. El toque si llega. Con mouse se sigue
+       esperando el click, que es lo normal -- deja arrepentirse soltando
+       el boton afuera. */
+    backToReel.addEventListener("pointerdown", function (e) {
+      if (e.pointerType === "mouse") {
+        freezeSmooth();
+        window.scrollTo(0, window.scrollY);
+        requestAnimationFrame(function () { if (toTopRaf === null) releaseSmooth(); });
+        return;
+      }
+      touchStartedY = e.clientY;
+      rideToTop();
     });
+    /* Safari sin eventos de puntero: el mismo camino por touch. */
+    backToReel.addEventListener("touchstart", function (e) {
+      if (e.touches && e.touches[0]) touchStartedY = e.touches[0].clientY;
+      rideToTop();
+    }, { passive: true });
+
+    /* Si el dedo se arrastra en vez de tocar, no era un toque: se cancela.
+       Se mide contra donde empezo y no cuadro a cuadro porque el dedo
+       quieto no se mueve aunque la pagina si. */
+    var dragAway = function (y) {
+      if (toTopRaf !== null && Math.abs(y - touchStartedY) > 12) cancelRide();
+    };
+    backToReel.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") dragAway(e.clientY);
+    });
+    backToReel.addEventListener("touchmove", function (e) {
+      if (e.touches && e.touches[0]) dragAway(e.touches[0].clientY);
+    }, { passive: true });
+
+    backToReel.addEventListener("click", rideToTop);
 
     /* Un scroll deliberado a mitad de camino manda: se corta la subida.
-       La inercia de ANTES del toque no cuenta, que es la que rompia esto. */
+       El envion de ANTES del toque no cuenta, que es el que rompia esto. */
     window.addEventListener("wheel", function () {
-      if (toTopRaf !== null) { cancelAnimationFrame(toTopRaf); toTopRaf = null; releaseSmooth(); }
+      if (toTopRaf !== null) cancelRide();
     }, { passive: true });
   }
 

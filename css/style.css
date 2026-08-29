@@ -1067,19 +1067,22 @@ p { text-wrap: pretty; }
     z-index: 2;
   }
   .hero__welcome-links {
+    /* Con el cuarto link (About) los cuatro dejaron de entrar. Un margen
+       automatico centra la CAJA, no lo que sobresale de ella: la caja
+       quedaba centrada y los links se desbordaban todos para el mismo
+       lado, asi que la fila terminaba 19px a la derecha del nombre y del
+       subtitulo (medido a 390px de ancho: la fila necesita 324px y solo
+       tenia 286). La unica forma de que quede centrada de verdad es que
+       entre; por eso ahora usa todo el ancho disponible y las medidas de
+       abajo se achican solas con la pantalla. */
     width: fit-content;
-    /* Con el cuarto link (About) esta fila dejo de entrar y "Contact"
-       quedaba cortado por el borde de la pantalla: "fit-content" toma el
-       ancho natural, y un margen automatico no puede achicar lo que no
-       entra. El tope lo obliga a quedarse adentro, y el achique de abajo
-       hace que los cuatro entren de verdad en vez de apretarse. */
-    max-width: calc(100% - var(--gutter) * 2);
+    max-width: 100%;
     margin: var(--sp-3) auto 0;
     flex-wrap: nowrap;
   }
   .hero__welcome-links .nav__link {
-    padding-inline: var(--sp-2);
-    font-size: var(--fs-2xs);
+    padding-inline: clamp(0.125rem, 1.95vw, var(--sp-2));
+    font-size: clamp(0.5625rem, 2.75vw, var(--fs-2xs));
   }
   /* El "top" y el "height" de este wrap los calcula JS (ver "7. CENTRAR
      EL BOTON..." en main.js), no CSS: .hero centra el marco del reel
@@ -1532,40 +1535,72 @@ p { text-wrap: pretty; }
 .lang-switch { display: none; }
 
 @media (max-width: 900px) {
+  /* Mismo boton que el selector de proyectos (.portfolio-tabs): una
+     pastilla con borde, y el idioma elegido encendido en blanco. La
+     diferencia es la rayita en el medio, que es la que ya tenia y separa
+     los dos idiomas como lo hacia la etiqueta. Por eso el blanco lo lleva
+     puesto cada boton en vez de ser una bolita que se desliza como alla:
+     deslizandose tendria que pasar por arriba de la rayita. */
   .lang-switch {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: var(--sp-3);
-    margin-bottom: var(--sp-3);
+    /* La pastilla mide lo que su contenido y nada mas: adentro de una
+       grilla o de una columna flex, un hijo se estira al ancho de la
+       columna por defecto y quedaba una pastilla larguisima. */
+    width: fit-content;
+    max-width: 100%;
+    justify-self: start;
+    align-self: flex-start;
+    gap: var(--sp-1);
+    padding: var(--sp-1);
+    background: var(--c-bg-raised);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-full);
+    margin-bottom: var(--sp-4);
   }
   /* La etiqueta suelta sobra: lo que dice ya lo dice el selector. */
   .lang-switch + .lang .lang__label,
   .lang-switch ~ .lang .lang__label { display: none; }
 
   .lang-switch__btn {
-    padding: 0;
+    appearance: none;
     border: 0;
-    background: none;
+    background: transparent;
     cursor: pointer;
-    font: inherit;
+    min-height: var(--tap);
+    padding-inline: clamp(var(--sp-3), 2vw, var(--sp-5));
+    border-radius: var(--r-full);
+    font-family: var(--font-tabs);
     font-size: var(--fs-2xs);
-    font-weight: 500;
-    letter-spacing: var(--ls-wide);
+    font-weight: 400;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    /* Discreto: el que no esta puesto se apaga, no se pinta de otro
-       color -- es un cambio de idioma, no una llamada a la accion. */
     color: var(--c-text-faint);
-    transition: color var(--dur) var(--ease);
+    white-space: nowrap;
+    transition: color var(--dur) var(--ease), background var(--dur) var(--ease),
+                box-shadow var(--dur) var(--ease);
   }
-  .lang-switch__btn[aria-pressed="true"] { color: var(--c-text); }
+  .lang-switch__btn[aria-pressed="true"] {
+    background: var(--c-text);
+    color: #0a0910;
+    font-weight: 500;
+    box-shadow: 0 0 14px -2px rgba(255, 255, 255, .55),
+                0 0 3px rgba(255, 255, 255, .4);
+  }
   @media (hover: hover) {
-    .lang-switch__btn:hover { color: var(--c-text-muted); }
+    .lang-switch__btn:hover:not([aria-pressed="true"]) {
+      color: var(--c-text);
+      background: var(--c-bg-hover);
+    }
   }
 
-  /* La rayita larga entre los dos idiomas. */
+  /* La rayita entre los dos idiomas. Ancho fijo y no "flex:1": adentro de
+     una pastilla que mide lo que su contenido, un elemento que solo
+     crece no tiene de donde crecer y quedaria en cero. Se achica con la
+     pantalla para que la pastilla entre siempre. */
   .lang-switch__dash {
-    flex: 1;
-    max-width: 8rem;
+    flex: none;
+    width: clamp(2rem, 16vw, 7rem);
     height: 1px;
     background: var(--c-line-strong);
   }
@@ -2172,9 +2207,18 @@ p { text-wrap: pretty; }
      un poco demasiado pegado. */
   #projects { padding-top: var(--sp-9); padding-bottom: var(--sp-6); }
 
-  /* Una sola columna: las tarjetas (Sound y Audiovisual, cada una en su
-     pestana) van apiladas una debajo de la otra, sin compartir fila. */
+  /* Una sola columna: las tarjetas van apiladas una debajo de la otra,
+     sin compartir fila. */
   .grid { grid-template-columns: 1fr; gap: var(--sp-7) var(--sp-5); }
+
+  /* En "All", primero los de sonido y despues los audiovisuales. En
+     escritorio son tres por fila y el orden mezclado equilibra la
+     grilla, asi que ese queda como esta: esto ordena solo la columna
+     unica del celular, sin tocar el HTML. Filtrando por una categoria
+     sola no cambia nada -- todas las tarjetas a la vista tienen el mismo
+     numero y entre iguales mandan el orden en que estan escritas. */
+  .tile[data-category="sound"] { order: 1; }
+  .tile[data-category="audiovisual"] { order: 2; }
 
   /* En celular se lee primero de que va el proyecto y despues se mira el
      material: titulo, subtitulo, "Upcoming release" si lo hay, los textos
