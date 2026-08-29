@@ -1780,7 +1780,25 @@ p { text-wrap: pretty; }
      recalcula el desenfoque sobre el video entero en cada cuadro y la
      reproduccion se entrecorta (mismo motivo que .hero__bg video). */
   transform: translateZ(0);
-  filter: blur(1.5px) brightness(0.9);
+  filter: blur(2.2px) brightness(0.9);
+}
+
+/* Una capa mas oscura donde va el texto, para que el texto destaque y las
+   particulas de atras no compitan con el. No es un rectangulo con bordes:
+   se desvanece hacia afuera en todas las direcciones (la mascara es una
+   elipse: opaca en el centro y transparente antes de llegar a ningun
+   borde), asi no hay ningun canto que delate que hay una capa puesta.
+   Del color del fondo de la pagina y no negro: el resto de la seccion es
+   ese color, asi que oscurecer con el mismo se lee como "menos luz" y no
+   como una mancha encima. */
+.about-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c-bg);
+  opacity: 0.62;
+  -webkit-mask-image: radial-gradient(ellipse 68% 52% at 50% 50%, #000 28%, transparent 80%);
+          mask-image: radial-gradient(ellipse 68% 52% at 50% 50%, #000 28%, transparent 80%);
 }
 
 /* El titulo va alineado a la izquierda, como el de Contact y el de
