@@ -492,6 +492,20 @@
            Para cambiar el texto alcanza con editar los dos parrafos de
            abajo. El ultimo renglon es un link al formulario de contacto. -->
       <div class="about-band" id="about">
+        <!-- Telon de particulas. Es decoracion pura: aria-hidden lo saca
+             de los lectores de pantalla y tabindex="-1" del teclado.
+             El "poster" es el primer cuadro y tapa el arranque: se ve
+             desde el primer momento, sin un rectangulo negro esperando a
+             que cargue el video.
+             preload="none" a proposito: el video no se baja hasta que
+             About aparece en pantalla (ver "11. TELON DE ABOUT" en
+             js/main.js). Alguien que solo mira el reel no paga esos
+             500 KB. -->
+        <div class="about-bg" aria-hidden="true">
+          <video src="assets/video/about-bg.mp4" poster="assets/img/about-bg-poster.webp"
+                 muted loop playsinline preload="none" tabindex="-1" data-about-bg></video>
+        </div>
+
         <div class="wrap wrap--narrow page__body">
           <div class="page__head reveal">
             <h2 class="project__title">About</h2>
