@@ -316,13 +316,17 @@ directo sin abrir nada, hace falta conectar un servicio como
 
 ## 7. Poner tu dominio
 
-Mientras uses la dirección gratis de Vercel no hace falta tocar nada. Cuando
-compres tu dominio, buscá en el HTML las 4 líneas marcadas con
-`<!-- DOMINIO -->` y cambiá `https://ianiacono.vercel.app` por tu dirección
-real.
+El sitio se publica con GitHub Pages y el dominio es `ianiacono.com`. Esa
+dirección vive en dos lugares:
 
-Sirve para que Google y las redes sociales sepan cuál es la dirección
-verdadera de tu sitio.
+1. **El archivo `CNAME`** en la raíz del repositorio, con el dominio adentro
+   y nada más. Es lo que le dice a GitHub Pages por qué dirección responder.
+   Lo crea solo GitHub cuando cargás el dominio en Settings → Pages.
+2. **Las 4 líneas del HTML marcadas con `<!-- DOMINIO -->`**, que son para
+   Google (cuál es la dirección verdadera del sitio) y para WhatsApp e
+   Instagram (de dónde bajar la imagen de la previsualización).
+
+Si algún día cambiás de dominio, se cambian esos dos lugares y nada más.
 
 ---
 
@@ -380,7 +384,7 @@ webportfolio/
 │
 ├── favicon.ico         ← el iconito de la pestaña del navegador
 ├── apple-touch-icon.png← el icono cuando alguien guarda el sitio en el celular
-├── vercel.json         ← le dice a Vercel cuánto tiempo guardar los archivos
+├── CNAME               ← el dominio propio, para GitHub Pages
 └── README.md           ← este instructivo
 ```
 
