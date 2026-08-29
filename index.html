@@ -263,12 +263,8 @@
           <h2 class="portfolio-tabs-row__title">Selected Works</h2>
           <div class="portfolio-tabs" data-portfolio-tabs role="tablist" aria-label="Project category">
             <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
-            <button type="button" class="portfolio-tab" data-portfolio-target="all"
-                    role="tab" aria-selected="true" aria-controls="grid-projects" id="tab-all">
-              All
-            </button>
             <button type="button" class="portfolio-tab" data-portfolio-target="sound"
-                    role="tab" aria-selected="false" aria-controls="grid-projects" id="tab-sound" tabindex="-1">
+                    role="tab" aria-selected="true" aria-controls="grid-projects" id="tab-sound">
               Sound
             </button>
             <button type="button" class="portfolio-tab" data-portfolio-target="audiovisual"
@@ -279,125 +275,12 @@
         </div>
 
         <!-- UNA SOLA GRILLA con los diez proyectos. El selector de
-             arriba (all / sound / audiovisual) no cambia de grilla:
-             filtra estas mismas tarjetas por su data-category, asi
-             "all" puede mostrarlas todas juntas. El orden de aca es
+             arriba (sound / audiovisual) no cambia de grilla: filtra
+             estas mismas tarjetas por su data-category. Primero los
+             siete de sonido y despues los tres audiovisuales, cada
+             grupo en el orden en que se muestra. El orden de aca es
              tambien el de los botones Back/Next de cada proyecto. -->
         <div class="grid" id="grid-projects" data-portfolio-grid>
-        <article class="tile reveal" data-delay="0" data-category="sound">
-          <a class="tile__link" href="#reports" aria-label="View project: Rèport Travel Media">
-            <div class="tile__media">
-              <img class="tile__poster" src="assets/img/report-travel-media-960.webp"
-                   srcset="assets/img/report-travel-media-480.webp 480w, assets/img/report-travel-media-960.webp 960w, assets/img/report-travel-media.webp 1252w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1252" height="1252" alt="Rèport Travel Media logo in black and white on a red background" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/reports-hover.mp4" muted loop playsinline preload="none"
-                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Rèport Travel Media</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="1" data-category="sound">
-          <a class="tile__link" href="#ddp" aria-label="View project: Detras del Puesto">
-            <div class="tile__media">
-              <img class="tile__poster" src="assets/img/detras-del-puesto-960.webp"
-                   srcset="assets/img/detras-del-puesto-480.webp 480w, assets/img/detras-del-puesto-960.webp 960w, assets/img/detras-del-puesto.webp 822w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="822" height="640" alt="Detras del Puesto logo in orange on a white background" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/ddp-hover.mp4" muted loop playsinline preload="none"
-                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Detras del Puesto</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="2" data-category="audiovisual">
-          <a class="tile__link" href="#faiketen" aria-label="View project: Te Lo Aseguro | Analipsis">
-            <div class="tile__media">
-              <img class="tile__poster" src="assets/img/te-lo-aseguro-960.webp"
-                   srcset="assets/img/te-lo-aseguro-480.webp 480w, assets/img/te-lo-aseguro-960.webp 960w, assets/img/te-lo-aseguro.webp 1280w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1280" height="720" alt="Show thumbnail: two hosts next to the title Las cenizas no se apagan" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/faiketen-hover.mp4" muted loop playsinline preload="none"
-                     width="1280" height="720" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Te Lo Aseguro | Analipsis</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="0" data-category="audiovisual">
-          <a class="tile__link" href="#juleriaque" aria-label="View project: Juleriaque">
-            <div class="tile__media">
-              <img class="tile__poster" src="assets/img/report-travel-media-2-960.webp"
-                   srcset="assets/img/report-travel-media-2-480.webp 480w, assets/img/report-travel-media-2-960.webp 960w, assets/img/report-travel-media-2.webp 1023w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1023" height="1027" alt="Black title card with the word Juleriaque in white letters" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/juleriaque-hover.mp4" muted loop playsinline preload="none"
-                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Juleriaque</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="1" data-category="sound">
-          <a class="tile__link" href="#section12" aria-label="View project: Polvora Podcast">
-            <div class="tile__media">
-              <img class="tile__poster" src="assets/img/polvora-podcast-960.webp"
-                   srcset="assets/img/polvora-podcast-480.webp 480w, assets/img/polvora-podcast-960.webp 960w, assets/img/polvora-podcast.webp 1920w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1920" height="1080" alt="Polvora Podcast logo: the word Polvora in tan serif type on a wine-red background" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/section12-hover.mp4" muted loop playsinline preload="none"
-                     width="1920" height="1080" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Polvora Podcast</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
-        <article class="tile reveal" data-delay="2" data-category="audiovisual">
-          <a class="tile__link" href="#playbook" aria-label="View project: Playbook">
-            <div class="tile__media">
-              <img class="tile__poster" src="assets/img/playbook-960.webp"
-                   srcset="assets/img/playbook-480.webp 480w, assets/img/playbook-960.webp 960w, assets/img/playbook.webp 1138w"
-                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1138" height="640" alt="Playbook cover: x Anita y Sebas, black background, marketing para marketers" loading="lazy" decoding="async">
-              <video class="tile__video" data-src="assets/video/playbook-hover.mp4" muted loop playsinline preload="none"
-                     width="1138" height="640" aria-hidden="true" tabindex="-1"></video>
-            </div>
-            <div class="tile__meta">
-              <div>
-                <h2 class="tile__title">Playbook</h2>
-                
-              </div>
-              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
-            </div>
-          </a>
-        </article>
         <article class="tile reveal" data-delay="0" data-category="sound">
           <a class="tile__link" href="#thecarboncase" aria-label="View project: The Carbon Case">
             <div class="tile__media">
@@ -476,6 +359,120 @@
             <div class="tile__meta">
               <div>
                 <h2 class="tile__title">La Llamada Fatal</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="1" data-category="sound">
+          <a class="tile__link" href="#ddp" aria-label="View project: Detras del Puesto">
+            <div class="tile__media">
+              <img class="tile__poster" src="assets/img/detras-del-puesto-960.webp"
+                   srcset="assets/img/detras-del-puesto-480.webp 480w, assets/img/detras-del-puesto-960.webp 960w, assets/img/detras-del-puesto.webp 822w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="822" height="640" alt="Detras del Puesto logo in orange on a white background" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="assets/video/ddp-hover.mp4" muted loop playsinline preload="none"
+                     width="822" height="640" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Detras del Puesto</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="2" data-category="sound">
+          <a class="tile__link" href="#reports" aria-label="View project: Rèport Travel Media">
+            <div class="tile__media">
+              <img class="tile__poster" src="assets/img/report-travel-media-960.webp"
+                   srcset="assets/img/report-travel-media-480.webp 480w, assets/img/report-travel-media-960.webp 960w, assets/img/report-travel-media.webp 1252w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1252" height="1252" alt="Rèport Travel Media logo in black and white on a red background" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="assets/video/reports-hover.mp4" muted loop playsinline preload="none"
+                     width="1252" height="1252" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Rèport Travel Media</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="0" data-category="sound">
+          <a class="tile__link" href="#section12" aria-label="View project: Polvora Podcast">
+            <div class="tile__media">
+              <img class="tile__poster" src="assets/img/polvora-podcast-960.webp"
+                   srcset="assets/img/polvora-podcast-480.webp 480w, assets/img/polvora-podcast-960.webp 960w, assets/img/polvora-podcast.webp 1920w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1920" height="1080" alt="Polvora Podcast logo: the word Polvora in tan serif type on a wine-red background" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="assets/video/section12-hover.mp4" muted loop playsinline preload="none"
+                     width="1920" height="1080" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Polvora Podcast</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="0" data-category="audiovisual">
+          <a class="tile__link" href="#faiketen" aria-label="View project: Te Lo Aseguro | Analipsis">
+            <div class="tile__media">
+              <img class="tile__poster" src="assets/img/te-lo-aseguro-960.webp"
+                   srcset="assets/img/te-lo-aseguro-480.webp 480w, assets/img/te-lo-aseguro-960.webp 960w, assets/img/te-lo-aseguro.webp 1280w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1280" height="720" alt="Show thumbnail: two hosts next to the title Las cenizas no se apagan" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="assets/video/faiketen-hover.mp4" muted loop playsinline preload="none"
+                     width="1280" height="720" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Te Lo Aseguro | Analipsis</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="1" data-category="audiovisual">
+          <a class="tile__link" href="#juleriaque" aria-label="View project: Juleriaque">
+            <div class="tile__media">
+              <img class="tile__poster" src="assets/img/report-travel-media-2-960.webp"
+                   srcset="assets/img/report-travel-media-2-480.webp 480w, assets/img/report-travel-media-2-960.webp 960w, assets/img/report-travel-media-2.webp 1023w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1023" height="1027" alt="Black title card with the word Juleriaque in white letters" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="assets/video/juleriaque-hover.mp4" muted loop playsinline preload="none"
+                     width="1023" height="1027" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Juleriaque</h2>
+                
+              </div>
+              <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </div>
+          </a>
+        </article>
+        <article class="tile reveal" data-delay="2" data-category="audiovisual">
+          <a class="tile__link" href="#playbook" aria-label="View project: Playbook">
+            <div class="tile__media">
+              <img class="tile__poster" src="assets/img/playbook-960.webp"
+                   srcset="assets/img/playbook-480.webp 480w, assets/img/playbook-960.webp 960w, assets/img/playbook.webp 1138w"
+                   sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
+                   width="1138" height="640" alt="Playbook cover: x Anita y Sebas, black background, marketing para marketers" loading="lazy" decoding="async">
+              <video class="tile__video" data-src="assets/video/playbook-hover.mp4" muted loop playsinline preload="none"
+                     width="1138" height="640" aria-hidden="true" tabindex="-1"></video>
+            </div>
+            <div class="tile__meta">
+              <div>
+                <h2 class="tile__title">Playbook</h2>
                 
               </div>
               <svg class="tile__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>

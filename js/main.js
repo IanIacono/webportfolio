@@ -278,8 +278,7 @@
 
     /* Antes habia DOS grillas y el selector cambiaba de una a la otra.
        Ahora hay una sola con los diez proyectos (ver index.html) y el
-       selector filtra: "all" los muestra todos, y las otras dos dejan
-       solo los de su categoria (data-category en cada tarjeta).
+       selector filtra por la categoria de cada tarjeta (data-category).
        Se esconden con [hidden] y no con una clase: asi tampoco quedan
        en la navegacion por teclado ni para un lector de pantalla, que
        es lo correcto para algo que no se esta mostrando. */
@@ -296,8 +295,7 @@
       positionThumb(activeTab, skipAnim);
 
       allTiles.forEach(function (tile) {
-        var show = name === "all" || tile.dataset.category === name;
-        tile.hidden = !show;
+        tile.hidden = tile.dataset.category !== name;
       });
 
       /* Las tarjetas que vuelven a aparecer tienen que poder animar su
@@ -314,11 +312,12 @@
       tab.addEventListener("click", function () { selectPortfolio(tab.dataset.portfolioTarget); });
     });
 
-    /* Un link viejo a #sound o #audiovisual (por ejemplo, de un buscador)
-       abre directo con ese filtro puesto; si no, arranca en "all". */
+    /* Un link a #sound o #audiovisual (por ejemplo, de un buscador) abre
+       directo con ese filtro puesto; si no, arranca en Sound, que es la
+       primera pestana. */
     var startHash = currentHash();
-    if (startHash === "sound" || startHash === "audiovisual") selectPortfolio(startHash, true);
-    else selectPortfolio("all", true);
+    if (startHash === "audiovisual") selectPortfolio(startHash, true);
+    else selectPortfolio("sound", true);
 
     /* Reubica la bolita sin animar si cambia el ancho de las pestanas
        (rotacion de pantalla, resize, o la fuente Alexandria que termina
@@ -958,7 +957,10 @@
      daria un salto de alto en el medio de la animacion.
      ====================================================================== */
 
-  var FADE_MS = 200; /* debe coincidir con .lang.is-fading en css/style.css */
+  /* Los dos numeros de abajo tienen que coincidir con .lang y con
+     .is-lang-sliding en css/style.css. */
+  var SLIDE_MS = 300;
+  var SLIDE_PX = 24;
 
   Array.prototype.slice.call(document.querySelectorAll(".project__text, .about__cols"))
     .forEach(function (group) {
@@ -969,15 +971,7 @@
       swap.className = "lang-switch";
 
       var buttons = {};
-      ["en", "es"].forEach(function (code, i) {
-        if (i === 1) {
-          /* La rayita larga entre los dos idiomas: es la misma que ya
-             tenia la etiqueta al lado del texto, ahora separandolos. */
-          var dash = document.createElement("span");
-          dash.className = "lang-switch__dash";
-          dash.setAttribute("aria-hidden", "true");
-          swap.appendChild(dash);
-        }
+      ["en", "es"].forEach(function (code) {
         var btn = document.createElement("button");
         btn.type = "button";
         btn.className = "lang-switch__btn";
@@ -991,6 +985,8 @@
       group.insertBefore(swap, group.firstChild);
 
       var current = "en";
+      var animating = false;
+      var settleTimer = null;
 
       function paint() {
         ["en", "es"].forEach(function (code) {
@@ -998,36 +994,98 @@
         });
       }
 
-      function show(code, animate) {
-        blocks.forEach(function (b) {
-          var on = b.dataset.lang === code;
-          b.hidden = !on;
-          if (on && animate) {
-            b.classList.add("is-fading");
-            void b.offsetWidth; /* fuerza el punto de partida antes de animar */
-            b.classList.remove("is-fading");
-          }
-        });
+      function byLang(code) {
+        return blocks.filter(function (b) { return b.dataset.lang === code; })[0];
       }
 
+      function showOnly(code) {
+        blocks.forEach(function (b) { b.hidden = b.dataset.lang !== code; });
+      }
+
+      /* Deja el bloque como estaba: sin alto fijo, sin nada fuera de
+         flujo y sin clases de animacion. Corre al terminar el cambio, y
+         tambien al arrancar uno nuevo si el anterior seguia a mitad de
+         camino (dos toques seguidos). */
+      function settle() {
+        if (settleTimer !== null) { window.clearTimeout(settleTimer); settleTimer = null; }
+        group.classList.remove("is-lang-sliding");
+        group.style.height = "";
+        blocks.forEach(function (b) {
+          b.classList.remove("is-lang-off");
+          b.style.position = "";
+          b.style.top = "";
+          b.style.left = "";
+          b.style.width = "";
+          b.style.removeProperty("--lang-slide");
+        });
+        showOnly(current);
+        animating = false;
+      }
+
+      /* El cambio de idioma es un deslizamiento y no un corte. Los dos
+         textos se mueven para el MISMO lado -- de ingles a espanol, los
+         dos hacia la izquierda; de espanol a ingles, los dos hacia la
+         derecha -- asi se lee como un solo movimiento y no como dos
+         cosas sueltas pasando a la vez.
+
+         Para que puedan cruzarse, el que se va sale del flujo clavado
+         donde estaba y el que entra ocupa su lugar. Eso deja al bloque
+         midiendo el alto NUEVO, que casi nunca es el mismo (el mismo
+         texto en dos idiomas no ocupa lo mismo): por eso el alto se
+         anima tambien, y asi los videos y embeds de mas abajo acompanan
+         el cambio en vez de aparecer de golpe mas arriba o mas abajo. */
       function setLang(code) {
         if (code === current) return;
-        var leaving = blocks.filter(function (b) { return b.dataset.lang === current; })[0];
+        if (animating) settle();
+
+        var leaving = byLang(current);
+        var entering = byLang(code);
+        var dir = code === "es" ? -1 : 1;
+
         current = code;
         paint();
-        if (!leaving || reduceMotion.matches) { show(code, false); return; }
-        leaving.classList.add("is-fading");
-        window.setTimeout(function () {
-          leaving.classList.remove("is-fading");
-          show(code, true);
-        }, FADE_MS);
-      }
 
-      /* Estado inicial. El [hidden] lo pone el JS y no el HTML a proposito:
-         si el JavaScript no llegara a correr, se ven los dos textos --
-         que es lo que pasaba antes y se lee perfecto. */
-      show(current, false);
-      paint();
+        if (!narrow.matches || reduceMotion.matches || !leaving || !entering) {
+          showOnly(code);
+          return;
+        }
+
+        animating = true;
+
+        var gRect = group.getBoundingClientRect();
+        var lRect = leaving.getBoundingClientRect();
+        var startH = Math.round(gRect.height);
+
+        group.classList.add("is-lang-sliding");
+        group.style.height = startH + "px";
+
+        leaving.style.top = Math.round(lRect.top - gRect.top) + "px";
+        leaving.style.left = Math.round(lRect.left - gRect.left) + "px";
+        leaving.style.width = Math.round(lRect.width) + "px";
+        leaving.style.position = "absolute";
+
+        /* El que entra se coloca corrido y transparente ANTES de que se
+           vea: si no, la animacion arrancaria a mitad de camino. */
+        entering.style.setProperty("--lang-slide", (SLIDE_PX * -dir) + "px");
+        entering.classList.add("is-lang-off");
+        entering.hidden = false;
+
+        /* Cuanto va a medir con el texto nuevo. Se suelta el alto, se
+           mide, y se vuelve al de antes para que la animacion tenga de
+           donde salir. El corrimiento del que entra no cuenta para esta
+           medida: un transform no ocupa lugar. */
+        group.style.height = "";
+        var endH = Math.round(group.getBoundingClientRect().height);
+        group.style.height = startH + "px";
+        void group.offsetHeight;
+
+        group.style.height = endH + "px";
+        entering.classList.remove("is-lang-off");
+        leaving.style.setProperty("--lang-slide", (SLIDE_PX * dir) + "px");
+        leaving.classList.add("is-lang-off");
+
+        settleTimer = window.setTimeout(settle, SLIDE_MS + 60);
+      }
 
       /* En escritorio se muestran los dos, asi que hay que deshacer el
          [hidden] al pasar de un ancho al otro (rotar el telefono, o
@@ -1035,10 +1093,16 @@
          y de volver a mostrar las etiquetas. */
       var narrow = window.matchMedia("(max-width: 900px)");
       var syncToWidth = function () {
-        if (narrow.matches) show(current, false);
+        settle();
+        if (narrow.matches) showOnly(current);
         else blocks.forEach(function (b) { b.hidden = false; });
       };
+
+      /* Estado inicial. El [hidden] lo pone el JS y no el HTML a proposito:
+         si el JavaScript no llegara a correr, se ven los dos textos --
+         que es lo que pasaba antes y se lee perfecto. */
       syncToWidth();
+      paint();
       narrow.addEventListener("change", syncToWidth);
     });
 

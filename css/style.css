@@ -123,8 +123,15 @@
      grande Y separarse mas del nombre a la vez -- antes, con el mismo
      margen arriba y abajo, agrandar el reel comia el espacio libre de
      los dos lados por igual. */
+  /* Ancho real del reel. Vive aca y no suelto adentro de .hero__frame
+     porque la barra de arriba se alinea con sus bordes (ver ".nav" en
+     "3. BARRA DE ARRIBA"): si el numero estuviera escrito dos veces,
+     tarde o temprano uno de los dos cambia y la barra deja de coincidir.
+     Depende del ALTO de la ventana, no solo del ancho: el reel es 16/9 y
+     lo primero que se le acaba es el alto. */
   --hero-top-clearance:    8.75rem;
   --hero-bottom-clearance:  0.75rem;
+  --reel-w: min(94vw, calc((100svh - var(--hero-top-clearance) - var(--hero-bottom-clearance)) * 16 / 9));
 
   /* Area minima clickeable (accesibilidad) */
   --tap: 44px;
@@ -365,6 +372,7 @@ p { text-wrap: pretty; }
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: padding-block var(--dur-slow) var(--ease),
+              padding-inline var(--dur-slow) var(--ease),
               background var(--dur-slow) var(--ease),
               border-color var(--dur-slow) var(--ease);
 }
@@ -387,6 +395,8 @@ p { text-wrap: pretty; }
   align-items: center;
   justify-content: flex-end;
   gap: var(--sp-5);
+  transition: padding-inline var(--dur-slow) var(--ease),
+              gap var(--dur-slow) var(--ease);
 }
 
 /* "Ian Iacono" a la izquierda de la barra, link de vuelta al reel:
@@ -488,6 +498,39 @@ p { text-wrap: pretty; }
 
 @media (min-width: 901px) {
   .audio-control--nav { margin-right: auto; }
+
+  /* ARRIBA DE TODO DEL HOME, LA BARRA SE ALINEA CON EL REEL.
+     El reel no ocupa todo el ancho: es 16/9 y esta centrado, asi que sus
+     bordes caen adentro de los margenes de la pagina -- y la barra, que
+     iba por esos margenes, quedaba por afuera del video. En una ventana
+     de 1920 el volumen llegaba a estar 208px a la izquierda del borde
+     del reel. Ahora los costados de la barra valen exactamente lo que le
+     sobra al reel a cada lado, asi que el volumen empieza donde empieza
+     el video y los links terminan donde termina.
+
+     Solo arriba de todo del home. Cuando la barra se achica (:is-stuck,
+     o sea cualquier pagina de proyecto y el home apenas scrolleas) el
+     reel deja de estar en pantalla y no hay con que alinearse: ahi
+     vuelve a los margenes de la pagina, que es con lo que se alinea el
+     resto del contenido. El cambio va animado junto con el resto de la
+     barra, no de un salto. */
+  .nav:not(.is-stuck) {
+    padding-inline: max(0px, calc((100% - var(--reel-w)) / 2));
+  }
+  /* Sin esto el volumen arrancaria un gutter mas adentro (el margen
+     propio de .nav__inner) mas el hueco que le guarda al nombre chico,
+     que ahi esta invisible y mide cero. */
+  .nav:not(.is-stuck) .nav__inner {
+    padding-inline: 0;
+    gap: 0;
+  }
+  /* Los links se corren su propio padding hacia afuera: lo que se ve
+     alineado con el borde del video es la LETRA de "Contact", no la caja
+     que la rodea. Del lado del volumen no hace falta -- ahi el borde de
+     la caja es el circulo del boton, que si se ve. */
+  .nav:not(.is-stuck) .nav__right {
+    margin-right: calc(var(--sp-3) * -1);
+  }
 }
 
 /* Arriba de todo del home conviven tres cosas en la misma fila: el volumen
@@ -870,7 +913,7 @@ p { text-wrap: pretty; }
 .hero__frame {
   position: relative;
   z-index: 1;
-  width: min(94vw, calc((100svh - var(--hero-top-clearance) - var(--hero-bottom-clearance)) * 16 / 9));
+  width: var(--reel-w);
   aspect-ratio: 16 / 9;
   border-radius: 0;
   overflow: hidden;
@@ -1151,9 +1194,9 @@ p { text-wrap: pretty; }
    [hidden]; el fundido de las que quedan lo hace .tile de aca abajo. */
 .grid {
   display: grid;
-  /* Tres por fila. Con los diez juntos ("all") son cuatro filas, y con
-     cada filtro puesto quedan dos o una -- la forma de la tarjeta no
-     cambia en ninguno de los casos. */
+  /* Tres por fila: tres filas para Sound (siete proyectos) y una para
+     Audiovisual (tres) -- la forma de la tarjeta no cambia en ninguno
+     de los dos casos. */
   grid-template-columns: repeat(3, 1fr);
   align-items: start;
   gap: var(--sp-8) var(--sp-6);
@@ -1556,6 +1599,9 @@ p { text-wrap: pretty; }
     background: var(--c-bg-raised);
     border: 1px solid var(--c-line);
     border-radius: var(--r-full);
+    /* La misma distancia arriba que abajo: abajo la pone este margen, y
+       arriba el margen del bloque que la contiene (ver .project__text y
+       .about__cols en "14. RESPONSIVE"). */
     margin-bottom: var(--sp-4);
   }
   /* La etiqueta suelta sobra: lo que dice ya lo dice el selector. */
@@ -1593,22 +1639,32 @@ p { text-wrap: pretty; }
       background: var(--c-bg-hover);
     }
   }
-
-  /* La rayita entre los dos idiomas. Ancho fijo y no "flex:1": adentro de
-     una pastilla que mide lo que su contenido, un elemento que solo
-     crece no tiene de donde crecer y quedaria en cero. Se achica con la
-     pantalla para que la pastilla entre siempre. */
-  .lang-switch__dash {
-    flex: none;
-    width: clamp(2rem, 16vw, 7rem);
-    height: 1px;
-    background: var(--c-line-strong);
-  }
 }
 
-/* El fundido del cambio de idioma. Fuera de celular no se usa nunca. */
-.lang { transition: opacity 200ms var(--ease); }
-.lang.is-fading { opacity: 0; }
+/* EL CAMBIO DE IDIOMA (solo celular -- en escritorio se ven los dos).
+   No es un corte ni un fundido en el lugar: los dos textos se corren
+   para el MISMO lado, el que se va y el que llega, asi se lee como un
+   solo movimiento. La direccion la decide el JavaScript (punto 10 en
+   js/main.js) con --lang-slide. */
+.lang {
+  transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+}
+.lang.is-lang-off {
+  opacity: 0;
+  transform: translateX(var(--lang-slide, 0px));
+}
+
+/* Mientras dura el cambio el bloque toma el alto que va a tener, y lo
+   anima. Sin esto, el mismo texto en dos idiomas (que nunca mide igual)
+   hace saltar de golpe todo lo que viene abajo -- videos, embeds. El
+   overflow es para que el texto que se va no se vea asomando por el
+   costado ni por abajo mientras se corre. */
+.about__cols.is-lang-sliding,
+.project__text.is-lang-sliding {
+  position: relative;
+  overflow: hidden;
+  transition: height 300ms var(--ease);
+}
 
 /* Bloque de idioma: la etiqueta ESP/ENG arriba y el parrafo debajo */
 .lang + .lang { margin-top: var(--sp-6); }
@@ -2211,15 +2267,6 @@ p { text-wrap: pretty; }
      sin compartir fila. */
   .grid { grid-template-columns: 1fr; gap: var(--sp-7) var(--sp-5); }
 
-  /* En "All", primero los de sonido y despues los audiovisuales. En
-     escritorio son tres por fila y el orden mezclado equilibra la
-     grilla, asi que ese queda como esta: esto ordena solo la columna
-     unica del celular, sin tocar el HTML. Filtrando por una categoria
-     sola no cambia nada -- todas las tarjetas a la vista tienen el mismo
-     numero y entre iguales mandan el orden en que estan escritas. */
-  .tile[data-category="sound"] { order: 1; }
-  .tile[data-category="audiovisual"] { order: 2; }
-
   /* En celular se lee primero de que va el proyecto y despues se mira el
      material: titulo, subtitulo, "Upcoming release" si lo hay, los textos
      ESP/ENG, y recien al final los videos y embeds. En el HTML el bloque
@@ -2300,7 +2347,14 @@ p { text-wrap: pretty; }
      separacion. Se le da el mismo aire que separa al parrafo en espanol del
      que esta en ingles (.lang + .lang), asi el ritmo vertical del bloque es
      uno solo. */
-  .project__text { margin-top: var(--sp-6); }
+  /* Lo mismo que el margen de abajo del selector de idioma, para que
+     quede a la misma distancia del subtitulo violeta que del texto. */
+  .project__text { margin-top: var(--sp-4); }
+  /* En About el selector arranca pegado al titulo y al texto por igual:
+     la fila de la grilla no separa (el idioma que no se muestra no esta),
+     y el titulo se acerca. */
+  #about .about__cols { row-gap: 0; }
+  #about .page__head { margin-bottom: var(--sp-4); }
 
   .nav__right {
     /* Mas chico que en desktop: con el tamano de link mas grande que le
