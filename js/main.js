@@ -403,21 +403,21 @@
 
   /* ======================================================================
      6. SCROLL POR SECCIONES (SOLO ESCRITORIO)
-     Cuatro paradas: el reel, Selected Works, Sobre mi y Contact. La rueda
-     lleva de una a la otra de a una por vez.
+     Cinco paradas, en este orden:
+       1. el reel,
+       2. Selected Works con el titulo arriba,
+       3. Selected Works con el ultimo proyecto apoyado en el borde de
+          abajo de la pantalla,
+       4. Sobre mi,
+       5. Contact.
+     La rueda lleva de una a la otra de a UNA por vez. No hay tramo
+     libre en ningun lado: Selected Works no entra en una pantalla, y en
+     vez de scrollearse libre entre sus dos bordes son dos paradas mas,
+     como cualquier otra.
 
-     Selected Works es distinta de las demas: con los diez proyectos
-     juntos la grilla es mas alta que la pantalla, asi que ahi adentro NO
-     hay enganche -- se scrollea libre, como en cualquier pagina. Tiene
-     dos bordes:
-       - el techo, que es donde se llega viniendo del reel (con el titulo
-         "Selected Works" arriba, igual que siempre), y
-       - el piso, que deja el final de la seccion apoyado en el borde de
-         abajo de la pantalla.
-     Entre esos dos bordes la rueda no se toca. Al llegar a un borde el
-     scroll FRENA ahi (para no pasarse de largo a Sobre mi sin querer); si
-     desde ahi se sigue scrolleando en la misma direccion, recien entonces
-     salta a la seccion siguiente.
+     "De a una por vez" es literal: mientras el salto esta en curso la
+     rueda no hace nada, asi un tiron largo de trackpad avanza una sola
+     parada en vez de llevarse tres puestas.
 
      Sobre por que nunca se pierde el control de la rueda: en vez de
      recordar "en que seccion estoy", cada evento mira la posicion REAL
@@ -449,40 +449,44 @@
        confundir una parada con otra. */
     var SNAP_TOLERANCE_PX = 24;
     /* Cuanto dura, como maximo, un salto. Mientras corre, la rueda no
-       arranca otro salto nuevo hacia atras; en la misma direccion si
-       encadena (ver mas abajo). Es un tiempo fijo y no un evento del
+       arranca ninguno nuevo. Es un tiempo fijo y no un evento del
        navegador a proposito: un tiempo no se puede "no disparar", asi que
        esto no puede quedarse trabado nunca. */
     var SETTLE_MS = 550;
 
-    /* Un scroll seguido (varios eventos con muy poca pausa entre si) cuenta
-       como UN gesto. Sirve para el freno de los bordes de Selected Works:
-       al llegar a un borde el gesto que llego hasta ahi se da por
-       terminado, y recien un gesto NUEVO sigue hacia la seccion
-       siguiente. Sin esto, un scroll fuerte se llevaba puesto el freno y
-       terminaba en Contact -- que es justo lo que el freno tiene que
-       evitar. */
+    /* Un tiron de trackpad no es un evento: es una rafaga que sigue
+       llegando sola mientras la inercia se apaga, y puede durar mas que
+       un salto entero. Para que esa rafaga cuente como UN scroll y no
+       como varios, un salto nuevo pide que la rueda haya estado quieta un
+       momento: mientras los eventos vienen pegados, son el mismo gesto.
+
+       La segunda condicion es para el mouse de rueda, que girando de
+       corrido manda eventos sin pausa nunca: pasado MAX_HOLD_MS desde el
+       ultimo salto se avanza igual, asi girar sin parar sigue bajando en
+       vez de quedar clavado en una parada. */
     var GESTURE_GAP_MS = 180;
+    var MAX_HOLD_MS = 1100;
     var lastWheelAt = 0;
-    var edgeStopDir = 0;
+    var lastJumpAt = 0;
 
     var animStartedAt = 0;
-    var animTarget = null;
-    var animDir = 0;
 
     function isAnimating() { return Date.now() - animStartedAt < SETTLE_MS; }
 
-    /* Las cuatro paradas, en orden de scroll. Se recalculan en cada uso:
-       la grilla cambia de alto al filtrar por categoria, y la ventana
-       puede cambiar de tamano. */
+    /* Las CINCO paradas, en orden de scroll: el reel, Selected Works con
+       el titulo arriba, Selected Works con el ultimo proyecto abajo,
+       About y Contact. Se recalculan en cada uso: la grilla cambia de
+       alto al filtrar por categoria, y la ventana puede cambiar de
+       tamano. */
     function stops() {
       var c = navClearance();
       var projectsTop = projectsEl.offsetTop - c;
       /* El piso deja el final de la seccion pegado al borde de abajo de la
-         pantalla. Si la grilla llegara a entrar entera (filtrada, o en una
-         pantalla muy alta) el piso queda por ENCIMA del techo -- de ahi el
-         Math.max: en ese caso las dos paradas son la misma y no hay tramo
-         libre, que es exactamente lo que corresponde. */
+         pantalla, o sea el ultimo proyecto abajo de todo. Si la grilla
+         llegara a entrar entera (filtrada por Audiovisual, que son tres,
+         o en una pantalla muy alta) el piso quedaria por ENCIMA del techo
+         -- de ahi el Math.max: ahi las dos paradas son la misma, y
+         orderedStops se queda con una sola. */
       var projectsBottom = Math.max(
         projectsTop,
         projectsEl.offsetTop + projectsEl.offsetHeight - window.innerHeight
@@ -496,14 +500,20 @@
       };
     }
 
+    /* Las paradas en orden, sin repetidas: dos paradas en el mismo lugar
+       (Selected Works cuando entra entera en la pantalla) dejarian un
+       salto que no mueve nada y se comeria un tiron de rueda. */
     function orderedStops(s) {
-      return [s.hero, s.projectsTop, s.projectsBottom, s.about, s.contact];
+      var all = [s.hero, s.projectsTop, s.projectsBottom, s.about, s.contact];
+      var out = [];
+      for (var i = 0; i < all.length; i++) {
+        if (!out.length || all[i] - out[out.length - 1] > 1) out.push(all[i]);
+      }
+      return out;
     }
 
-    function snapTo(y, dir) {
-      animTarget = y;
-      animDir = dir;
-      animStartedAt = Date.now();
+    function snapTo(y) {
+      animStartedAt = lastJumpAt = Date.now();
       window.scrollTo({ top: y, behavior: "smooth" });
     }
 
@@ -515,6 +525,17 @@
         for (var j = list.length - 1; j >= 0; j--) if (list[j] < from - 1) return list[j];
       }
       return null;
+    }
+
+    /* En cual de las paradas estamos parados, si es que en alguna. La
+       tolerancia cubre la diferencia entre la posicion calculada y donde
+       el scroll queda realmente quieto (cada seccion tiene su propio
+       "scroll-margin-top", ver css/style.css). */
+    function stopIndexAt(list, y) {
+      for (var i = 0; i < list.length; i++) {
+        if (Math.abs(y - list[i]) <= SNAP_TOLERANCE_PX) return i;
+      }
+      return -1;
     }
 
     window.addEventListener("wheel", function (e) {
@@ -530,81 +551,31 @@
 
       var dir = e.deltaY > 0 ? 1 : -1;
       var now = Date.now();
-      var sameGesture = now - lastWheelAt < GESTURE_GAP_MS;
+      var newGesture = now - lastWheelAt > GESTURE_GAP_MS;
       lastWheelAt = now;
-      /* Gesto nuevo: el freno del borde ya se cobro, vuelve a estar libre. */
-      if (!sameGesture) edgeStopDir = 0;
 
-      var s = stops();
-      var list = orderedStops(s);
+      /* Mientras un salto esta en curso la rueda no hace nada, en
+         cualquiera de las dos direcciones. */
+      if (isAnimating()) { e.preventDefault(); return; }
+      /* Terminado el salto, si los eventos siguen llegando pegados es la
+         inercia del mismo tiron: no arranca otro. */
+      if (!newGesture && now - lastJumpAt < MAX_HOLD_MS) { e.preventDefault(); return; }
+
+      var list = orderedStops(stops());
       var y = window.scrollY;
-      var tol = SNAP_TOLERANCE_PX;
+      var here = stopIndexAt(list, y);
 
-      /* Salto en curso: en la misma direccion sigue de largo a la parada
-         siguiente (asi un scroll sostenido no se frena de a un tramo por
-         vez); en la contraria se ignora, que es lo que evita que una
-         reversa a mitad de camino deje la rueda peleando con el salto. */
-      if (isAnimating()) {
-        e.preventDefault();
-        if (dir === animDir) {
-          var chained = stopAfter(list, animTarget, dir);
-          if (chained !== null) snapTo(chained, dir);
-        }
-        return;
-      }
+      /* Parados en una parada: se pasa a la de al lado. Si no hay (arriba
+         del reel, o debajo de Contact) la rueda queda libre -- abajo de
+         Contact esta el pie de pagina y ahi el scroll es normal.
+         Si no estamos en ninguna (tipico de arrastrar la barra de scroll
+         del navegador y soltar entre dos secciones) se va a la mas
+         cercana hacia donde apunta la rueda. */
+      var target = here >= 0 ? list[here + dir] : stopAfter(list, y, dir);
+      if (target === undefined || target === null) return;
 
-      /* --- Adentro de Selected Works: scroll libre, con freno en los bordes --- */
-      if (y > s.projectsTop - tol && y < s.projectsBottom + tol) {
-        var room = dir > 0 ? s.projectsBottom - y : y - s.projectsTop;
-        if (room > tol) {
-          /* Hay lugar: no se toca la rueda, scrollea el navegador. Solo se
-             frena si ESTE evento se pasaria del borde, para que el freno
-             sea exacto y no quede a mitad de camino entre dos secciones.
-             Ahi tambien se marca el borde como "ya frenado" para este
-             gesto. */
-          if (Math.abs(e.deltaY) > room) {
-            e.preventDefault();
-            window.scrollTo({ top: dir > 0 ? s.projectsBottom : s.projectsTop, behavior: "auto" });
-            edgeStopDir = dir;
-          }
-          return;
-        }
-        /* Apoyado en un borde. Si el gesto que lo trajo hasta aca todavia
-           sigue (inercia del trackpad, o la rueda girando de corrido), se
-           queda quieto: eso es el freno. Un gesto nuevo en la misma
-           direccion si pasa a la seccion siguiente. */
-        e.preventDefault();
-        if (edgeStopDir === dir) return;
-        snapTo(dir > 0 ? s.about : s.hero, dir);
-        return;
-      }
-
-      /* --- Paradas de una sola posicion --- */
-      if (Math.abs(y - s.hero) < tol) {
-        if (dir > 0) { e.preventDefault(); snapTo(s.projectsTop, dir); }
-        return; /* hacia arriba desde el reel no hay nada: scroll normal */
-      }
-      if (Math.abs(y - s.about) < tol) {
-        e.preventDefault();
-        snapTo(dir > 0 ? s.contact : s.projectsBottom, dir);
-        return;
-      }
-      if (Math.abs(y - s.contact) < tol) {
-        /* Hacia abajo queda libre a proposito: ahi esta el pie de pagina. */
-        if (dir < 0) { e.preventDefault(); snapTo(s.about, dir); }
-        return;
-      }
-
-      /* --- En ningun lado conocido --- */
-      /* Se llega aca sobre todo arrastrando la barra de scroll del
-         navegador y soltando entre dos secciones. Antes esto dejaba la
-         rueda sin efecto; ahora se busca la parada mas cercana hacia
-         donde se esta scrolleando y se va hacia ella. */
-      var target = stopAfter(list, y, dir);
-      if (target !== null) {
-        e.preventDefault();
-        snapTo(target, dir);
-      }
+      e.preventDefault();
+      snapTo(target);
     }, { passive: false });
   }
 

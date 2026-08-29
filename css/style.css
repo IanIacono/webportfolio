@@ -2457,7 +2457,17 @@ p { text-wrap: pretty; }
    nada de esto. --- */
 @media (min-width: 901px) {
   #projects {
-    min-height: 100svh;
+    /* Alto = la franja que se ve de verdad, no la pantalla entera: la
+       seccion arranca abajo de la barra fija, asi que un 100svh completo
+       le sobra justo el alto de la barra. Ese sobrante inventaba una
+       parada de scroll: con Audiovisual (una sola fila, que entra sobrada)
+       la seccion seguia siendo 88px mas alta que la pantalla, asi que el
+       "piso" de Selected Works quedaba 88px debajo del "techo" y la rueda
+       gastaba un tiron en mover la pagina esos 88px sin mostrar nada
+       nuevo. Con la franja real, cuando la grilla entra las dos paradas
+       son la misma y desaparece esa (ver "6. SCROLL POR SECCIONES" en
+       js/main.js). Mismo calculo que #about y #contact aca abajo. */
+    min-height: calc(100svh - var(--nav-h) - var(--sp-4));
     display: flex;
     flex-direction: column;
     /* "flex-start", no "center": con "center", si el contenido (titulo +
