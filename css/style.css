@@ -372,7 +372,6 @@ p { text-wrap: pretty; }
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: padding-block var(--dur-slow) var(--ease),
-              padding-inline var(--dur-slow) var(--ease),
               background var(--dur-slow) var(--ease),
               border-color var(--dur-slow) var(--ease);
 }
@@ -395,8 +394,6 @@ p { text-wrap: pretty; }
   align-items: center;
   justify-content: flex-end;
   gap: var(--sp-5);
-  transition: padding-inline var(--dur-slow) var(--ease),
-              gap var(--dur-slow) var(--ease);
 }
 
 /* "Ian Iacono" a la izquierda de la barra, link de vuelta al reel:
@@ -416,16 +413,16 @@ p { text-wrap: pretty; }
    saca de la navegacion por teclado/mouse mientras esta invisible). */
 .nav__project-brand {
   font-family: var(--font-name);
-  /* Arriba de todo del home este nombre chico esta invisible, pero antes
-     seguia ocupando su ancho: eran ~180px muertos a la izquierda que
-     empujaban al volumen hacia el centro y le robaban largo al slider.
-     Con max-width en 0 (mas overflow:hidden, y el nowrap de mas abajo) no
-     ocupa nada hasta que hace falta, y el volumen arranca pegado al borde.
-     Al achicarse la barra vuelve a su ancho y corre al volumen a su
-     derecha -- animado, no de un salto, que es para lo que esta el
-     max-width en la transicion. */
-  max-width: 0;
-  overflow: hidden;
+  /* Centrado y por encima de la barra, en el mismo lugar donde estaba el
+     nombre grande al que reemplaza: aparece ahi, no en una esquina.
+     Fuera del flujo a proposito -- antes iba primero en la fila y al
+     aparecer empujaba al volumen 218px a la derecha, asi que al
+     scrollear se corria todo de lugar. Sin ocupar espacio, el volumen y
+     los links se quedan donde estan en los dos estados de la barra. */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   font-size: var(--fs-xl);
   font-weight: 900;
   color: var(--c-text);
@@ -435,16 +432,15 @@ p { text-wrap: pretty; }
   visibility: hidden;
   pointer-events: none;
   transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow),
-              max-width var(--dur-slow) var(--ease), color var(--dur) var(--ease);
+              color var(--dur) var(--ease);
 }
 .nav__project-brand:hover { color: var(--c-accent-soft); }
 .nav.is-stuck .nav__project-brand {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  max-width: 20rem;
   transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s,
-              max-width var(--dur-slow) var(--ease), color var(--dur) var(--ease);
+              color var(--dur) var(--ease);
 }
 /* En celular/tablet no existe: el equivalente ahi es .hero__welcome. */
 @media (max-width: 900px) {
@@ -508,29 +504,21 @@ p { text-wrap: pretty; }
      sobra al reel a cada lado, asi que el volumen empieza donde empieza
      el video y los links terminan donde termina.
 
-     Solo arriba de todo del home. Cuando la barra se achica (:is-stuck,
-     o sea cualquier pagina de proyecto y el home apenas scrolleas) el
-     reel deja de estar en pantalla y no hay con que alinearse: ahi
-     vuelve a los margenes de la pagina, que es con lo que se alinea el
-     resto del contenido. El cambio va animado junto con el resto de la
-     barra, no de un salto. */
-  .nav:not(.is-stuck) {
+     Vale en los dos estados de la barra, no solo arriba de todo: al
+     scrollear la barra se achica pero nada se corre de lugar. Antes,
+     al achicarse, volvia a los margenes de la pagina y el volumen se
+     iba 218px a la derecha de un saque. */
+  .nav {
     padding-inline: max(0px, calc((100% - var(--reel-w)) / 2));
   }
-  /* Sin esto el volumen arrancaria un gutter mas adentro (el margen
-     propio de .nav__inner) mas el hueco que le guarda al nombre chico,
-     que ahi esta invisible y mide cero. */
-  .nav:not(.is-stuck) .nav__inner {
-    padding-inline: 0;
-    gap: 0;
-  }
+  /* Sin esto el volumen arrancaria un gutter mas adentro: el margen
+     propio de .nav__inner, que aca no hace falta. */
+  .nav__inner { padding-inline: 0; }
   /* Los links se corren su propio padding hacia afuera: lo que se ve
      alineado con el borde del video es la LETRA de "Contact", no la caja
      que la rodea. Del lado del volumen no hace falta -- ahi el borde de
      la caja es el circulo del boton, que si se ve. */
-  .nav:not(.is-stuck) .nav__right {
-    margin-right: calc(var(--sp-3) * -1);
-  }
+  .nav__right { margin-right: calc(var(--sp-3) * -1); }
 }
 
 /* Arriba de todo del home conviven tres cosas en la misma fila: el volumen
@@ -557,6 +545,17 @@ p { text-wrap: pretty; }
     visibility: visible;
     pointer-events: auto;
     transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
+  }
+
+  /* Y por lo mismo, aca abajo el nombre chico no aparece nunca. Esta
+     centrado en la PANTALLA, pero el hueco que le dejan el volumen y los
+     links no esta centrado: a 901px de ancho se le montaba 55px encima de
+     "Showreel". No se pierde nada -- para volver al reel esta ese mismo
+     link, que dice justo eso. */
+  .nav.is-stuck .nav__project-brand {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 }
 

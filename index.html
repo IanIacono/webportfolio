@@ -90,16 +90,20 @@
          BARRA DE NAVEGACION  —  aparece fija arriba en todas las paginas
          ========================================================================== -->
   <header class="nav">
-    <div class="nav__inner">
-      <!-- "Ian Iacono" a la izquierda de la barra, link de vuelta al
-           reel: aparece siempre que la barra esta en su version chica
-           (.nav.is-stuck -- en cualquier pagina de proyecto, o en el
-           home despues de scrollear) y SOLO en escritorio -- ver
-           ".nav__project-brand" en css/style.css. Arriba de todo del
-           home no hace falta: ya esta el nombre grande centrado, mas
-           abajo, y ese no es link porque ahi ya estas en el reel. -->
-      <a class="nav__project-brand" href="#home">Ian Iacono</a>
+    <!-- "Ian Iacono" centrado en la barra, link de vuelta al reel:
+         aparece siempre que la barra esta en su version chica
+         (.nav.is-stuck -- en cualquier pagina de proyecto, o en el home
+         despues de scrollear) y SOLO en escritorio -- ver
+         ".nav__project-brand" en css/style.css. Arriba de todo del home
+         no hace falta: ahi esta el nombre grande, en el mismo lugar, y
+         ese no es link porque ya estas en el reel.
+         Vive afuera de .nav__inner y no adentro: esta posicionado por
+         encima de la barra (position:absolute) y se centra contra ella
+         entera, igual que el nombre grande al que reemplaza. Adentro de
+         .nav__inner se centraria contra media barra. -->
+    <a class="nav__project-brand" href="#home">Ian Iacono</a>
 
+    <div class="nav__inner">
       <!-- CONTROL GLOBAL DE SONIDO. Es el unico control de audio de todo
            el sitio: prende o apaga el volumen de lo que se este
            reproduciendo (el carrusel/reel, o el proyecto que estes
