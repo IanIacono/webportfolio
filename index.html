@@ -288,9 +288,9 @@
               <img class="tile__poster" src="assets/img/the-carbon-case-960.webp"
                    srcset="assets/img/the-carbon-case-480.webp 480w, assets/img/the-carbon-case-960.webp 960w, assets/img/the-carbon-case.webp 1600w"
                    sizes="(max-width: 640px) calc(100vw - 2.5rem), (max-width: 900px) 45vw, 30vw"
-                   width="1600" height="1531" alt="The Carbon Case cover: a planted field under a pale blue sky" style="object-position:50% 6%" loading="lazy" decoding="async">
+                   width="1600" height="1531" alt="The Carbon Case cover: a planted field under a pale blue sky" style="object-position:50% 0%" loading="lazy" decoding="async">
               <video class="tile__video" data-src="assets/video/thecarboncase-hover.mp4" muted loop playsinline preload="none"
-                     width="1600" height="1531" aria-hidden="true" tabindex="-1" style="object-position:50% 6%"></video>
+                     width="1600" height="1531" aria-hidden="true" tabindex="-1" style="object-position:50% 0%"></video>
             </div>
             <div class="tile__meta">
               <div>
@@ -492,19 +492,6 @@
            Para cambiar el texto alcanza con editar los dos parrafos de
            abajo. El ultimo renglon es un link al formulario de contacto. -->
       <div class="about-band" id="about">
-        <!-- Telon de particulas. Es decoracion pura: aria-hidden lo saca
-             de los lectores de pantalla y tabindex="-1" del teclado.
-             El "poster" es el primer cuadro y tapa el arranque: se ve
-             desde el primer momento, sin un rectangulo negro esperando a
-             que cargue el video.
-             preload="none" a proposito: el video no se baja hasta que
-             About aparece en pantalla (ver "11. TELON DE ABOUT" en
-             js/main.js). Alguien que solo mira el reel no paga esos
-             500 KB. -->
-        <div class="about-bg" aria-hidden="true">
-          <video src="assets/video/about-bg.mp4" poster="assets/img/about-bg-poster.webp"
-                 muted loop playsinline preload="none" tabindex="-1" data-about-bg></video>
-        </div>
 
         <div class="wrap wrap--narrow page__body">
           <div class="page__head reveal">

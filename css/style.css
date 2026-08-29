@@ -1742,65 +1742,6 @@ p { text-wrap: pretty; }
    "6. SCROLL FORZADO..." en js/main.js para el enganche).
    ========================================================================== */
 
-/* TELON DE FONDO. Un campo de particulas que se desvanece arriba y abajo
-   con un alpha real (el mismo recurso que usa el reel: una mascara, no un
-   degrade negro encima -- asi el fondo de la pagina se ve por
-   transparencia y no hay que adivinar el color con el que tapar).
-
-   El material es casi negro (luma media 17 sobre 255: puntitos blancos
-   sobre negro), asi que NO se oscurece -- bajarle el brillo lo borraria.
-   Lo que se le baja apenas es el brillo de los puntos mas fuertes, para
-   que no compitan con el texto. Y el desenfoque es minimo por lo mismo:
-   son puntos de pocos pixeles, con 3px se disuelven; 1.5px los ablanda
-   sin borrarlos.
-
-   El desenfoque corre los pixeles de los bordes hacia adentro y deja el
-   borde lavado, asi que la capa se estira 32px para cada lado (fuera de
-   la pantalla, donde ese lavado no se ve) y la seccion lo recorta. */
-#about {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
-.about-bg {
-  position: absolute;
-  inset: -32px;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  --about-bg-fade: 22%;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--about-bg-fade), #000 calc(100% - var(--about-bg-fade)), transparent);
-          mask-image: linear-gradient(to bottom, transparent, #000 var(--about-bg-fade), #000 calc(100% - var(--about-bg-fade)), transparent);
-}
-.about-bg video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* translateZ(0) le da capa propia en la GPU: sin eso el navegador
-     recalcula el desenfoque sobre el video entero en cada cuadro y la
-     reproduccion se entrecorta (mismo motivo que .hero__bg video). */
-  transform: translateZ(0);
-  filter: blur(2.2px) brightness(0.9);
-}
-
-/* Una capa mas oscura donde va el texto, para que el texto destaque y las
-   particulas de atras no compitan con el. No es un rectangulo con bordes:
-   se desvanece hacia afuera en todas las direcciones (la mascara es una
-   elipse: opaca en el centro y transparente antes de llegar a ningun
-   borde), asi no hay ningun canto que delate que hay una capa puesta.
-   Del color del fondo de la pagina y no negro: el resto de la seccion es
-   ese color, asi que oscurecer con el mismo se lee como "menos luz" y no
-   como una mancha encima. */
-.about-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--c-bg);
-  opacity: 0.62;
-  -webkit-mask-image: radial-gradient(ellipse 68% 52% at 50% 50%, #000 28%, transparent 80%);
-          mask-image: radial-gradient(ellipse 68% 52% at 50% 50%, #000 28%, transparent 80%);
-}
-
 /* El titulo va alineado a la izquierda, como el de Contact y el de
    Selected Works -- el centrado que trae .page__head por defecto es para
    las paginas de proyecto. */

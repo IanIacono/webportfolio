@@ -1120,47 +1120,6 @@
 
 
   /* ======================================================================
-     11. TELON DE ABOUT
-     El video de particulas del fondo de About no se baja al abrir la
-     pagina: son 500 KB que alguien que solo mira el reel no tiene por
-     que pagar. Se pide recien cuando About esta por aparecer, y se
-     reproduce solo mientras se ve -- fuera de pantalla se pausa, asi no
-     hay un video decodificando de gusto atras de otra seccion.
-
-     Mientras tanto se ve el "poster" (el primer cuadro), asi que nunca
-     hay un rectangulo negro esperando: la transicion de la imagen quieta
-     al video andando no se nota, porque es el mismo cuadro.
-     ====================================================================== */
-
-  var aboutBg = document.querySelector("[data-about-bg]");
-  if (aboutBg && aboutEl && "IntersectionObserver" in window) {
-    var aboutBgLoaded = false;
-
-    var playAboutBg = function () {
-      if (!aboutBgLoaded) {
-        aboutBgLoaded = true;
-        aboutBg.preload = "auto";
-        aboutBg.load();
-      }
-      var p = aboutBg.play();
-      if (p && p.catch) p.catch(function () {});
-    };
-
-    var aboutBgObserver = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) playAboutBg();
-      else if (aboutBgLoaded) aboutBg.pause();
-    }, { rootMargin: "200px 0px" });
-    aboutBgObserver.observe(aboutEl);
-
-    /* Entrando a un proyecto, About se esconde (display:none) y el
-       observer no siempre avisa: se pausa a mano. */
-    document.addEventListener("page:change", function (event) {
-      if (event.detail.id !== homeId && aboutBgLoaded) aboutBg.pause();
-    });
-  }
-
-
-  /* ======================================================================
      Arranque
      ====================================================================== */
 
