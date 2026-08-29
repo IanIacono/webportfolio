@@ -520,6 +520,14 @@
 
     window.addEventListener("wheel", function (e) {
       if (window.innerWidth <= 900) return;
+      /* Adentro de un proyecto esto no corre: #projects, #about y #contact
+         viven en la pagina de inicio, que ahi esta escondida (display:none),
+         y lo escondido mide 0 -- todas las paradas darian casi cero y la
+         rueda quedaba peleando contra una parada que no existe, dejando la
+         pagina del proyecto sin scroll. Se mira en vivo y no con
+         page:change porque entrando derecho por url (#lumia) ese evento ya
+         paso antes de que esta parte se enganche. */
+      if (projectsEl.offsetParent === null) return;
 
       var dir = e.deltaY > 0 ? 1 : -1;
       var now = Date.now();
@@ -738,12 +746,70 @@
     window.addEventListener("scroll", evaluateBackToReel, { passive: true });
     window.addEventListener("resize", evaluateBackToReel);
 
+    /* Antes esto era un scrollIntoView({behavior:"smooth"}) y en celular
+       fallaba justo cuando mas se lo usa: si la pagina venia con inercia
+       (el dedo ya se levanto pero sigue deslizandose), esa inercia pisaba
+       al scroll pedido y el boton parecia no hacer nada -- solo respondia
+       con la pagina completamente quieta.
+
+       Ahora la subida se anima a mano: en cada cuadro se fija la posicion,
+       asi no hay nada con lo que competir -- la inercia no puede ganarle a
+       algo que se reescribe sesenta veces por segundo. El toque ademas la
+       corta de entrada (el scrollTo a la posicion actual, que es un freno
+       en seco sin mover nada). */
+    var toTopRaf = null;
+    var docEl = document.documentElement;
+
+    /* Mientras dura la subida apagamos el scroll suave del CSS. Si no, el
+       scrollTo de CADA cuadro arranca su propia animacion del navegador y
+       la nuestra termina persiguiendolas: medido, la subida tardaba 1,3s
+       y los primeros 0,6s no se movia un pixel -- justo el sintoma de
+       "toco y no pasa nada" que esto venia a arreglar. Apagado, los 520ms
+       son 520ms y el primer cuadro ya mueve la pagina. */
+    var freezeSmooth = function () { docEl.style.scrollBehavior = "auto"; };
+    var releaseSmooth = function () { docEl.style.removeProperty("scroll-behavior"); };
+
+    var stopMomentum = function () {
+      freezeSmooth();
+      window.scrollTo(0, window.scrollY);
+      /* Si al toque no le sigue un click (el dedo se fue del boton sin
+         soltar ahi), devolvemos el scroll suave en el cuadro siguiente. */
+      requestAnimationFrame(function () { if (toTopRaf === null) releaseSmooth(); });
+    };
+
+    backToReel.addEventListener("pointerdown", stopMomentum);
+
     backToReel.addEventListener("click", function () {
-      heroSection.scrollIntoView({
-        behavior: reduceMotion.matches ? "auto" : "smooth",
-        block: "start"
-      });
+      if (toTopRaf !== null) { cancelAnimationFrame(toTopRaf); toTopRaf = null; }
+      stopMomentum();
+
+      if (reduceMotion.matches) { window.scrollTo(0, 0); releaseSmooth(); return; }
+
+      var startY = window.scrollY;
+      var startedAt = null;
+      var DURATION_MS = 520;
+
+      var step = function (now) {
+        if (startedAt === null) startedAt = now;
+        var k = Math.min(1, (now - startedAt) / DURATION_MS);
+        /* Sale rapido y frena al final, como el scroll suave del navegador. */
+        var eased = 1 - Math.pow(1 - k, 3);
+        window.scrollTo(0, Math.round(startY * (1 - eased)));
+        if (k < 1) {
+          toTopRaf = requestAnimationFrame(step);
+        } else {
+          toTopRaf = null;
+          releaseSmooth();
+        }
+      };
+      toTopRaf = requestAnimationFrame(step);
     });
+
+    /* Un scroll deliberado a mitad de camino manda: se corta la subida.
+       La inercia de ANTES del toque no cuenta, que es la que rompia esto. */
+    window.addEventListener("wheel", function () {
+      if (toTopRaf !== null) { cancelAnimationFrame(toTopRaf); toTopRaf = null; releaseSmooth(); }
+    }, { passive: true });
   }
 
 
@@ -832,6 +898,112 @@
       equalizeTimer = setTimeout(equalizeActions, 150);
     });
   }
+
+
+  /* ======================================================================
+     10. SELECTOR DE IDIOMA (SOLO CELULAR)
+     En escritorio los textos ESP y ENG se ven los dos, uno al lado del
+     otro. En una pantalla angosta eso son dos bloques largos uno abajo
+     del otro, y hay que scrollear el doble para leer lo mismo. Ahi se
+     muestra uno solo -- arranca en ingles -- con un selector chico en el
+     lugar donde estaba la etiqueta del idioma: arriba del texto y
+     alineado a la izquierda, igual que antes.
+
+     El selector se arma desde JavaScript y no a mano en el HTML porque
+     son once bloques iguales (About y los diez proyectos): escrito una
+     vez, vale para todos, y si manana se agrega otro proyecto aparece
+     solo.
+
+     El cambio de idioma es un fundido y no un corte: primero se apaga el
+     texto que estaba, y recien cuando termino de desaparecer se cambia
+     cual es el visible y se enciende el otro. Hacer las dos cosas a la
+     vez obligaria a superponerlos, y como no miden lo mismo, la seccion
+     daria un salto de alto en el medio de la animacion.
+     ====================================================================== */
+
+  var FADE_MS = 200; /* debe coincidir con .lang.is-fading en css/style.css */
+
+  Array.prototype.slice.call(document.querySelectorAll(".project__text, .about__cols"))
+    .forEach(function (group) {
+      var blocks = Array.prototype.slice.call(group.querySelectorAll(".lang[data-lang]"));
+      if (blocks.length < 2) return;
+
+      var swap = document.createElement("div");
+      swap.className = "lang-switch";
+
+      var buttons = {};
+      ["en", "es"].forEach(function (code, i) {
+        if (i === 1) {
+          /* La rayita larga entre los dos idiomas: es la misma que ya
+             tenia la etiqueta al lado del texto, ahora separandolos. */
+          var dash = document.createElement("span");
+          dash.className = "lang-switch__dash";
+          dash.setAttribute("aria-hidden", "true");
+          swap.appendChild(dash);
+        }
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "lang-switch__btn";
+        btn.dataset.lang = code;
+        btn.textContent = code === "en" ? "ENG" : "ESP";
+        btn.addEventListener("click", function () { setLang(code); });
+        buttons[code] = btn;
+        swap.appendChild(btn);
+      });
+
+      group.insertBefore(swap, group.firstChild);
+
+      var current = "en";
+
+      function paint() {
+        ["en", "es"].forEach(function (code) {
+          buttons[code].setAttribute("aria-pressed", String(code === current));
+        });
+      }
+
+      function show(code, animate) {
+        blocks.forEach(function (b) {
+          var on = b.dataset.lang === code;
+          b.hidden = !on;
+          if (on && animate) {
+            b.classList.add("is-fading");
+            void b.offsetWidth; /* fuerza el punto de partida antes de animar */
+            b.classList.remove("is-fading");
+          }
+        });
+      }
+
+      function setLang(code) {
+        if (code === current) return;
+        var leaving = blocks.filter(function (b) { return b.dataset.lang === current; })[0];
+        current = code;
+        paint();
+        if (!leaving || reduceMotion.matches) { show(code, false); return; }
+        leaving.classList.add("is-fading");
+        window.setTimeout(function () {
+          leaving.classList.remove("is-fading");
+          show(code, true);
+        }, FADE_MS);
+      }
+
+      /* Estado inicial. El [hidden] lo pone el JS y no el HTML a proposito:
+         si el JavaScript no llegara a correr, se ven los dos textos --
+         que es lo que pasaba antes y se lee perfecto. */
+      show(current, false);
+      paint();
+
+      /* En escritorio se muestran los dos, asi que hay que deshacer el
+         [hidden] al pasar de un ancho al otro (rotar el telefono, o
+         agrandar la ventana). El CSS se encarga de esconder el selector
+         y de volver a mostrar las etiquetas. */
+      var narrow = window.matchMedia("(max-width: 900px)");
+      var syncToWidth = function () {
+        if (narrow.matches) show(current, false);
+        else blocks.forEach(function (b) { b.hidden = false; });
+      };
+      syncToWidth();
+      narrow.addEventListener("change", syncToWidth);
+    });
 
 
   /* ======================================================================

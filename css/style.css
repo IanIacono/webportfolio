@@ -1068,7 +1068,18 @@ p { text-wrap: pretty; }
   }
   .hero__welcome-links {
     width: fit-content;
+    /* Con el cuarto link (About) esta fila dejo de entrar y "Contact"
+       quedaba cortado por el borde de la pantalla: "fit-content" toma el
+       ancho natural, y un margen automatico no puede achicar lo que no
+       entra. El tope lo obliga a quedarse adentro, y el achique de abajo
+       hace que los cuatro entren de verdad en vez de apretarse. */
+    max-width: calc(100% - var(--gutter) * 2);
     margin: var(--sp-3) auto 0;
+    flex-wrap: nowrap;
+  }
+  .hero__welcome-links .nav__link {
+    padding-inline: var(--sp-2);
+    font-size: var(--fs-2xs);
   }
   /* El "top" y el "height" de este wrap los calcula JS (ver "7. CENTRAR
      EL BOTON..." en main.js), no CSS: .hero centra el marco del reel
@@ -1514,8 +1525,65 @@ p { text-wrap: pretty; }
 
 .project__text { margin-top: var(--sp-8); }
 
+/* --- Selector de idioma (solo celular, ver punto 10 en js/main.js) ---
+   En escritorio no se ve: ahi estan los dos textos, cada uno con su
+   etiqueta. En celular pasa al reves -- se ve el selector y se esconden
+   las etiquetas, porque el selector ya dice de que idioma es el texto. */
+.lang-switch { display: none; }
+
+@media (max-width: 900px) {
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    margin-bottom: var(--sp-3);
+  }
+  /* La etiqueta suelta sobra: lo que dice ya lo dice el selector. */
+  .lang-switch + .lang .lang__label,
+  .lang-switch ~ .lang .lang__label { display: none; }
+
+  .lang-switch__btn {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--fs-2xs);
+    font-weight: 500;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    /* Discreto: el que no esta puesto se apaga, no se pinta de otro
+       color -- es un cambio de idioma, no una llamada a la accion. */
+    color: var(--c-text-faint);
+    transition: color var(--dur) var(--ease);
+  }
+  .lang-switch__btn[aria-pressed="true"] { color: var(--c-text); }
+  @media (hover: hover) {
+    .lang-switch__btn:hover { color: var(--c-text-muted); }
+  }
+
+  /* La rayita larga entre los dos idiomas. */
+  .lang-switch__dash {
+    flex: 1;
+    max-width: 8rem;
+    height: 1px;
+    background: var(--c-line-strong);
+  }
+}
+
+/* El fundido del cambio de idioma. Fuera de celular no se usa nunca. */
+.lang { transition: opacity 200ms var(--ease); }
+.lang.is-fading { opacity: 0; }
+
 /* Bloque de idioma: la etiqueta ESP/ENG arriba y el parrafo debajo */
 .lang + .lang { margin-top: var(--sp-6); }
+/* En celular se muestra un texto solo, asi que la separacion entre los dos
+   no va: si no, al pasar a ESP el texto se corria 20px y el cambio de
+   idioma parecia un salto. Tiene que ir DESPUES de la linea de arriba --
+   pesan igual, y entre iguales gana la ultima. */
+@media (max-width: 900px) {
+  .lang + .lang { margin-top: 0; }
+}
 .lang__label {
   display: inline-flex;
   align-items: center;
