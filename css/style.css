@@ -1739,6 +1739,48 @@ p { text-wrap: pretty; }
    "6. SCROLL FORZADO..." en js/main.js para el enganche).
    ========================================================================== */
 
+/* FOTO DE FONDO. Se desvanece arriba y abajo con un alpha real (el mismo
+   recurso que usa el reel: una mascara, no un degrade negro encima --
+   asi el fondo de la pagina se ve por transparencia y no hay que
+   adivinar el color con el que tapar). Va oscura y algo desenfocada: es
+   un telon, no una imagen para mirar, y el texto tiene que seguir
+   leyendose limpio encima.
+
+   Vive en un ::before y no en el "background" de la seccion porque el
+   filtro (brightness/blur) tomaria tambien al texto, que es hijo suyo.
+
+   El desenfoque corre los pixeles de los bordes hacia adentro y deja el
+   borde lavado, asi que el ::before se estira 32px para cada lado (fuera
+   de la pantalla, donde ese lavado no se ve) y la seccion lo recorta.
+
+   POR AHORA ESTA APAGADO: falta la foto. La imagen se enciende poniendole
+   un valor a --about-bg aca abajo:
+
+       --about-bg: url("../assets/img/about-bg.webp");
+
+   Sin eso queda en "none" y el navegador no pide nada -- la seccion se ve
+   igual que siempre, sin un archivo faltante colgando de cada visita. */
+#about {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  --about-bg: none;
+}
+#about::before {
+  content: "";
+  position: absolute;
+  inset: -32px;
+  z-index: -1;
+  background-image: var(--about-bg);
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.3) blur(3px);
+  --about-bg-fade: 22%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--about-bg-fade), #000 calc(100% - var(--about-bg-fade)), transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 var(--about-bg-fade), #000 calc(100% - var(--about-bg-fade)), transparent);
+  pointer-events: none;
+}
+
 /* El titulo va alineado a la izquierda, como el de Contact y el de
    Selected Works -- el centrado que trae .page__head por defecto es para
    las paginas de proyecto. */
