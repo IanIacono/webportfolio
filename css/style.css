@@ -393,7 +393,6 @@ p { text-wrap: pretty; }
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--sp-5);
 }
 
 /* "Ian Iacono" a la izquierda de la barra, link de vuelta al reel:
@@ -413,16 +412,26 @@ p { text-wrap: pretty; }
    saca de la navegacion por teclado/mouse mientras esta invisible). */
 .nav__project-brand {
   font-family: var(--font-name);
-  /* Centrado y por encima de la barra, en el mismo lugar donde estaba el
-     nombre grande al que reemplaza: aparece ahi, no en una esquina.
-     Fuera del flujo a proposito -- antes iba primero en la fila y al
-     aparecer empujaba al volumen 218px a la derecha, asi que al
-     scrollear se corria todo de lugar. Sin ocupar espacio, el volumen y
-     los links se quedan donde estan en los dos estados de la barra. */
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  /* Arriba a la izquierda, antes del boton y el slider de sonido, y link
+     de vuelta al reel.
+
+     Arriba de todo del home esta invisible, y ahi no puede ocupar lugar:
+     si lo ocupara, el volumen no arrancaria pegado al borde izquierdo
+     del reel, que es donde tiene que estar. Con max-width en 0 (mas
+     overflow:hidden y el nowrap de mas abajo) no mide nada hasta que
+     hace falta. Al achicarse la barra recupera su ancho y corre al
+     volumen a su derecha -- animado y no de un salto, que es para lo que
+     esta el max-width en la transicion.
+
+     El hueco hasta el volumen aparece con el nombre, y por eso es un
+     margen suyo y no un "gap" de la fila: un gap separa igual aunque el
+     nombre mida cero, y esos 24px alcanzaban para despegar al volumen
+     del borde del reel. Padding tampoco servia: con box-sizing:border-box
+     una caja nunca queda mas angosta que su propio padding, asi que
+     seguia midiendo esos 24px con max-width en 0. */
+  max-width: 0;
+  overflow: hidden;
+  margin-right: 0;
   font-size: var(--fs-xl);
   font-weight: 900;
   color: var(--c-text);
@@ -432,6 +441,7 @@ p { text-wrap: pretty; }
   visibility: hidden;
   pointer-events: none;
   transition: opacity var(--dur-slow) var(--ease), visibility 0s linear var(--dur-slow),
+              max-width var(--dur-slow) var(--ease), margin-right var(--dur-slow) var(--ease),
               color var(--dur) var(--ease);
 }
 .nav__project-brand:hover { color: var(--c-accent-soft); }
@@ -439,7 +449,10 @@ p { text-wrap: pretty; }
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  max-width: 20rem;
+  margin-right: var(--sp-5);
   transition: opacity var(--dur-slow) var(--ease), visibility 0s linear 0s,
+              max-width var(--dur-slow) var(--ease), margin-right var(--dur-slow) var(--ease),
               color var(--dur) var(--ease);
 }
 /* En celular/tablet no existe: el equivalente ahi es .hero__welcome. */
@@ -545,17 +558,6 @@ p { text-wrap: pretty; }
     visibility: visible;
     pointer-events: auto;
     transition: opacity 450ms ease-in-out, visibility 0s linear 0s;
-  }
-
-  /* Y por lo mismo, aca abajo el nombre chico no aparece nunca. Esta
-     centrado en la PANTALLA, pero el hueco que le dejan el volumen y los
-     links no esta centrado: a 901px de ancho se le montaba 55px encima de
-     "Showreel". No se pierde nada -- para volver al reel esta ese mismo
-     link, que dice justo eso. */
-  .nav.is-stuck .nav__project-brand {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
   }
 }
 
@@ -1757,13 +1759,6 @@ p { text-wrap: pretty; }
 .about__cols .lang + .lang { margin-top: 0; }
 .about__cols .prose + .prose { margin-top: var(--sp-5); }
 
-/* Centrado debajo de las dos columnas, no dentro de ninguna: es el cierre
-   de las dos por igual. */
-.about__cta {
-  margin-top: var(--sp-8);
-  text-align: center;
-  font-size: var(--fs-lg);
-}
 
 
 /* ==========================================================================
