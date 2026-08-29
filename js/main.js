@@ -415,9 +415,13 @@
      vez de scrollearse libre entre sus dos bordes son dos paradas mas,
      como cualquier otra.
 
-     "De a una por vez" es literal: mientras el salto esta en curso la
-     rueda no hace nada, asi un tiron largo de trackpad avanza una sola
-     parada en vez de llevarse tres puestas.
+     Un salto en curso no bloquea la rueda: scrollear rapido no obliga a
+     esperar a que cada salto termine, el siguiente engancha en el acto y
+     arranca desde donde el anterior iba a terminar. Lo que si se cuida es
+     que un solo tiron de trackpad -- que es una rafaga larga de eventos y
+     no uno -- no se lleve puestas todas las paradas: cuenta el primer
+     evento de cada gesto, y despues uno cada tanto mientras el scroll
+     siga. Cuanto mas fuerte y sostenido, mas paradas cubre.
 
      Sobre por que nunca se pierde el control de la rueda: en vez de
      recordar "en que seccion estoy", cada evento mira la posicion REAL
@@ -465,11 +469,19 @@
        ultimo salto se avanza igual, asi girar sin parar sigue bajando en
        vez de quedar clavado en una parada. */
     var GESTURE_GAP_MS = 180;
-    var MAX_HOLD_MS = 1100;
+    /* Scrolleando sin parar (la rueda girando de corrido, o dos dedos
+       arrastrando) no hay pausa nunca, asi que no alcanza con el gap: se
+       avanza otra parada cada tanto. Cuanto mas corto, mas rapido baja un
+       scroll sostenido. */
+    var HOLD_STEP_MS = 350;
+    /* Debajo de esto los eventos ya son la inercia apagandose sola, no
+       alguien scrolleando: no cuentan para lo de arriba. */
+    var LIVE_DELTA = 4;
     var lastWheelAt = 0;
     var lastJumpAt = 0;
 
     var animStartedAt = 0;
+    var animTarget = 0;
 
     function isAnimating() { return Date.now() - animStartedAt < SETTLE_MS; }
 
@@ -514,6 +526,7 @@
 
     function snapTo(y) {
       animStartedAt = lastJumpAt = Date.now();
+      animTarget = y;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
 
@@ -554,16 +567,16 @@
       var newGesture = now - lastWheelAt > GESTURE_GAP_MS;
       lastWheelAt = now;
 
-      /* Mientras un salto esta en curso la rueda no hace nada, en
-         cualquiera de las dos direcciones. */
-      if (isAnimating()) { e.preventDefault(); return; }
-      /* Terminado el salto, si los eventos siguen llegando pegados es la
-         inercia del mismo tiron: no arranca otro. */
-      if (!newGesture && now - lastJumpAt < MAX_HOLD_MS) { e.preventDefault(); return; }
+      /* Un salto en curso NO bloquea la rueda: si bloqueara, scrollear
+         rapido obligaria a esperar a que cada salto termine antes de que
+         el siguiente arranque, y se siente trabado. Un scroll nuevo
+         engancha en el acto y sale desde donde el salto iba a terminar,
+         no desde donde la pagina esta en este instante -- que es un lugar
+         de paso y no una parada. */
+      var from = isAnimating() ? animTarget : window.scrollY;
 
       var list = orderedStops(stops());
-      var y = window.scrollY;
-      var here = stopIndexAt(list, y);
+      var here = stopIndexAt(list, from);
 
       /* Parados en una parada: se pasa a la de al lado. Si no hay (arriba
          del reel, o debajo de Contact) la rueda queda libre -- abajo de
@@ -571,10 +584,25 @@
          Si no estamos en ninguna (tipico de arrastrar la barra de scroll
          del navegador y soltar entre dos secciones) se va a la mas
          cercana hacia donde apunta la rueda. */
-      var target = here >= 0 ? list[here + dir] : stopAfter(list, y, dir);
+      var target = here >= 0 ? list[here + dir] : stopAfter(list, from, dir);
+      if ((target === undefined || target === null) && !isAnimating()) return;
+
+      /* De aca en adelante la rueda es nuestra: aunque este evento no
+         mueva nada, dejarlo pasar scrollearia la pagina a mano por encima
+         del salto. */
+      e.preventDefault();
+
+      /* Un tiron de trackpad es una rafaga larga de eventos, no uno: si
+         cada uno avanzara una parada, un solo tiron se llevaria puestas
+         todas. Cuenta el primero de cada gesto (los que llegan despues de
+         una pausa), y mientras el scroll siga sin pausas, uno mas cada
+         HOLD_STEP_MS -- asi cuanto mas fuerte y sostenido el scroll, mas
+         paradas cubre, pero nunca de golpe. */
+      var deliberate = newGesture ||
+        (Math.abs(e.deltaY) >= LIVE_DELTA && now - lastJumpAt >= HOLD_STEP_MS);
+      if (!deliberate) return;
       if (target === undefined || target === null) return;
 
-      e.preventDefault();
       snapTo(target);
     }, { passive: false });
   }
