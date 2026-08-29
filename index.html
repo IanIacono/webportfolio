@@ -625,20 +625,22 @@
 
          Next sigue el mismo orden en que se ven las tarjetas en la grilla de
          "Selected Works", leyendo de izquierda a derecha y de arriba a abajo:
-         primero la pestana Audiovisual entera y despues la Sound. Back hace
+         primero la pestana Sound entera y despues la Audiovisual. Back hace
          exactamente lo mismo al reves. Es un ciclo cerrado: el ultimo vuelve
          al primero.
 
-           Rèport Travel Media -> Detras Del Puesto -> Te Lo Aseguro ->
-           Juleriaque -> Polvora Podcast -> Playbook -> The Carbon Case ->
-           Lumia -> Red Bull Batallas -> La Llamada Fatal -> (vuelve a Rèport)
+           The Carbon Case -> Lumia -> Red Bull Batallas -> La Llamada Fatal ->
+           Detras Del Puesto -> Rèport Travel Media -> Polvora Podcast ->
+           Te Lo Aseguro -> Juleriaque -> Playbook -> (vuelve a The Carbon Case)
 
          Los enlaces estan escritos a mano en cada proyecto (el href del boton
          Back y el del Next, mas abajo en cada seccion). Si algun dia cambia
          el orden de las tarjetas en la grilla, hay que reacomodar esos dos
          enlaces en las DIEZ secciones para que el ciclo siga cerrado: si uno
          solo queda mal, se puede terminar dando vueltas sin pasar por algun
-         proyecto.
+         proyecto. Ese es justo el error que se cometio al reordenar la
+         grilla la primera vez: las tarjetas se movieron y estos enlaces se
+         quedaron donde estaban.
          ========================================================================== -->
 
     <!-- ==========================================================================
@@ -842,7 +844,7 @@
             <a class="btn" href="#redbull"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#reports">
+            <a class="btn" href="#ddp">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
@@ -893,10 +895,10 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#lallamada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#faiketen">
+            <a class="btn" href="#reports">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
@@ -941,7 +943,7 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#ddp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#section12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#juleriaque">
@@ -989,10 +991,10 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#lallamada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#ddp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#ddp">
+            <a class="btn" href="#section12">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
@@ -1076,7 +1078,7 @@
             <a class="btn" href="#faiketen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#section12">
+            <a class="btn" href="#playbook">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
@@ -1126,10 +1128,10 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#juleriaque"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
-            <a class="btn" href="#playbook">
+            <a class="btn" href="#faiketen">
               <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
@@ -1179,7 +1181,7 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#section12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#juleriaque"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#thecarboncase">
