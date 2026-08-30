@@ -522,7 +522,27 @@ p { text-wrap: pretty; }
      al achicarse, volvia a los margenes de la pagina y el volumen se
      iba 218px a la derecha de un saque. */
   .nav {
-    padding-inline: max(0px, calc((100% - var(--reel-w)) / 2));
+    /* Los costados valen lo que le sobra al reel a cada lado... hasta
+       cierto punto. El reel es 16/9 y lo primero que se le acaba es el
+       ALTO: en una ventana baja queda angosto, y la barra siguiendolo se
+       angostaba tanto que los links se metian encima del nombre grande
+       (que esta centrado en la pantalla y no se corre). Medido: a
+       1366x768 se pisaban 81px, y a 1440x800 -- un MacBook Air -- 53px.
+
+       El segundo valor es el limite: deja siempre lugar para el nombre
+       (30rem) mas los links de cada lado (25rem cada uno) mas un respiro.
+       Se toma el menor de los dos, asi la barra se alinea con el reel
+       siempre que entre, y cuando no entra los links se van hacia afuera
+       en vez de encimarse. En pantallas holgadas manda el reel, que es lo
+       que se pidio; el limite solo aparece cuando haria falta.
+
+       Y un piso, para que en ventanas todavia mas chicas la barra no
+       termine pegada al borde de la pantalla: ahi el limite de arriba da
+       negativo y sin este minimo el volumen quedaba tocando el filo. */
+    padding-inline: max(var(--sp-4), min(
+      calc((100% - var(--reel-w)) / 2),
+      calc((100% - 83rem) / 2)
+    ));
   }
   /* Sin esto el volumen arrancaria un gutter mas adentro: el margen
      propio de .nav__inner, que aca no hace falta. */
@@ -2292,7 +2312,7 @@ p { text-wrap: pretty; }
     position: fixed;
     left: var(--sp-5);
     right: var(--sp-5);
-    bottom: var(--sp-5);
+    bottom: var(--sp-7);
     z-index: 80;
     margin-top: 0;
     padding-top: 0;
@@ -2301,9 +2321,18 @@ p { text-wrap: pretty; }
        las mantiene invisibles DURANTE esa espera: sin eso se verian de
        entrada y el retraso no serviria de nada. La animacion se reinicia
        sola en cada proyecto, porque cada seccion pasa de display:none a
-       visible al mostrarse. */
+       visible al mostrarse -- y eso es justo lo que la clase de abajo
+       viene a evitar. */
     animation: project-arrows-in var(--dur-slow) var(--ease) 400ms both;
   }
+  /* Yendo de un proyecto a otro, las flechas NO vuelven a entrar: cada
+     seccion tiene su propio par, y el par nuevo arrancaba invisible
+     esperando esos 0.4s -- tocarlas se sentia como si desaparecieran.
+     Salteando la entrada se quedan quietas donde estaban, que es lo que
+     uno espera de algo que no se movio de lugar. La clase la pone y la
+     saca JavaScript (ver "9b. FLECHAS DE PROYECTO" en js/main.js): la
+     animacion vuelve recien cuando entras a un proyecto desde afuera. */
+  .no-arrows-intro .project__actions { animation: none; }
   .project__actions .btn {
     pointer-events: auto;
     width: var(--tap);
@@ -2318,7 +2347,17 @@ p { text-wrap: pretty; }
     -webkit-backdrop-filter: blur(8px);
     color: var(--c-text);
     box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c-accent) 70%, transparent);
+    transition: background var(--dur) var(--ease),
+                border-color var(--dur) var(--ease),
+                color var(--dur) var(--ease),
+                transform 150ms var(--ease);
   }
+  /* Se achica mientras el dedo esta apoyado. El achique arranca al TOCAR
+     y no al soltar: al soltar ya cambiaste de proyecto, y estas flechas
+     -- las de la seccion que acabas de dejar -- ya no estan en pantalla,
+     asi que nadie llegaria a verlo. */
+  .project__actions .btn.is-pressed,
+  .project__actions .btn:active { transform: scale(0.88); }
   /* Las palabras "Back" y "Next" sobran: quedan dos flechas y se entiende
      solo. El texto sigue en el HTML para quien navegue con lector de
      pantalla. */

@@ -936,6 +936,48 @@
 
 
   /* ======================================================================
+     9b. FLECHAS DE PROYECTO (SOLO CELULAR)
+     Las dos flechitas flotantes de abajo entran con un fade a los 0.4s de
+     llegar a un proyecto. Eso esta bien la primera vez, pero cada seccion
+     tiene su PROPIO par de flechas: yendo de un proyecto a otro, el par
+     nuevo arrancaba invisible esperando esos 0.4s, asi que tocarlas se
+     sentia como si se apagaran. Saltando de proyecto a proyecto la
+     entrada se saltea (ver ".no-arrows-intro" en css/style.css) y las
+     flechas se quedan quietas; la animacion vuelve recien al entrar a un
+     proyecto desde afuera.
+     ====================================================================== */
+
+  var wasOnProject = false;
+  document.addEventListener("page:change", function (event) {
+    var onProject = event.detail.id !== homeId;
+    document.documentElement.classList.toggle("no-arrows-intro", onProject && wasOnProject);
+    wasOnProject = onProject;
+  });
+
+  /* El "recien la tocaste": la flecha se achica mientras el dedo esta
+     apoyado. Va al TOCAR y no al soltar, porque al soltar ya cambiaste de
+     proyecto y estas flechas ya no estan en pantalla -- nadie llegaria a
+     verlo. Un solo par de listeners para todas: las flechas viven adentro
+     de cada seccion de proyecto, asi que engancharlas una por una seria
+     repetir lo mismo diez veces. */
+  var pressedArrow = null;
+  var releaseArrow = function () {
+    if (!pressedArrow) return;
+    pressedArrow.classList.remove("is-pressed");
+    pressedArrow = null;
+  };
+  document.addEventListener("pointerdown", function (event) {
+    var arrow = event.target.closest && event.target.closest(".project__actions .btn");
+    if (!arrow) return;
+    releaseArrow();
+    pressedArrow = arrow;
+    arrow.classList.add("is-pressed");
+  });
+  document.addEventListener("pointerup", releaseArrow);
+  document.addEventListener("pointercancel", releaseArrow);
+
+
+  /* ======================================================================
      10. SELECTOR DE IDIOMA (SOLO CELULAR)
      En escritorio los textos ESP y ENG se ven los dos, uno al lado del
      otro. En una pantalla angosta eso son dos bloques largos uno abajo
