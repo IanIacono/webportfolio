@@ -59,6 +59,17 @@
     var next = pageById(id) || pageById(homeId);
     var wasAlreadyShown = !next.hidden;
 
+    /* Saltar de un proyecto a otro (las flechitas) no cuenta como cambiar
+       de pagina: es la misma pantalla con otro contenido. Sin esto, la
+       seccion nueva entraba con el fade de abajo, y ese fade se lleva
+       puestas tambien a las flechas -- viven adentro de la seccion, asi
+       que la opacidad del padre las apaga, y su "position:fixed" ademas
+       pasa a medirse contra el padre en cuanto este tiene un transform.
+       Resultado: las flechas parpadeaban justo al usarlas. */
+    var leaving = pages.filter(function (p) { return !p.hidden; })[0];
+    var hopBetweenProjects = !!leaving && leaving !== next &&
+      leaving.id !== homeId && next.id !== homeId;
+
     pages.forEach(function (page) {
       var active = page === next;
       page.hidden = !active;
@@ -71,7 +82,7 @@
        tarjeta) que volviendo de un proyecto a home (Back), porque las dos
        pasan por aca. Solo cuando de verdad cambiamos de pagina (no en la
        carga inicial, ni si ya estabas viendola). */
-    if (!isFirstLoad && !wasAlreadyShown && !reduceMotion.matches) {
+    if (!isFirstLoad && !wasAlreadyShown && !reduceMotion.matches && !hopBetweenProjects) {
       next.classList.remove("page-enter");
       void next.offsetWidth; /* fuerza reflow para poder repetir la animacion */
       next.classList.add("page-enter");
@@ -116,7 +127,13 @@
       }
     }
 
-    window.scrollTo({ top: 0, behavior: "auto" });
+    /* "instant" y no "auto": el sitio tiene scroll suave puesto en el CSS
+       (scroll-behavior en <html>), y "auto" hereda eso -- o sea que al
+       abrir un proyecto desde una tarjeta, la pagina nueva aparecia con el
+       scroll donde estaba la grilla (mostrando su parte de abajo) y recien
+       ahi se deslizaba hasta arriba. Con "instant" el salto pasa antes de
+       que el navegador pinte: el proyecto se ve desde el titulo, de una. */
+    window.scrollTo({ top: 0, behavior: "instant" });
 
     /* Accesibilidad: manda el foco al titulo de la pagina nueva, para que
        quien navega con teclado o lector de pantalla no quede perdido */
