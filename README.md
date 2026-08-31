@@ -1724,3 +1724,28 @@ entonces se ve un cuadro del propio video como portada. Y si te vas a
 otro proyecto mientras uno está sonando, se pausa y vuelve al
 principio (si no, seguía sonando escondido detrás, que es exactamente
 lo que ya pasaba con los de YouTube).
+**158. En Audiovisual ya no queda ese "mini scroll": las dos filas
+entran enteras en una pantalla.** Venía de una cuenta que no cerraba:
+la sección mide, aparte de las tarjetas, 166px de cabecera ("Selected
+Works" apilado arriba del selector, más la separación hasta la grilla
+y el aire de abajo). Con eso, las dos filas recién entraban en una
+ventana de 858px de alto para arriba; en una notebook de 768 la última
+fila quedaba 74px abajo del borde — el título de los proyectos entero
+—, así que hacía falta una segunda parada de scroll para llegar a
+verla, y esa parada movía tan poco que se sentía como un tirón al
+pedo.
+
+Ahora, cuando la ventana es baja, "Selected Works" y el selector se
+ponen en una misma línea en vez de apilados: la cabecera pasa de 118 a
+54px de alto y se recuperan 80px, que es casi todo lo que faltaba. Y
+si con eso todavía no alcanza (ventanas más bajas todavía), la portada
+de cada tarjeta se recorta un poquito — recorta parejo arriba y abajo,
+así que lo que esté centrado sigue centrado. En una ventana de 1440 x
+768 ese recorte es del 2%; de 800 para arriba es cero.
+
+Lo probé en 66 combinaciones de ancho por alto (de 1024 a 1920 de
+ancho, de 620 a 1080 de alto): **en todas, Audiovisual entra en una
+pantalla y tiene una sola parada**. Sound, que son tres filas y no
+entra en ninguna pantalla normal, mantiene sus dos paradas como
+pediste.
+

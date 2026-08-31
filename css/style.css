@@ -2549,10 +2549,44 @@ p { text-wrap: pretty; }
   /* OJO: un intento anterior le puso "max-width: 94%" a esta grilla para
      achicar las tarjetas un poco -- en vez de un achique leve, termino
      achicandolas muchisimo mas de lo esperado (interaccion rara con
-     .portfolio-panels, que tambien es un grid). Se saco por completo:
-     si "La Llamada Fatal" sigue sin entrar en tu pantalla, avisame el
-     alto de tu ventana y lo resolvemos con otro numero, no con este
-     mecanismo. */
+     .portfolio-panels, que tambien es un grid). Se saco por completo, y
+     el achique termino resolviendose por el alto (el max-height de aca
+     abajo) en vez de por el ancho. */
+
+  /* Que las DOS filas de Audiovisual entren siempre en una pantalla.
+
+     La cuenta de la seccion, medida: 166px de "cabecera" (el titulo y el
+     selector apilados, 118, mas 32 de separacion hasta la grilla, mas 16
+     de aire abajo de todo) + 16 de separacion entre las dos filas + dos
+     tarjetas. Y cada tarjeta es la portada (16/9, o sea que su alto sale
+     del ancho de la columna) mas 60px fijos de titulo y rol -- 60 clavado
+     en todos los anchos, lo medi de 1024 a 1920.
+
+     O sea que las dos filas entran si la portada mide, como mucho:
+       (franja visible - 302) / 2      con 302 = 166 + 16 + 60 + 60
+     A 1440 de ancho la portada mide 234, asi que entraban recien en una
+     ventana de 858 de alto para arriba. Abajo de eso la ultima fila
+     quedaba abajo del borde -- a 768, 74px, o sea el titulo del proyecto
+     entero -- y hacia falta una segunda parada de scroll para llegar a
+     verla. De ahi el "mini scroll" de Audiovisual.
+
+     Este max-height le pone ese techo a la portada: cuando no entra, se
+     recorta un poco (la imagen es object-fit:cover, asi que recorta
+     parejo arriba y abajo y lo que este centrado sigue centrado). El
+     max() de abajo es el limite: mas achique que ese ya se veria mal, asi
+     que a partir de ahi se acepta la segunda parada. */
+  #projects .tile__media {
+    /* El width:100% no es de adorno. Con "aspect-ratio" puesto y el ancho
+       en auto, apenas el max-height le fija un alto definido el navegador
+       le vuelve a sacar el ANCHO a la relacion 16/9 -- o sea que la
+       portada se achicaba de 416 a 336 y quedaba un hueco de 80px a la
+       derecha, con el titulo abajo mas ancho que la imagen. Con el ancho
+       declarado, lo que cede es la relacion: la portada sigue ocupando
+       toda la columna y se recorta un poco arriba y abajo (object-fit:
+       cover, asi que recorta parejo y lo centrado sigue centrado). */
+    width: 100%;
+    max-height: max(150px, calc((100svh - var(--nav-h) - var(--sp-4) - 302px) / 2));
+  }
 
   /* Sobre mi es una pantalla mas del scroll forzado, asi que ocupa una
      pantalla entera igual que Selected Works: estando parado aca no se ve
@@ -2648,6 +2682,32 @@ p { text-wrap: pretty; }
   /* Pisa el alto que da rows="7" en el HTML (que queda igual como valor
      de respaldo, y es el que usa el celular). */
   #contact .contact-form textarea { height: clamp(7.5rem, 20svh, 15rem); }
+}
+
+/* --- Escritorio con la ventana baja (una notebook, que es lo normal) ---
+   La cuenta del max-height de aca arriba no cierra sola en una ventana de
+   menos de 880 de alto: a 768 la portada tendria que achicarse un 19%,
+   que ya se nota. Pero la mayor parte de ese sobrante no son las
+   tarjetas, es la cabecera -- "Selected Works" APILADO arriba del
+   selector se lleva 118px de alto, y los dos en una misma linea se
+   llevan 54. Poniendolos en una linea (y achicando de 32 a 16 la
+   separacion hasta la grilla) se recuperan 80px, que es casi todo lo que
+   faltaba: a 768 la portada termina recortandose 5px en vez de 45.
+
+   Con la cabecera en una linea la constante de la cuenta baja de 302 a
+   222: 54 (cabecera) + 16 (separacion hasta la grilla) + 16 (aire abajo
+   de todo) + 16 (entre las dos filas) + 60 + 60 (titulo y rol de las dos
+   tarjetas). */
+@media (min-width: 901px) and (max-height: 880px) {
+  #projects .portfolio-tabs-row {
+    flex-direction: row;
+    gap: var(--sp-6);
+    margin-bottom: var(--sp-4);
+  }
+  #projects .tile__media {
+    width: 100%;
+    max-height: max(150px, calc((100svh - var(--nav-h) - var(--sp-4) - 222px) / 2));
+  }
 }
 
 /* --- Impresion: que se pueda imprimir sin desperdiciar tinta --- */
