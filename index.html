@@ -890,10 +890,23 @@
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
-          <div class="embed embed--audio">
-            <iframe src="https://open.spotify.com/embed/show/5giJTeKbeLgLNMYudI0tYP?utm_source=generator&amp;theme=0"
-                    title="Detras Del Puesto — Spotify show" loading="lazy" width="100%" height="352" frameborder="0"
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+          <!-- Estos dos NO son de YouTube: son archivos propios que viven en
+               assets/video/ y se reproducen con los controles del navegador.
+               preload="none" + poster hace que no se baje ni un byte del
+               video hasta que se toque play (igual que las miniaturas de los
+               de YouTube), asi entrar al proyecto sigue siendo instantaneo.
+               El poster es un cuadro del propio video, sacado con ffmpeg.
+               Para cambiar el video: reemplaza el .mp4 en assets/video/ y,
+               si cambia la imagen, tambien el .webp del poster. -->
+          <div class="embed">
+            <video src="assets/video/ddp-logo-audio-branding.mp4" controls playsinline preload="none"
+                   poster="assets/img/ddp-logo-audio-branding.webp"
+                   title="Detras Del Puesto — logo animation and audio branding"></video>
+          </div>
+          <div class="embed">
+            <video src="assets/video/ddp-cortina-musical.mp4" controls playsinline preload="none"
+                   poster="assets/img/ddp-cortina-musical.webp"
+                   title="Detras Del Puesto — musical sting"></video>
           </div>
         </div>
 
@@ -989,6 +1002,12 @@
           <div class="embed">
             <iframe src="https://www.youtube.com/embed/DvwVEGCEHb4?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
                     title="Rèport Travel Media — project video" loading="lazy"
+                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <div class="embed">
+            <iframe src="https://www.youtube.com/embed/tdpmnCCosE0?rel=0&amp;loop=0&amp;controls=1&amp;cc_load_policy=0"
+                    title="Rèport Travel Media — second project video" loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>

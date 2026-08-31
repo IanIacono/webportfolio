@@ -286,6 +286,29 @@
 
 
   /* ======================================================================
+     VIDEOS PROPIOS EN LAS PAGINAS DE PROYECTO
+     Los que no vienen de YouTube sino de assets/video/ (hoy los dos de
+     Detras Del Puesto). Mismo problema que los iframes de aca arriba: la
+     seccion vieja solo queda "hidden", nunca se destruye, asi que un video
+     puesto se queda sonando detras al pasar al proyecto siguiente. Con
+     estos alcanza con pausarlos -- son elementos nuestros, no un iframe de
+     otro dominio -- y se los deja de nuevo en cero para que al volver
+     arranquen del principio, igual que los de YouTube al volver a su
+     miniatura. Se busca en el documento cada vez y no una lista guardada
+     al cargar, para que sirva tambien si algun dia se agrega otro.
+     ====================================================================== */
+
+  document.addEventListener("page:change", function (event) {
+    var activePage = event.detail.page;
+    document.querySelectorAll(".embed > video").forEach(function (video) {
+      if (activePage.contains(video) || video.paused) return;
+      video.pause();
+      try { video.currentTime = 0; } catch (e) {}
+    });
+  });
+
+
+  /* ======================================================================
      REEL DEL INICIO
      Arranca solo cuando esta a la vista, se pausa al salir de pantalla, y
      tiene boton de pausar/reanudar y una linea de tiempo para saltar a un
