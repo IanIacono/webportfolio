@@ -461,6 +461,7 @@
 
   var heroEl = document.querySelector(".hero");
   var projectsEl = document.getElementById("projects");
+  var projectsGridEl = document.querySelector("[data-portfolio-grid]");
   var aboutEl = document.getElementById("about");
   var contactEl = document.getElementById("contact");
 
@@ -521,15 +522,26 @@
       var c = navClearance();
       var projectsTop = projectsEl.offsetTop - c;
       /* El piso deja el final de la seccion pegado al borde de abajo de la
-         pantalla, o sea el ultimo proyecto abajo de todo. Si la grilla
-         llegara a entrar entera (filtrada por Audiovisual, que son tres,
-         o en una pantalla muy alta) el piso quedaria por ENCIMA del techo
-         -- de ahi el Math.max: ahi las dos paradas son la misma, y
-         orderedStops se queda con una sola. */
-      var projectsBottom = Math.max(
-        projectsTop,
-        projectsEl.offsetTop + projectsEl.offsetHeight - window.innerHeight
-      );
+         pantalla, o sea el ultimo proyecto abajo de todo. Pero solo existe
+         si hace falta: si parado en el techo ya se ve la grilla entera, no
+         hay nada que alcanzar y la seccion tiene UNA sola parada.
+
+         La pregunta se le hace a la GRILLA y no a la seccion. La seccion
+         termina 16px mas abajo que la grilla (su padding), y esos 16px
+         solos alcanzaban para inventar una parada: en Audiovisual, que son
+         dos filas y entra entera, quedaba un "mini scroll" de 8px que no
+         mostraba nada. Con Sound son tres filas, la ultima si queda abajo
+         del borde, y las dos paradas siguen como estaban. */
+      var gridBottom = projectsGridEl
+        ? projectsGridEl.getBoundingClientRect().bottom + window.scrollY
+        : projectsEl.offsetTop + projectsEl.offsetHeight;
+      var gridPeeksBelow = gridBottom > projectsTop + window.innerHeight;
+      var projectsBottom = gridPeeksBelow
+        ? Math.max(
+            projectsTop,
+            projectsEl.offsetTop + projectsEl.offsetHeight - window.innerHeight
+          )
+        : projectsTop;
       /* About tiene su propio piso por el mismo motivo que Selected Works:
          con el texto largo, en una pantalla de 768 de alto la seccion mide
          738 y la franja visible 680 -- esos 58px quedaban abajo del borde
