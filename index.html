@@ -12,7 +12,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Ian Iacono — Portfolio</title>
-  <meta name="description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, and La Llamada Fatal.">
+  <meta name="description" content="Ian Iacono — sound design, mix and mastering, original music, and live studio operation for documentary, fiction, advertising and podcast.">
 
   <!-- Las 4 lineas marcadas con DOMINIO son la direccion real del sitio.
        Tienen que ser absolutas (con https:// y el dominio entero) porque
@@ -26,7 +26,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Ian Iacono">
   <meta property="og:title" content="Ian Iacono — Portfolio">
-  <meta property="og:description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, and La Llamada Fatal.">
+  <meta property="og:description" content="Ian Iacono — sound design, mix and mastering, original music, and live studio operation for documentary, fiction, advertising and podcast.">
   <meta property="og:url" content="https://ianiacono.com/">                      <!-- DOMINIO -->
   <meta property="og:image" content="https://ianiacono.com/assets/img/og.jpg?v=2">   <!-- DOMINIO -->
   <meta property="og:image:width" content="1200">
@@ -36,7 +36,7 @@
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Ian Iacono — Portfolio">
-  <meta name="twitter:description" content="Ian Iacono — sound design, mix, and mastering. Sound and audiovisual portfolio: The Carbon Case, Lumia, Red Bull Batallas, and La Llamada Fatal.">
+  <meta name="twitter:description" content="Ian Iacono — sound design, mix and mastering, original music, and live studio operation for documentary, fiction, advertising and podcast.">
   <meta name="twitter:image" content="https://ianiacono.com/assets/img/og.jpg?v=2">  <!-- DOMINIO -->
 
   <meta name="theme-color" content="#0a0910">
@@ -145,7 +145,7 @@
            pantalla. -->
       <div class="nav__brand">
         <p class="nav__brand-name">Ian Iacono</p>
-        <p class="nav__brand-role">Sound Designer&nbsp;&middot; Music Producer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Podcast Editor</p>
+        <p class="nav__brand-role">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</p>
       </div>
 
 
@@ -193,7 +193,7 @@
              tambien. -->
         <div class="hero__welcome">
           <p class="nav__brand-name">Ian Iacono</p>
-          <p class="nav__brand-role">Sound Designer&nbsp;&middot; Music Producer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Podcast Editor</p>
+          <p class="nav__brand-role">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</p>
 
           <div class="nav__links hero__welcome-links">
             <a class="nav__link" href="#home">Showreel</a>
@@ -281,12 +281,18 @@
 
         <!-- UNA SOLA GRILLA con los diez proyectos. El selector de
              arriba (sound / audiovisual) no cambia de grilla: filtra
-             estas mismas tarjetas por su data-category. Primero los
-             siete de sonido y despues los tres audiovisuales, cada
-             grupo en el orden en que se muestra. El orden de aca es
-             tambien el de los botones Back/Next de cada proyecto. -->
+             estas mismas tarjetas por su "data-tags".
+
+             Son etiquetas y no una categoria sola porque tres proyectos
+             son las dos cosas -- Detras del Puesto, Report y Polvora,
+             donde el trabajo fue de sonido Y de video -- y aparecen en
+             las dos pestanas. Van separadas por espacio, igual que
+             "class". Sound muestra siete y Audiovisual seis.
+
+             El orden de aca es tambien el de los botones Back/Next de
+             cada proyecto. -->
         <div class="grid" id="grid-projects" data-portfolio-grid>
-        <article class="tile reveal" data-delay="0" data-category="sound">
+        <article class="tile reveal" data-delay="0" data-tags="sound">
           <a class="tile__link" href="#thecarboncase" aria-label="View project: The Carbon Case">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/the-carbon-case-960.webp"
@@ -305,7 +311,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="1" data-category="sound">
+        <article class="tile reveal" data-delay="1" data-tags="sound">
           <a class="tile__link" href="#lumia" aria-label="View project: Lumia">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/lumia-960.webp"
@@ -324,7 +330,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="2" data-category="sound">
+        <article class="tile reveal" data-delay="2" data-tags="sound">
           <a class="tile__link" href="#redbull" aria-label="View project: Red Bull Batallas">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/red-bull-batallas-960.webp"
@@ -343,7 +349,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="0" data-category="sound">
+        <article class="tile reveal" data-delay="0" data-tags="sound">
           <!-- Es el unico proyecto sin video de hover (no hay
                lallamada-hover.mp4). En su lugar, al pasar el mouse la
                portada titila y suena un fragmento del podcast: los dos
@@ -370,7 +376,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="1" data-category="sound">
+        <article class="tile reveal" data-delay="1" data-tags="sound audiovisual">
           <a class="tile__link" href="#ddp" aria-label="View project: Detras del Puesto">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/detras-del-puesto-960.webp"
@@ -389,7 +395,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="2" data-category="sound">
+        <article class="tile reveal" data-delay="2" data-tags="sound audiovisual">
           <a class="tile__link" href="#reports" aria-label="View project: Rèport Travel Media">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/report-travel-media-960.webp"
@@ -408,7 +414,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="0" data-category="sound">
+        <article class="tile reveal" data-delay="0" data-tags="sound audiovisual">
           <a class="tile__link" href="#section12" aria-label="View project: Polvora Podcast">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/polvora-podcast-960.webp"
@@ -427,7 +433,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="0" data-category="audiovisual">
+        <article class="tile reveal" data-delay="0" data-tags="audiovisual">
           <a class="tile__link" href="#faiketen" aria-label="View project: Te Lo Aseguro | Analipsis">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/te-lo-aseguro-960.webp"
@@ -446,7 +452,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="1" data-category="audiovisual">
+        <article class="tile reveal" data-delay="1" data-tags="audiovisual">
           <a class="tile__link" href="#juleriaque" aria-label="View project: Juleriaque">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/report-travel-media-2-960.webp"
@@ -465,7 +471,7 @@
             </div>
           </a>
         </article>
-        <article class="tile reveal" data-delay="2" data-category="audiovisual">
+        <article class="tile reveal" data-delay="2" data-tags="audiovisual">
           <a class="tile__link" href="#playbook" aria-label="View project: Playbook">
             <div class="tile__media">
               <img class="tile__poster" src="assets/img/playbook-960.webp"
@@ -509,27 +515,40 @@
             <div class="lang" data-lang="es">
               <p class="label lang__label">ESP</p>
               <p class="prose" lang="es">Diseñador sonoro y productor musical con más de
-                 cinco años de experiencia. Realizo sound design, mezcla, masterización y
-                 edición de sonido para podcasters, creadores de contenido y productoras
-                 audiovisuales.</p>
+                 cinco años de experiencia.</p>
+              <p class="prose" lang="es">Hago postproducción de sonido para documental,
+                 ficción, publicidad y podcast: diseño sonoro, edición y limpieza de
+                 diálogos, mezcla y masterización. También produzco música original para
+                 piezas audiovisuales.</p>
+              <p class="prose" lang="es">Trabajo en estudios de grabación operando las
+                 sesiones de punta a punta: armado y setup de cámaras y micrófonos,
+                 operación de video y sonido en vivo mientras se graba, y toda la
+                 postproducción posterior, incluyendo edición multicámara, motion graphics
+                 y cortes para redes.</p>
               <p class="prose" lang="es">Mi background en edición y postproducción de video
-                 me da una perspectiva única, permitiéndome entender cómo el sonido e imagen
-                 funcionan juntos para contar una historia. Eso me permite diseñar cada
-                 elemento sonoro pensando en la narrativa visual completa, no solo en
-                 aislamiento técnico. Siempre con el foco en que el resultado final esté a
-                 la altura de la idea.</p>
+                 me da una perspectiva distinta: entiendo cómo el sonido y la imagen
+                 funcionan juntos para contar una historia, y diseño cada elemento sonoro
+                 pensando en la narrativa visual completa, no de forma aislada. Siempre con
+                 el foco en que el resultado esté a la altura de tu idea.</p>
             </div>
 
             <div class="lang" data-lang="en">
               <p class="label lang__label">ENG</p>
               <p class="prose">Sound designer and music producer with 5+ years of
-                 experience. I specialize in sound design, mixing, mastering, and podcast
-                 production for podcasters, creators, and production companies.</p>
+                 experience.</p>
+              <p class="prose">I do sound post-production for documentary, fiction,
+                 advertising, and podcast: sound design, dialogue editing and cleanup,
+                 mixing, and mastering. I also produce original music for audiovisual
+                 pieces.</p>
+              <p class="prose">I work in recording studios running sessions end to end:
+                 camera and microphone setup, live video and sound operation while
+                 recording, and all the post-production that follows, including multicam
+                 editing, motion graphics, and cutdowns for social.</p>
               <p class="prose">My background in video editing and post-production gives me a
-                 unique perspective, allowing me to understand how sound and image work
-                 together to tell a story. This enables me to design every sonic element
-                 with the full visual narrative in mind, not just technical isolation.
-                 Always focused on delivering audio that matches your original vision.</p>
+                 different perspective: I understand how sound and image work together to
+                 tell a story, and I design every sonic element with the full visual
+                 narrative in mind, not in isolation. Always focused on making sure the
+                 result lives up to your idea.</p>
             </div>
           </div>
 
@@ -880,7 +899,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Detras Del Puesto</h1>
-          <p class="project__role">Live Video Operation, Music, Logo Animation &amp; Audio Branding</p>
+          <p class="project__role">Live Video &amp; Sound Operation, Editing, Music, Logo Animation &amp; Audio Branding</p>
           <p class="project__links"><a class="link" href="https://www.instagram.com/detrasdelpuesto.podcast/" target="_blank" rel="noopener">Instagram</a></p>
 
           <div class="project__text">
@@ -977,7 +996,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Rèport Travel Media</h1>
-          <p class="project__role">Live Video Operation, Post Production</p>
+          <p class="project__role">Studio Setup, Live Video &amp; Sound Operation, Video &amp; Sound Post (Buenos Aires &amp; Colombia)</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -1114,7 +1133,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Polvora Podcast</h1>
-          <p class="project__role">Live Video Operation, Post Production</p>
+          <p class="project__role">Live Video &amp; Sound Operation, Video &amp; Sound Post</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -1200,7 +1219,7 @@
   <footer class="site-footer">
     <div class="site-footer__inner">
       <span class="site-footer__name">Ian Iacono</span>
-      <span class="site-footer__role">Sound Designer&nbsp;&middot; Music Producer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Podcast Editor</span>
+      <span class="site-footer__role">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</span>
       <span class="site-footer__copy">&copy; 2026</span>
     </div>
   </footer>

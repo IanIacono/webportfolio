@@ -295,7 +295,16 @@
 
     /* Antes habia DOS grillas y el selector cambiaba de una a la otra.
        Ahora hay una sola con los diez proyectos (ver index.html) y el
-       selector filtra por la categoria de cada tarjeta (data-category).
+       selector filtra por las etiquetas de cada tarjeta.
+
+       Etiquetas en plural y no una categoria sola: hay proyectos donde
+       hice sonido Y video (Detras del Puesto, Report, Polvora), y
+       meterlos en un solo cajon borraba la mitad del trabajo. Cada
+       tarjeta lleva las suyas separadas por espacio -- la misma forma
+       que usa "class", que es la idiomatica en HTML: un atributo no
+       puede guardar una lista de verdad. Aparece en las dos pestanas la
+       que tenga las dos.
+
        Se esconden con [hidden] y no con una clase: asi tampoco quedan
        en la navegacion por teclado ni para un lector de pantalla, que
        es lo correcto para algo que no se esta mostrando. */
@@ -312,7 +321,8 @@
       positionThumb(activeTab, skipAnim);
 
       allTiles.forEach(function (tile) {
-        tile.hidden = tile.dataset.category !== name;
+        var tags = (tile.dataset.tags || "").split(/\s+/);
+        tile.hidden = tags.indexOf(name) === -1;
       });
 
       /* Las tarjetas que vuelven a aparecer tienen que poder animar su
@@ -520,11 +530,24 @@
         projectsTop,
         projectsEl.offsetTop + projectsEl.offsetHeight - window.innerHeight
       );
+      /* About tiene su propio piso por el mismo motivo que Selected Works:
+         con el texto largo, en una pantalla de 768 de alto la seccion mide
+         738 y la franja visible 680 -- esos 58px quedaban abajo del borde
+         y, con el scroll enganchado, eran inalcanzables: la parada
+         siguiente ya era Contact. Con el piso se llega. En una pantalla
+         donde About entra entera las dos paradas son la misma y
+         orderedStops se queda con una. */
+      var aboutTop = aboutEl.offsetTop - c;
+      var aboutBottom = Math.max(
+        aboutTop,
+        aboutEl.offsetTop + aboutEl.offsetHeight - window.innerHeight
+      );
       return {
         hero: 0,
         projectsTop: projectsTop,
         projectsBottom: projectsBottom,
-        about: aboutEl.offsetTop - c,
+        about: aboutTop,
+        aboutBottom: aboutBottom,
         contact: contactEl.offsetTop - c
       };
     }
@@ -533,7 +556,7 @@
        (Selected Works cuando entra entera en la pantalla) dejarian un
        salto que no mueve nada y se comeria un tiron de rueda. */
     function orderedStops(s) {
-      var all = [s.hero, s.projectsTop, s.projectsBottom, s.about, s.contact];
+      var all = [s.hero, s.projectsTop, s.projectsBottom, s.about, s.aboutBottom, s.contact];
       var out = [];
       for (var i = 0; i < all.length; i++) {
         if (!out.length || all[i] - out[out.length - 1] > 1) out.push(all[i]);

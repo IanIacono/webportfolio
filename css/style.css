@@ -494,7 +494,15 @@ p { text-wrap: pretty; }
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   color: var(--c-text-muted);
-  white-space: nowrap;
+  /* Se parte en dos lineas antes de pasar el ancho del nombre. Con el
+     subtitulo largo ("...Podcast Editing & Live Studio Operation") en una
+     sola linea el bloque medía 639px contra los 483 del nombre, y esos
+     156px de mas lo mandaban encima de los links: se pisaban 47px a
+     1366, 43 a 1440 y 42 a 1600. Partido, el bloque vuelve a medir lo
+     que el nombre y todo entra como antes. */
+  max-width: 30rem;
+  margin-inline: auto;
+  text-wrap: balance;
 }
 
 /* Links + volumen: se ven siempre, arriba de todo del home (junto a la
@@ -2664,7 +2672,13 @@ p { text-wrap: pretty; }
 }
 
 .site-footer__inner {
-  max-width: var(--maxw-sm);
+  /* Un poco mas ancho que --maxw-sm (54rem): con el subtitulo largo, al
+     rol le quedaban 601px y necesita 639, asi que se partia en dos
+     lineas. Eso subia el pie de 66px a 91, y esos 25px de mas hacian que
+     el formulario de Contact y el pie ya no entraran juntos en una
+     pantalla de 768 de alto -- que es justo lo que #contact calcula (ver
+     --footer-h en js/main.js). Ensanchandolo, vuelve a una linea. */
+  max-width: 60rem;
   margin-inline: auto;
   padding-inline: var(--gutter);
   display: flex;
