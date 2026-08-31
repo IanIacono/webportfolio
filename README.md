@@ -1634,3 +1634,93 @@ saltar directo al contenido si alguien navega con teclado o lector
 de pantalla, sin pasar por todo el menú) que normalmente queda
 invisible y solo aparece si alguien lo enfoca con tab — pero se
 veía suelto y fuera de lugar, así que lo saqué del todo.
+
+
+**151. El sitio ya vive en tu propio dominio: ianiacono.com.** Antes
+la dirección era la que te daba GitHub (usuario.github.io/...), y en
+las previews de los links todavía asomaba el nombre de Vercel, un
+servicio que en algún momento se probó y quedó de arrastre. Ahora hay
+un archivo `CNAME` en el proyecto que dice cuál es tu dominio, la
+configuración vieja de Vercel se borró, y todos los links absolutos
+(los de las previews, los del buscador) apuntan a ianiacono.com. Si
+alguna vez cambiás de dominio, ese archivo `CNAME` y las cuatro líneas
+marcadas con "DOMINIO" arriba de index.html son todo lo que hay que
+tocar.
+
+**152. Las flechas para pasar de un proyecto a otro en celular
+subieron, se quedan en pantalla y ahora "responden" al tocarlas.**
+Estaban muy abajo; las subí. Antes desaparecían al tocarlas y al
+cargar el proyecto siguiente volvían a aparecer con su animación de
+entrada, que se veía como un parpadeo: ahora se mantienen puestas
+mientras estés dentro de un proyecto, y recién desaparecen si te vas
+a la home o a otra sección. Además, al presionarlas se achican un
+toque y vuelven, para que se sienta que registraron el toque. (El
+parpadeo, cuando lo fui a buscar, no venía de las flechas sino de la
+sección entera: cada proyecto entra con un fundido, y las flechas se
+iban con él. Ese fundido ahora no corre cuando vas de un proyecto a
+otro, solo cuando entrás desde afuera.)
+
+**153. La preview del link, esa tarjetita que aparece cuando pegás
+ianiacono.com en WhatsApp o en redes, se rehizo de cero.** Mostraba
+la versión vieja del sitio y el ícono naranja y negro de la primera
+versión. Ahora muestra una imagen del sitio como está hoy, con tu
+nombre y el subtítulo actual. Ojo con una cosa que no depende del
+sitio: WhatsApp, Twitter y compañía se guardan esa preview un buen
+rato, así que si pegás el link al toque quizás sigas viendo la vieja
+por unas horas. Se destraba mandando el link con algo pegado al
+final, por ejemplo `ianiacono.com/?2`.
+
+**154. Al tocar una tarjeta, el proyecto ahora abre desde el título.**
+Antes cargaba mostrando la parte de abajo y en seguida se subía solo,
+y ese tironcito se veía. La causa era una sola línea: el sitio tiene
+el scroll suave prendido para todo, así que la orden de "andá arriba"
+también se hacía suave — o sea, se veía el viaje. Ahora esa orden en
+particular es instantánea. Le hice un test que mide cuadro por cuadro
+los primeros milisegundos: con el código viejo encontraba 14 cuadros
+mal en celular y 12 en escritorio, con el nuevo, ninguno.
+
+**155. El selector de proyectos ahora filtra por etiquetas, así los
+que son sonido Y video aparecen en las dos pestañas.** Cada proyecto
+tenía una sola categoría, y eso obligaba a elegir: Detrás del Puesto,
+Rèport y Pólvora quedaban archivados en una de las dos y desaparecían
+de la otra, borrando la mitad del laburo. Ahora cada tarjeta lleva las
+etiquetas que le correspondan y sale en toda pestaña que la nombre.
+Sound muestra siete proyectos y Audiovisual seis, con esos tres en las
+dos. Para cambiarlo, en index.html cada tarjeta tiene su `data-tags`.
+
+**156. Subtítulo nuevo (inicio, pie de página y buscador), y About
+reescrito en los dos idiomas.** El subtítulo ahora dice "Sound
+Designer · Mix & Master · Music Producer · Podcast Editing & Live
+Studio Operation", About pasó de dos párrafos a cuatro (sumando la
+postproducción y todo el trabajo en estudio, que antes no figuraban) y
+tres proyectos tienen el rol reescrito. Dos cosas se acomodaron solas
+por el texto más largo, y te las cuento porque se ven: el subtítulo ya
+no entra en un renglón al lado del nombre — medía 639px contra los 483
+del nombre, y ese sobrante se le montaba a los links de arriba, así
+que ahora se parte en dos renglones del ancho del nombre. Y el pie de
+página se ensanchó un poco para que su subtítulo siga en un renglón:
+partido medía 91px de alto en vez de 66, y esos 25px hacían que el
+formulario de contacto y el pie ya no entraran juntos en una pantalla.
+Ah, y About ahora tiene dos paradas de scroll en pantallas bajas (una
+arriba y otra abajo), porque con el texto nuevo la sección mide más
+que la pantalla y el final quedaba abajo del borde, sin manera de
+llegar.
+
+**157. Detrás del Puesto: se fue el reproductor de Spotify y entraron
+dos videos tuyos; Rèport Travel Media suma un segundo video.** Abajo
+del video de YouTube que ya estaba, Detrás del Puesto ahora muestra la
+animación del logo con su identidad sonora y, debajo, la cortina
+musical. Son archivos tuyos, no de YouTube: viven en el proyecto, en
+`assets/video/`. Los comprimí antes de subirlos — el del logo pasó de
+1,1 MB a 0,35 MB y la cortina de 6,4 MB a 3,5 MB — pero el **audio de
+los dos quedó intacto, byte por byte** (lo verifiqué comparando la
+huella digital del sonido original contra la del archivo que subí:
+son idénticas), así que en un proyecto que justamente muestra cómo
+suena el programa no se perdió absolutamente nada. Lo que se comprimió
+es solo la imagen, y medida contra el original da 56 y 55 decibeles de
+fidelidad, donde a partir de 45 la diferencia ya no se ve. Igual que
+los de YouTube, no se descargan hasta que apretás play: hasta
+entonces se ve un cuadro del propio video como portada. Y si te vas a
+otro proyecto mientras uno está sonando, se pausa y vuelve al
+principio (si no, seguía sonando escondido detrás, que es exactamente
+lo que ya pasaba con los de YouTube).
