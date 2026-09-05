@@ -1748,4 +1748,25 @@ ancho, de 620 a 1080 de alto): **en todas, Audiovisual entra en una
 pantalla y tiene una sola parada**. Sound, que son tres filas y no
 entra en ninguna pantalla normal, mantiene sus dos paradas como
 pediste.
+**159. En celular, la barra chica de arriba ya no lleva el botón de
+sonido, y los links quedaron centrados.** Eran las dos caras de lo
+mismo: el botón ocupaba el lugar de la izquierda y empujaba SHOWREEL /
+PROJECTS / ABOUT / CONTACT contra el borde derecho, tan pegados que
+"CONTACT" terminaba justo en el filo de la pantalla.
+
+Sacarlo no te deja sin control de sonido: en celular el que manda es el
+que está sobre el reel mismo, arriba de todo del home, y sigue igual. El
+de la barra no controlaba nada útil de todos modos — apenas scrolleás
+más abajo el reel se pausa solo, y los videos de cada proyecto traen sus
+propios controles. En computadora no cambió nada: el botón sigue a la
+izquierda, alineado con el borde del reel.
+
+De paso encontré por qué no habían quedado centrados antes, cuando se
+intentó: el centrado estaba puesto en el elemento equivocado. La barra
+tiene tres partes (el nombre chico + el sonido, el nombre grande, y los
+links), y el centrado se le pedía a la primera, que no envuelve a los
+links. Ahora se le pide a la barra entera, que es la que de verdad los
+acomoda. También cerré un `</div>` de más que había quedado suelto en el
+HTML de la barra — el navegador lo ignoraba, pero era una trampa para
+cualquier cambio futuro.
 

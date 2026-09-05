@@ -2414,15 +2414,35 @@ p { text-wrap: pretty; }
     font-size: var(--fs-2xs);
   }
   .nav__right .nav__links { gap: var(--sp-1); }
-  .audio-control--nav .audio-control__toggle {
-    width: calc(var(--tap) - 8px);
-    height: calc(var(--tap) - 8px);
+  /* La barra chica de celular NO lleva boton de sonido. El unico control
+     de sonido en celular es el que esta sobre el reel mismo
+     (.hero__welcome-audio, arriba de todo del home), que es donde hay
+     algo que silenciar: al scrollear mas abajo el reel se pausa solo
+     (ver player.js), y los videos de cada proyecto traen sus propios
+     controles. Aca no controlaba nada y encima ocupaba el lugar de la
+     izquierda, que era lo que empujaba los links contra el borde
+     derecho. */
+  .audio-control--nav { display: none; }
+
+  /* Y con el boton afuera, .nav__inner se queda sin contenido visible en
+     este ancho: adentro solo viven el "Ian Iacono" chico (que en celular
+     ya estaba en display:none) y ese boton. Si se lo deja, su padding
+     sigue ocupando un gutter y corre los links hacia la derecha igual.
+
+     OJO con donde va el centrado: el que estaba aca antes se lo pedia a
+     .nav__inner, y no hacia nada. .nav__inner NO envuelve a los links --
+     cierra justo despues del control de sonido, y .nav__brand y
+     .nav__right son hermanos suyos, hijos directos de .nav (que es el
+     flex de verdad). Por eso los links se veian pegados a la derecha
+     aunque hubiera un justify-content:center puesto: se lo estaba
+     pidiendo al elemento equivocado. */
+  .nav__inner { display: none; }
+  .nav {
+    justify-content: center;
+    /* El gutter lo daba .nav__inner, que ya no esta: sin esto los links
+       quedan tocando los dos bordes de la pantalla. */
+    padding-inline: var(--gutter);
   }
-  /* .nav__brand esta oculto en este ancho (no ocupa lugar), asi que
-     .nav__right (boton de volumen + links) queda como el unico
-     contenido real de la barra -- centrado en vez de pegado a la
-     derecha. */
-  .nav__inner { justify-content: center; }
 
   /* .page__body trae un padding-top pensado para paginas que arrancan
      solas, justo debajo de la barra fija (cada proyecto). Contact no es
