@@ -1802,4 +1802,32 @@ detalle en mi propia rampa: en el primer cuadro se pasaba un poquito del
 volumen del header (0,828 con el header en 0,80). Inaudible, pero con el
 volumen al máximo pedirle más de 1 al reproductor es un error que tira
 el navegador. Ya está corregido.
+**162. Los clicks del hover: ahora sí.** El fundido del punto 161 no
+alcanzaba, y tenías razón en que se seguían escuchando. Dos causas, las
+dos medidas:
+
+**Una:** la rampa la hacía JavaScript, moviendo el volumen un poquito en
+cada cuadro de pantalla. Pero el volumen de un video solo se puede
+cambiar una vez por cuadro, y en la página de proyectos (con videos
+descargándose y decodificándose) los cuadros llegan cada 40-50
+milisegundos. O sea que una rampa de 100ms terminaba siendo una escalera
+de dos o tres escalones grandes: tres cortes secos en vez de uno. Ahora
+la rampa la hace el **motor de audio del navegador**, que la calcula
+muestra por muestra en su propio hilo — 4800 pasitos en vez de dos — y
+no se entera si la página se traba.
+
+**Dos, y esta fue la buena:** al reprogramar una rampa (que es lo que
+pasa cuando entrás y salís rápido) hay un método hecho justamente para
+eso, `cancelAndHoldAtTime`. Lo probé aislado midiendo el valor cada 8ms,
+y **hace saltar el volumen de 0,80 a 0,27 de un golpe** antes de empezar
+a bajar. O sea, el método que existe para evitar el click, mete el
+click. Reemplazado por la forma larga, que sale pareja: 0,80 → 0,71 →
+0,64 → 0,55 → 0,48 → 0,38 → 0,31 → 0,22 → 0,15 → 0,08 → 0.
+
+Verificado de punta a punta: le colgué un analizador a la salida de
+audio y comprobé que suena mientras hay hover, que la rampa baja
+completa en 0,1s, que el sonido corta recién ahí, y que entrando y
+saliendo ocho veces seguidas no queda ni un salto más grande de lo que
+la rampa permite. El reel del inicio no pasa por nada de esto, sigue
+como estaba.
 

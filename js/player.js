@@ -59,13 +59,118 @@
      reel del inicio y los videos de las paginas de proyecto no pasan por
      aca, siguen como estaban.
 
-     Mientras corre, el fundido es el DUENO del .volume: applyAudio (que
-     es quien normalmente lo fija) se aparta si hay uno en curso. Si no,
-     el primer aviso de la barra de volumen del header le pisaria la
-     rampa a la mitad y volveria el corte que se esta evitando.
+     COMO se hace la rampa importa. El primer intento la hacia desde
+     JavaScript, moviendo el .volume del elemento un poco en cada cuadro
+     de pantalla, y SEGUIA sonando el click: el .volume solo se puede
+     cambiar una vez por cuadro, y en esta pagina (con videos
+     descargandose y decodificandose) los cuadros llegan cada 40-50ms
+     medidos. Una rampa de 100ms terminaba siendo una escalera de dos o
+     tres escalones de 0.3 de volumen cada uno -- o sea, tres cortes
+     secos en vez de uno. Peor todavia si el navegador se traba justo
+     ahi: la escalera se vuelve un solo salto.
+
+     Asi que la rampa la hace el motor de audio del navegador (Web Audio)
+     y no JavaScript: cada elemento pasa por un control de ganancia y se
+     le pide "llega a este volumen en 0.1 segundos". Eso se calcula
+     MUESTRA POR MUESTRA en el hilo de audio -- 4800 pasitos en vez de
+     dos o tres -- y no se entera de si la pagina se traba. Es la
+     diferencia entre una rampa de verdad y una escalera.
+
+     Al enchufar un elemento a ese grafo, su .volume y su .muted dejan de
+     mandar (el sonido sale por el grafo), asi que de ahi en mas el
+     volumen lo decide unicamente la ganancia. applyAudio, aca abajo,
+     tiene eso en cuenta.
+
+     Si el navegador no tuviera Web Audio -- o si enchufar el elemento
+     fallara por lo que sea -- se cae a la rampa vieja por .volume, que
+     es peor pero mejor que nada.
      ====================================================================== */
 
-  var FADE_MS = 100;
+  var FADE_S = 0.1;
+  var FADE_MS = FADE_S * 1000;
+
+  var AudioCtx = window.AudioContext || window.webkitAudioContext;
+  var audioCtx = null;
+  /* elemento -> su control de ganancia (o null si no se pudo enchufar).
+     Es un WeakMap para no dejar vivo un <video> que ya no esta. */
+  var gains = (AudioCtx && window.WeakMap) ? new WeakMap() : null;
+  var stopTimers = window.WeakMap ? new WeakMap() : null;
+
+  /* El navegador arranca el motor de audio "suspendido" hasta que la
+     persona toca algo. En este sitio el sonido ya requiere un click en el
+     boton del header, asi que ahi hay de sobra -- pero se lo intenta
+     tambien en cada hover por las dudas. */
+  function resumeCtx() {
+    if (!audioCtx || audioCtx.state !== "suspended") return;
+    var p = audioCtx.resume();
+    if (p && p.catch) p.catch(function () {});
+  }
+
+  function gainFor(el) {
+    if (!gains) return null;
+    if (gains.has(el)) return gains.get(el);
+    var gain = null;
+    try {
+      if (!audioCtx) audioCtx = new AudioCtx();
+      var src = audioCtx.createMediaElementSource(el);
+      gain = audioCtx.createGain();
+      /* Arranca en silencio: el primer hover lo sube con su rampa. Si
+         empezara en 1, enchufarlo seria justo el golpe que se evita. */
+      gain.gain.value = 0;
+      src.connect(gain);
+      gain.connect(audioCtx.destination);
+      /* Desde aca manda la ganancia: el elemento se deja abierto del todo
+         y sin mutear, si no estaria cortando el sonido antes de entrar al
+         grafo. */
+      el.volume = 1;
+      el.muted = false;
+    } catch (e) {
+      gain = null;
+    }
+    gains.set(el, gain);
+    return gain;
+  }
+
+  function rampGain(gain, to) {
+    resumeCtx();
+    var now = audioCtx.currentTime;
+    var p = gain.gain;
+    /* Cortar lo que estaba programado SIN saltar: se lee el valor que tiene
+       AHORA, se lo clava en ese punto y desde ahi arranca la rampa nueva.
+       Sin esto, entrar y salir rapido encadena rampas que se pisan y el
+       valor pega saltos -- que es exactamente el click que se esta
+       sacando.
+
+       Y NO se usa cancelAndHoldAtTime, que es el metodo que existe
+       justamente para esto: medido en este navegador, hace saltar el
+       valor de 0.8 a 0.27 en el primer instante y recien despues rampea
+       -- o sea, mete el click que se venia a evitar. Con
+       cancelScheduledValues + setValueAtTime la rampa sale pareja
+       (0.8, 0.71, 0.64, 0.55, 0.48, 0.38, 0.31, 0.22, 0.15, 0.08, 0).
+       Si algun dia se lo quiere volver a probar, la sonda que mide las
+       dos formas esta en el historial de esta sesion. */
+    var v = p.value;
+    p.cancelScheduledValues(now);
+    p.setValueAtTime(v, now);
+    p.linearRampToValueAtTime(to, now + FADE_S);
+  }
+
+  function clearStop(el) {
+    if (!stopTimers || !stopTimers.has(el)) return;
+    clearTimeout(stopTimers.get(el));
+    stopTimers["delete"](el);
+  }
+
+  /* Lo que se hace DESPUES de que la rampa llego a cero: pausar y volver
+     al principio. Con un margen chico para no cortar la ultima muestra. */
+  function scheduleStop(el, fn) {
+    clearStop(el);
+    var id = setTimeout(function () {
+      if (stopTimers) stopTimers["delete"](el);
+      fn();
+    }, FADE_MS + 30);
+    if (stopTimers) stopTimers.set(el, id);
+  }
 
   function fadeState(el) {
     if (!el.__fade) el.__fade = { raf: 0, to: -1, done: null };
@@ -149,16 +254,30 @@
 
   /* Arranca una vista previa con fundido de entrada. */
   function startPreview(el) {
-    /* Si venia saliendo, se retoma desde el volumen en el que quedo en vez
-       de bajar a cero primero -- si no, entrar y salir rapido produce un
-       bajon momentaneo que es justo lo contrario de lo que se busca. */
+    /* Si venia saliendo, lo primero es cancelar el apagado pendiente: asi
+       volver a entrar rapido RETOMA desde el volumen en el que iba en vez
+       de bajar a cero y arrancar de nuevo. */
+    clearStop(el);
+    var gain = gainFor(el);
+    if (gain) {
+      resumeCtx();
+      var pr = gain && el.play();
+      if (pr && pr.catch) pr.catch(function () {});
+      focusVideo(el);
+      /* Explicito ademas de focusVideo: si este elemento ya era el
+         enfocado (justo lo que pasa al volver a entrar antes de que
+         termine de salir), focusVideo se va sin hacer nada y la ganancia
+         se quedaria bajando hacia cero. */
+      applyAudio(el, true);
+      return;
+    }
+
+    /* --- Sin Web Audio: la rampa vieja, cuadro a cuadro --- */
     var st = el.__fade;
     var resumeFrom = (st && st.raf) ? el.volume : 0;
     cancelFade(el);
-    var pr = el.play();
-    if (pr && pr.catch) pr.catch(function () {});
-    /* focusVideo puede fijar el volumen al del header, asi que el punto de
-       partida se vuelve a poner DESPUES de el. */
+    var pr2 = el.play();
+    if (pr2 && pr2.catch) pr2.catch(function () {});
     focusVideo(el);
     try { el.volume = resumeFrom; } catch (e) {}
     fadeTo(el, busVolume());
@@ -170,6 +289,18 @@
      tambien tiene que apagarla sin el click de audio). */
   function stopPreview(el, link) {
     if (link) link.classList.remove("is-playing");
+    var gain = gains && gains.get(el);
+    if (gain) {
+      rampGain(gain, 0);
+      scheduleStop(el, function () {
+        if (!el.paused) el.pause();
+        try { el.currentTime = 0; } catch (e) {}
+        blurVideo(el);
+      });
+      return;
+    }
+
+    /* --- Sin Web Audio: la rampa vieja, cuadro a cuadro --- */
     fadeTo(el, 0, function () {
       if (!el.paused) el.pause();
       try { el.currentTime = 0; } catch (e) {}
@@ -194,6 +325,18 @@
   function applyAudio(video, isFocused) {
     var bus = window.AudioBus;
     var on = isFocused && bus && !bus.muted;
+
+    /* Enchufado al grafo de audio: el .volume y el .muted del elemento ya
+       no mandan, y ademas tocarlos seria un corte seco. Todo lo decide la
+       ganancia, que siempre llega a destino con una rampa -- tambien
+       cuando el corte viene de apretar mute o de que otra tarjeta se lleve
+       el foco. */
+    var gain = gains && gains.get(video);
+    if (gain) {
+      rampGain(gain, on ? bus.volume : 0);
+      return;
+    }
+
     /* En pleno fundido de salida no se lo toca: mutearlo ahora seria
        exactamente el corte que el fundido esta evitando. Su propio
        fundido lo deja en cero y ahi lo apaga. */
@@ -216,7 +359,10 @@
   }
 
   if (window.AudioBus) {
-    window.AudioBus.subscribe(function () {
+    window.AudioBus.subscribe(function (state) {
+      /* Prender el sonido es un click de verdad, que es lo que el
+         navegador pide para dejar arrancar el motor de audio. */
+      if (state && !state.muted) resumeCtx();
       if (focused) applyAudio(focused, true);
     });
   }
