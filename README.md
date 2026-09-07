@@ -1769,4 +1769,37 @@ links. Ahora se le pide a la barra entera, que es la que de verdad los
 acomoda. También cerré un `</div>` de más que había quedado suelto en el
 HTML de la barra — el navegador lo ignoraba, pero era una trampa para
 cualquier cambio futuro.
+**160. Los hover de Te Lo Aseguro y de Rèport ahora usan las versiones
+nuevas que mandaste.** Los comprimí con el mismo criterio de siempre —
+854x480, que es el tamaño en que se ven — y el **audio nuevo quedó
+intacto, byte por byte**: lo copié sin re-comprimir, así que suena
+exactamente como el archivo que me pasaste. Lo verifiqué comparando la
+huella digital del sonido de tu archivo contra la del que subí: son
+idénticas.
+
+Los dos pesan prácticamente lo mismo que los que reemplazan (1,05 MB
+contra 1,04, y 1,25 contra 1,24), así que no tardan más en cargar. Y la
+imagen quedó bastante mejor que la de antes: medida contra tu original
+da 43,6 y 43,5 decibeles de fidelidad, donde los que estaban en vivo
+daban 37,2 y 37,8. O sea, mismo peso, mejor calidad.
+
+**161. Los hover de la grilla ahora entran y salen con un fundido de
+sonido de 0,1 segundos.** Antes el audio arrancaba y cortaba de golpe:
+sacar el mouse a mitad de una palabra sonaba como un click. Es el "pop"
+clásico de cortar una onda que no está pasando por cero. Con una rampa
+de 100 milisegundos no queda ningún corte seco, y es tan corta que no se
+percibe como un desvanecido — se percibe como que arranca y para limpio.
+
+Vale para todas las tarjetas, incluida La Llamada Fatal (que en vez de
+video tiene el fragmento de podcast). Y también cuando hacés click en
+una tarjeta para entrar al proyecto: ahí el mouse se queda encima, así
+que no hay "salida" que apague la vista previa — la apagaba el cambio de
+página, de golpe, con el mismo click. Ahora también se funde.
+
+Es solo para computadora, que es donde existe el hover; en celular no
+cambia nada. Midiendo el volumen cuadro por cuadro encontré de paso un
+detalle en mi propia rampa: en el primer cuadro se pasaba un poquito del
+volumen del header (0,828 con el header en 0,80). Inaudible, pero con el
+volumen al máximo pedirle más de 1 al reproductor es un error que tira
+el navegador. Ya está corregido.
 

@@ -46,6 +46,143 @@
 
 
   /* ======================================================================
+     FUNDIDOS DE VOLUMEN DE LAS VISTAS PREVIAS  (0.1s)
+     Las tarjetas de la grilla arrancaban y cortaban el sonido de golpe.
+     Sacar el mouse a mitad de una palabra sonaba como un click: es el
+     "pop" clasico de cortar una onda que no esta pasando por cero.
+     Entrando y saliendo con 100ms de rampa no queda ningun corte seco, y
+     es tan corto que no se percibe como un desvanecido -- se percibe como
+     que arranca y para limpio.
+
+     Es solo para los hovers de la grilla, que existen unicamente en
+     escritorio (en tactil no hay hover: ver el chequeo de isTouch). El
+     reel del inicio y los videos de las paginas de proyecto no pasan por
+     aca, siguen como estaban.
+
+     Mientras corre, el fundido es el DUENO del .volume: applyAudio (que
+     es quien normalmente lo fija) se aparta si hay uno en curso. Si no,
+     el primer aviso de la barra de volumen del header le pisaria la
+     rampa a la mitad y volveria el corte que se esta evitando.
+     ====================================================================== */
+
+  var FADE_MS = 100;
+
+  function fadeState(el) {
+    if (!el.__fade) el.__fade = { raf: 0, to: -1, done: null };
+    return el.__fade;
+  }
+
+  /* Corta el fundido en curso SIN ejecutar lo que tenia pendiente (pausar
+     y volver a cero). Se usa al volver a entrar antes de que termine de
+     salir: ahi se retoma, no se reinicia. */
+  function cancelFade(el) {
+    var st = fadeState(el);
+    if (st.raf) cancelAnimationFrame(st.raf);
+    st.raf = 0;
+    st.to = -1;
+    st.done = null;
+  }
+
+  function isFadingOut(el) {
+    var st = el.__fade;
+    return !!(st && st.raf && st.to === 0);
+  }
+
+  function fadeTo(el, to, done) {
+    var st = fadeState(el);
+    if (st.raf) cancelAnimationFrame(st.raf);
+    var from = el.volume;
+    st.to = to;
+    st.done = done || null;
+
+    var finish = function () {
+      st.raf = 0;
+      st.to = -1;
+      var fin = st.done;
+      st.done = null;
+      if (fin) fin();
+    };
+
+    /* Ya esta donde tiene que estar (el sitio en volumen cero, por
+       ejemplo): no hay nada que fundir, pero lo que quedaba pendiente
+       igual tiene que correr. */
+    if (Math.abs(to - from) < 0.001) { finish(); return; }
+
+    var t0 = performance.now();
+    var step = function (t) {
+      /* El "t" que da requestAnimationFrame es el del ARRANQUE del cuadro,
+         y puede ser anterior al performance.now() de recien: si fadeTo se
+         llamo desde un evento que corrio con el cuadro ya empezado, la
+         primera vuelta da un k negativo. Sin este piso el volumen se
+         pasaba del destino por un cuadro (medido: 0.828 con el header en
+         0.80) y, con el header al maximo, pedirle mas de 1 al .volume es
+         un error que tira el navegador. */
+      var k = (t - t0) / FADE_MS;
+      if (k < 0) k = 0;
+      if (k > 1) k = 1;
+      var v = from + (to - from) * k;
+      if (v < 0) v = 0;
+      if (v > 1) v = 1;
+      try { el.volume = v; } catch (e) {}
+      if (k < 1) { st.raf = requestAnimationFrame(step); return; }
+      finish();
+    };
+    st.raf = requestAnimationFrame(step);
+  }
+
+  function busVolume() {
+    var bus = window.AudioBus;
+    return bus ? bus.volume : 1;
+  }
+
+  /* Fija el volumen respetando un fundido en curso: si esta SUBIENDO se le
+     cambia el destino (paso que movieron la barra del header a mitad de
+     rampa), y si esta BAJANDO se lo deja llegar a cero tranquilo. */
+  function setLevel(el, vol) {
+    var st = el.__fade;
+    if (st && st.raf) {
+      if (st.to !== 0) fadeTo(el, vol, st.done);
+      return;
+    }
+    el.volume = vol;
+  }
+
+  /* Arranca una vista previa con fundido de entrada. */
+  function startPreview(el) {
+    /* Si venia saliendo, se retoma desde el volumen en el que quedo en vez
+       de bajar a cero primero -- si no, entrar y salir rapido produce un
+       bajon momentaneo que es justo lo contrario de lo que se busca. */
+    var st = el.__fade;
+    var resumeFrom = (st && st.raf) ? el.volume : 0;
+    cancelFade(el);
+    var pr = el.play();
+    if (pr && pr.catch) pr.catch(function () {});
+    /* focusVideo puede fijar el volumen al del header, asi que el punto de
+       partida se vuelve a poner DESPUES de el. */
+    focusVideo(el);
+    try { el.volume = resumeFrom; } catch (e) {}
+    fadeTo(el, busVolume());
+  }
+
+  /* Apaga una vista previa: primero la rampa a cero y recien cuando llego
+     se pausa, se vuelve al principio y se apaga. Lo usan el pointerleave,
+     el blur del teclado y el cambio de pagina (hacer click en una tarjeta
+     tambien tiene que apagarla sin el click de audio). */
+  function stopPreview(el, link) {
+    if (link) link.classList.remove("is-playing");
+    fadeTo(el, 0, function () {
+      if (!el.paused) el.pause();
+      try { el.currentTime = 0; } catch (e) {}
+      /* A mano ademas de blurVideo: si mientras tanto otra tarjeta se
+         quedo con el foco, blurVideo se va sin hacer nada y este quedaria
+         sin mutear. Aca ya esta en cero, asi que mutear no suena. */
+      el.muted = true;
+      blurVideo(el);
+    });
+  }
+
+
+  /* ======================================================================
      FOCO DE SONIDO
      Solo un video puede sonar a la vez. "Enfocar" un video lo vuelve el
      candidato a sonar (si el header no esta silenciado); "desenfocarlo"
@@ -57,8 +194,12 @@
   function applyAudio(video, isFocused) {
     var bus = window.AudioBus;
     var on = isFocused && bus && !bus.muted;
+    /* En pleno fundido de salida no se lo toca: mutearlo ahora seria
+       exactamente el corte que el fundido esta evitando. Su propio
+       fundido lo deja en cero y ahi lo apaga. */
+    if (!on && isFadingOut(video)) return;
     video.muted = !on;
-    if (bus) video.volume = bus.volume;
+    if (bus) setLevel(video, bus.volume);
   }
 
   function focusVideo(video) {
@@ -110,16 +251,11 @@
          el listener de pointerenter de mas abajo. */
       if (reduceMotion.matches || isTouch) return;
       load();
-      var pr = video.play();
-      if (pr && pr.catch) pr.catch(function () {});
-      focusVideo(video);
+      startPreview(video);
     };
 
     var leave = function () {
-      if (!video.paused) video.pause();
-      try { video.currentTime = 0; } catch (e) {}
-      blurVideo(video);
-      link.classList.remove("is-playing");
+      stopPreview(video, link);
     };
 
     video.addEventListener("playing", function () { link.classList.add("is-playing"); });
@@ -207,22 +343,16 @@
       buildClip();
       if (clip) {
         try { clip.currentTime = 0; } catch (e) {}
-        var pr = clip.play();
-        if (pr && pr.catch) pr.catch(function () {});
-        /* Entra al mismo foco de sonido que los videos de las otras
-           tarjetas: focusVideo/applyAudio solo tocan .muted y .volume, asi
-           que sirven igual para un <audio> que para un <video>. */
-        focusVideo(clip);
+        /* Entra al mismo foco de sonido y al mismo fundido que los videos
+           de las otras tarjetas: todo esto toca solo .muted y .volume, asi
+           que sirve igual para un <audio> que para un <video>. */
+        startPreview(clip);
       }
     };
 
     var leaveTile = function () {
       stopFlicker();
-      if (clip) {
-        clip.pause();
-        try { clip.currentTime = 0; } catch (e) {}
-        blurVideo(clip);
-      }
+      if (clip) stopPreview(clip, null);
     };
 
     link.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") enterTile(); });
@@ -236,8 +366,12 @@
     tileLinks.forEach(function (link) {
       if (activePage.contains(link)) return;
       var v = link.querySelector(".tile__video");
-      if (v && !v.paused) { v.pause(); try { v.currentTime = 0; } catch (e) {} blurVideo(v); }
-      link.classList.remove("is-playing");
+      /* Con fundido tambien aca: al hacer click en una tarjeta el mouse
+         se queda encima, asi que no hay pointerleave que apague la vista
+         previa -- la apaga este cambio de pagina, y de golpe sonaba al
+         mismo click que se esta evitando. */
+      if (v && !v.paused) stopPreview(v, link);
+      else link.classList.remove("is-playing");
     });
   });
 
