@@ -1830,4 +1830,34 @@ completa en 0,1s, que el sonido corta recién ahí, y que entrando y
 saliendo ocho veces seguidas no queda ni un salto más grande de lo que
 la rampa permite. El reel del inicio no pasa por nada de esto, sigue
 como estaba.
+**163. Google mostraba "+6 years of experience" y el sitio dice "5+".**
+Lo primero: **la página está bien**. Lo verifiqué en vivo — dice 5+ en
+los dos idiomas. Lo que Google muestra es una foto vieja: pasó a mirar la
+página en las pocas horas en que decía "6+", antes de que vos lo
+corrigieras, y se quedó con esa. Google no lee la página cada vez que
+alguien busca, la visita cada tanto y guarda lo que vio.
+
+Se arregla solo cuando vuelva a pasar (de días a un par de semanas en un
+sitio chico), pero se puede apurar desde Google Search Console pidiendo
+que la vuelva a leer. Los pasos están en la respuesta del chat.
+
+De mi lado agregué dos archivos que ayudan a que vuelva antes y a que
+mire lo que tiene que mirar:
+
+- **`sitemap.xml`**: le dice a Google cuál es la dirección del sitio y
+  cuándo cambió por última vez. Ojo: esa fecha (`lastmod`) hay que
+  actualizarla cuando cambien los textos, si no Google tiene menos motivo
+  para volver.
+- **`robots.txt`**: le da permiso para todo el sitio, le pasa la
+  dirección del sitemap, y le pide que NO indexe `README.md`. Este
+  archivo que estás leyendo se publica junto con el sitio nada más porque
+  GitHub Pages sirve todo lo que hay en el repositorio — son 96 KB de
+  notas internas en castellano que no tienen por qué aparecer en Google
+  debajo de tu portfolio.
+
+De paso revisé que no hubiera copias viejas del sitio dando vueltas por
+ahí (que es la otra razón típica por la que Google muestra algo
+desactualizado): la dirección vieja de GitHub redirige bien a
+ianiacono.com, la página declara correctamente cuál es su dirección
+oficial, y de Vercel no quedó nada publicado.
 

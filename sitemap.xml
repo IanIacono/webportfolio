@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- El sitio es UNA sola direccion. Las secciones (#projects, #about) y
+     cada proyecto (#lumia, #redbull...) viven en la misma pagina y se
+     muestran cambiando lo que va despues del "#", y para un buscador todo
+     lo que va despues del "#" no es una direccion aparte: es la misma.
+     Por eso aca hay una sola <url>.
+
+     OJO CON <lastmod>: le dice a Google cuando cambio la pagina por
+     ultima vez. Si cambias textos y no lo actualizas, Google tiene menos
+     motivo para volver a mirarla. Se pone la fecha en formato
+     ANIO-MES-DIA. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ianiacono.com/</loc>
+    <lastmod>2026-09-05</lastmod>
+  </url>
+</urlset>

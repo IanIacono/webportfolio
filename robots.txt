@@ -1,0 +1,12 @@
+# ianiacono.com
+
+User-agent: *
+Allow: /
+
+# README.md es el registro de cambios del proyecto, en castellano, y se
+# publica junto con el sitio nada mas porque GitHub Pages sirve TODO lo
+# que hay en el repositorio. No es contenido del portfolio y no tiene por
+# que aparecer en Google.
+Disallow: /README.md
+
+Sitemap: https://ianiacono.com/sitemap.xml
