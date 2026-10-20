@@ -1924,4 +1924,23 @@ ventana, pero no al cambiar de idioma. Ahora sí. Medido en 768, 900 y
 Lo que **no** se traduce todavía son las descripciones invisibles para
 lectores de pantalla (los "aria-label": "Turn on site sound", "Back to
 top", etc.). No se ven, pero si querés las paso también.
+**166. Nueva descripción para Google** (la que aparece debajo del
+título en los resultados, y también en las previews de WhatsApp y redes).
+La anterior decía "documentary, fiction, advertising and podcast", que ya
+no coincidía con tu About. Ahora dice lo que me pasaste:
+
+> Sound Designer · Mix & Master · Music Producer · Audio Editing & Live
+> Studio Operation // 5+ years of experience in sound post-production for
+> diverse audiovisual content, including documentaries, motion graphics,
+> advertising, and podcasts
+
+**Ojo con el largo**: son 238 caracteres y Google corta en ~155. Lo que
+se ve es hasta "...for diverse audio…" y se pierde justo la parte de
+documentales, motion graphics, publicidad y podcasts. En el chat te dejé
+una versión recortada de 156 caracteres que mantiene tu redacción y entra
+entera; si la querés, es cambiar una línea.
+
+Y el "ESP." con el que arrancaba la descripción vieja en Google ya no va
+a pasar más: venía de que la página mostraba los dos idiomas con sus
+etiquetas, y desde el punto 164/165 se muestra uno solo y sin etiqueta.
 
