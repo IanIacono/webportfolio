@@ -1939,7 +1939,7 @@ se perdía justo la parte de documentales, publicidad y podcasts. La que
 quedó mide **154** y entra entera:
 
 > Sound Designer · Mix & Master · Music Producer · Audio Editing & Live
-> Studio Operation // audio for documentary, motion graphics, advertising
+> Studio Operation // Audio for documentary, motion graphics, advertising
 > and podcast.
 
 Llegar ahí llevó un par de vueltas. Con "5+ years in sound
