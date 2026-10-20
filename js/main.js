@@ -402,7 +402,7 @@
       var ajaxAction = contactForm.action.replace("formsubmit.co/", "formsubmit.co/ajax/");
       var payload = Object.fromEntries(new FormData(contactForm));
 
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Sending…"; }
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = t("Sending…", "Enviando…"); }
       if (status) { status.textContent = ""; status.classList.remove("contact-form__status--error"); }
 
       fetch(ajaxAction, {
@@ -412,17 +412,25 @@
       })
         .then(function (res) { if (!res.ok) throw new Error("bad status"); return res.json(); })
         .then(function () {
-          if (status) status.textContent = "Message sent. Thanks for reaching out.";
+          if (status) status.textContent = t("Message sent. Thanks for reaching out.",
+            "Mensaje enviado. ¡Gracias por escribir!");
           contactForm.reset();
         })
         .catch(function () {
           if (status) {
-            status.textContent = "Something went wrong. Please try again, or email iaconoian1@gmail.com directly.";
+            status.textContent = t(
+              "Something went wrong. Please try again, or email iaconoian1@gmail.com directly.",
+              "Algo salió mal. Probá de nuevo, o escribime directo a iaconoian1@gmail.com.");
             status.classList.add("contact-form__status--error");
           }
         })
         .finally(function () {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = btnDefaultText; }
+          /* El texto del boton se devuelve en el idioma que este puesto
+             AHORA, no en el que estaba al cargar la pagina. */
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = t(btnDefaultText, submitBtn.dataset.es || btnDefaultText);
+          }
         });
     });
   }
@@ -1069,6 +1077,50 @@
   var langSwitches = [];
   var langGroups = [];
 
+  /* Devuelve el texto que corresponde al idioma puesto. Lo usan los
+     mensajes que arma el JavaScript (los del formulario), que no estan
+     escritos en el HTML y por eso no pueden llevar su data-es. */
+  function t(en, es) { return siteLang === "es" ? es : en; }
+
+  /* TODO LO DEMAS QUE ESTA ESCRITO EN INGLES.
+     Los dos parrafos largos de cada bloque son la parte facil: estan los
+     dos en el HTML y se muestra uno. Pero el resto del sitio -- el
+     subtitulo de abajo del nombre, los links de arriba, "Selected
+     Works", el subtitulo violeta de cada proyecto, los botones Back y
+     Next, el formulario de contacto -- estaba escrito una sola vez, en
+     ingles.
+
+     Cada uno de esos lleva ahora su version en castellano en un atributo
+     data-es, al lado del texto ingles. Va en el HTML y no en una tabla
+     aparte en este archivo a proposito: asi el texto y su traduccion
+     estan en la misma linea, y el dia que cambies el subtitulo de un
+     proyecto tenes los dos idiomas juntos a la vista.
+
+     El ingles no se guarda en ningun atributo: es el que esta escrito en
+     el HTML, y se lo lee una vez al cargar. Asi el buscador y cualquiera
+     que entre sin JavaScript ven el sitio en ingles, que es como estaba. */
+  var staticTexts = Array.prototype.slice.call(document.querySelectorAll("[data-es]"))
+    .map(function (el) { return { el: el, en: el.textContent, es: el.dataset.es }; });
+
+  function paintStaticText() {
+    staticTexts.forEach(function (item) {
+      item.el.textContent = siteLang === "es" ? item.es : item.en;
+    });
+    /* Para el navegador y los lectores de pantalla: en que idioma esta la
+       pagina en este momento. */
+    document.documentElement.lang = siteLang;
+
+    /* El pie cambia de ALTO al cambiar de idioma: el subtitulo en
+       castellano es mas largo y se parte en dos renglones, y el pie pasa
+       de 66px a 91. Ese alto esta guardado en --footer-h, que es lo que
+       #contact se descuenta para que el formulario y el pie entren juntos
+       en una pantalla (ver punto 6 mas arriba). Si no se lo vuelve a
+       medir aca, en castellano #contact queda 25px mas alto de lo que
+       entra y el pie se va abajo del borde -- medido, 25px exactos en
+       768, 900 y 1080 de alto. */
+    if (typeof setFooterHeightVar === "function") setFooterHeightVar();
+  }
+
   /* Arma una pastilla ESP/ENG. La pastilla ENTERA es el control, no cada
      palabra por su cuenta: un toque en cualquier parte cambia al otro
      idioma. Antes habia que acertarle a "ENG" o a "ESP", y son dos
@@ -1117,6 +1169,7 @@
     var from = siteLang;
     siteLang = code;
     langSwitches.forEach(function (s) { s.paint(); });
+    paintStaticText();
     langGroups.forEach(function (g) { g.show(from, code); });
   }
 
@@ -1254,6 +1307,7 @@
     document.documentElement.classList.add("has-lang-switch");
     langSwitches.forEach(function (s) { s.paint(); });
   }
+  paintStaticText();
 
   /* Cambiar de ancho a mitad de una animacion dejaria estilos puestos a
      mano (alto fijo, posiciones) calculados para el ancho anterior. */

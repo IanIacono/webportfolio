@@ -84,7 +84,7 @@
        proposito, para que el cartel y los puntitos se vean siempre
        nitidos mientras el fondo todavia esta borroso. -->
   <div class="preloader" data-preloader aria-hidden="true">
-    <p class="preloader__msg">Turn the audio on for a better experience.</p>
+    <p class="preloader__msg" data-es="Activá el audio para una mejor experiencia.">Turn the audio on for a better experience.</p>
     <div class="preloader__dots"><span></span><span></span><span></span></div>
   </div>
 
@@ -145,7 +145,7 @@
            pantalla. -->
       <div class="nav__brand">
         <p class="nav__brand-name">Ian Iacono</p>
-        <p class="nav__brand-role">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</p>
+        <p class="nav__brand-role" data-es="Diseñador sonoro&nbsp;&middot; Mezcla y máster&nbsp;&middot; Productor musical&nbsp;&middot; Edición de podcast y operación de estudio en vivo">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</p>
       </div>
 
 
@@ -154,9 +154,9 @@
           <!-- #home ya hace scroll instantaneo al toque del reel (ver el
                router en main.js) — no hace falta un ancla nueva. -->
           <a class="nav__link" href="#home">Showreel</a>
-          <a class="nav__link" href="#projects">Projects</a>
-          <a class="nav__link" href="#about">About</a>
-          <a class="nav__link" href="#contact">Contact</a>
+          <a class="nav__link" href="#projects" data-es="Proyectos">Projects</a>
+          <a class="nav__link" href="#about" data-es="Sobre mí">About</a>
+          <a class="nav__link" href="#contact" data-es="Contacto">Contact</a>
         </nav>
       </div>
   </header>
@@ -192,13 +192,13 @@
              tambien. -->
         <div class="hero__welcome">
           <p class="nav__brand-name">Ian Iacono</p>
-          <p class="nav__brand-role">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</p>
+          <p class="nav__brand-role" data-es="Diseñador sonoro&nbsp;&middot; Mezcla y máster&nbsp;&middot; Productor musical&nbsp;&middot; Edición de podcast y operación de estudio en vivo">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</p>
 
           <div class="nav__links hero__welcome-links">
             <a class="nav__link" href="#home">Showreel</a>
-            <a class="nav__link" href="#projects">Projects</a>
-            <a class="nav__link" href="#about">About</a>
-            <a class="nav__link" href="#contact">Contact</a>
+            <a class="nav__link" href="#projects" data-es="Proyectos">Projects</a>
+            <a class="nav__link" href="#about" data-es="Sobre mí">About</a>
+            <a class="nav__link" href="#contact" data-es="Contacto">Contact</a>
           </div>
 
           <!-- Envuelto en su propio div (que ocupa todo el espacio que
@@ -253,7 +253,7 @@
         </div>
 
         <a class="hero__scroll" href="#projects">
-          <span>See Projects</span>
+          <span data-es="Ver proyectos">See Projects</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
         </a>
       </div>
@@ -264,7 +264,7 @@
              los dos centrados. Los dos botones alternan cual grilla de
              abajo se ve, sin cambiar de pagina. -->
         <div class="portfolio-tabs-row reveal">
-          <h2 class="portfolio-tabs-row__title">Selected Works</h2>
+          <h2 class="portfolio-tabs-row__title" data-es="Trabajos seleccionados">Selected Works</h2>
           <div class="portfolio-tabs" data-portfolio-tabs role="tablist" aria-label="Project category">
             <span class="portfolio-tabs__thumb" data-portfolio-thumb aria-hidden="true"></span>
             <button type="button" class="portfolio-tab" data-portfolio-target="sound"
@@ -504,7 +504,7 @@
 
         <div class="wrap wrap--narrow page__body">
           <div class="page__head reveal">
-            <h2 class="project__title">About</h2>
+            <h2 class="project__title" data-es="Sobre mí">About</h2>
           </div>
 
           <!-- Las dos versiones van una al lado de la otra, con las mismas
@@ -584,7 +584,7 @@
       <div class="contact-band" id="contact">
         <div class="wrap wrap--narrow page__body">
           <div class="page__head reveal">
-            <h2 class="project__title">Contact</h2>
+            <h2 class="project__title" data-es="Contacto">Contact</h2>
             <div class="contact-form__links">
               <!-- Por ahora no lleva a ningun perfil: apunta al inicio del
                    propio sitio. Cuando tengas el usuario de Instagram
@@ -608,7 +608,7 @@
             <input type="hidden" name="_next" value="">
             <div class="contact-form__row">
               <label class="contact-form__field">
-                <span class="label">Name</span>
+                <span class="label" data-es="Nombre">Name</span>
                 <input type="text" name="name" autocomplete="name" required>
               </label>
               <label class="contact-form__field">
@@ -627,14 +627,14 @@
                  lo mismo. Asi, el asunto del mail sigue siendo siempre el
                  mismo y esto llega como una fila mas del cuerpo. -->
             <label class="contact-form__field">
-              <span class="label">Subject</span>
+              <span class="label" data-es="Asunto">Subject</span>
               <input type="text" name="subject" autocomplete="off">
             </label>
             <label class="contact-form__field">
-              <span class="label">Message</span>
+              <span class="label" data-es="Mensaje">Message</span>
               <textarea name="message" rows="7" required></textarea>
             </label>
-            <button type="submit" class="btn btn--primary">Send</button>
+            <button type="submit" class="btn btn--primary" data-es="Enviar">Send</button>
             <p class="contact-form__status" data-contact-status role="status" aria-live="polite"></p>
           </form>
         </div>
@@ -684,8 +684,8 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">The Carbon Case</h1>
-          <p class="project__role">Sound Design, Re-recording Mix &amp; Master</p>
-          <p class="project__badge">Upcoming release</p>
+          <p class="project__role" data-es="Diseño sonoro, mezcla de regrabación y masterización">Sound Design, Re-recording Mix &amp; Master</p>
+          <p class="project__badge" data-es="Próximo estreno">Upcoming release</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -701,11 +701,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#playbook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#playbook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#lumia">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -729,13 +729,13 @@
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
-          <p class="project__credit">Motion graphics &amp; visuals by @tomicalle.art</p>
+          <p class="project__credit" data-es="Motion graphics y visuales por @tomicalle.art">Motion graphics &amp; visuals by @tomicalle.art</p>
         </div>
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Lumia</h1>
-          <p class="project__role">Sound Design, Music &amp; Mix</p>
-          <p class="project__badge">Upcoming release</p>
+          <p class="project__role" data-es="Diseño sonoro, música y mezcla">Sound Design, Music &amp; Mix</p>
+          <p class="project__badge" data-es="Próximo estreno">Upcoming release</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -751,11 +751,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#thecarboncase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#thecarboncase"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#redbull">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -789,7 +789,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Red Bull Batallas</h1>
-          <p class="project__role">Sound Editing, Mix</p>
+          <p class="project__role" data-es="Edición de sonido y mezcla">Sound Editing, Mix</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -805,11 +805,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#lumia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#lumia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#lallamada">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -846,8 +846,8 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">La Llamada Fatal</h1>
-          <p class="project__role">Sound Editing, Dialogue Cleanup</p>
-          <p class="project__links"><a class="link" href="https://open.spotify.com/show/5O6b4MT62YUwcre4i4Ylb9" target="_blank" rel="noopener">Listen on Spotify</a></p>
+          <p class="project__role" data-es="Edición de sonido y limpieza de diálogos">Sound Editing, Dialogue Cleanup</p>
+          <p class="project__links"><a class="link" href="https://open.spotify.com/show/5O6b4MT62YUwcre4i4Ylb9" target="_blank" rel="noopener" data-es="Escuchar en Spotify">Listen on Spotify</a></p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -863,11 +863,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#redbull"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#redbull"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#ddp">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -913,7 +913,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Detras Del Puesto</h1>
-          <p class="project__role">Live Video &amp; Sound Operation, Editing, Music, Logo Animation &amp; Audio Branding</p>
+          <p class="project__role" data-es="Operación de video y sonido en vivo, edición, música, animación de logo e identidad sonora">Live Video &amp; Sound Operation, Editing, Music, Logo Animation &amp; Audio Branding</p>
           <p class="project__links"><a class="link" href="https://www.instagram.com/detrasdelpuesto.podcast/" target="_blank" rel="noopener">Instagram</a></p>
 
           <div class="project__text">
@@ -930,11 +930,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#lallamada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#lallamada"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#reports">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -962,7 +962,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Te Lo Aseguro | Analipsis</h1>
-          <p class="project__role">Video Editing</p>
+          <p class="project__role" data-es="Edición de video">Video Editing</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -978,11 +978,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#section12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#section12"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#juleriaque">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -1016,7 +1016,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Rèport Travel Media</h1>
-          <p class="project__role">Studio Setup, Live Video &amp; Sound Operation, Video &amp; Sound Post (Buenos Aires &amp; Colombia)</p>
+          <p class="project__role" data-es="Armado de estudio, operación de video y sonido en vivo, postproducción de video y sonido (Buenos Aires y Colombia)">Studio Setup, Live Video &amp; Sound Operation, Video &amp; Sound Post (Buenos Aires &amp; Colombia)</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -1032,11 +1032,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#ddp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#ddp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#section12">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -1100,7 +1100,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Juleriaque</h1>
-          <p class="project__role">Video Editing</p>
+          <p class="project__role" data-es="Edición de video">Video Editing</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -1116,11 +1116,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#faiketen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#faiketen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#playbook">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -1153,7 +1153,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Polvora Podcast</h1>
-          <p class="project__role">Live Video &amp; Sound Operation, Video &amp; Sound Post</p>
+          <p class="project__role" data-es="Operación de video y sonido en vivo, postproducción de video y sonido">Live Video &amp; Sound Operation, Video &amp; Sound Post</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -1169,11 +1169,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#faiketen">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -1206,7 +1206,7 @@
 
         <div class="project__info reveal" data-delay="1">
           <h1 class="project__title">Playbook</h1>
-          <p class="project__role">Video Editing</p>
+          <p class="project__role" data-es="Edición de video">Video Editing</p>
 
           <div class="project__text">
             <div class="lang" data-lang="es">
@@ -1222,11 +1222,11 @@
           <div class="project__actions">
             <!-- Lleva al proyecto anterior de la lista (el primero vuelve
                  al ultimo) -- ya no vuelve a la grilla de #projects. -->
-            <a class="btn" href="#juleriaque"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span>Back</span></a>
+            <a class="btn" href="#juleriaque"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg><span data-es="Anterior">Back</span></a>
             <!-- Lleva al siguiente proyecto de la lista (el ultimo vuelve
                  al primero). -->
             <a class="btn" href="#thecarboncase">
-              <span>Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <span data-es="Siguiente">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -1239,7 +1239,7 @@
   <footer class="site-footer">
     <div class="site-footer__inner">
       <span class="site-footer__name">Ian Iacono</span>
-      <span class="site-footer__role">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</span>
+      <span class="site-footer__role" data-es="Diseñador sonoro&nbsp;&middot; Mezcla y máster&nbsp;&middot; Productor musical&nbsp;&middot; Edición de podcast y operación de estudio en vivo">Sound Designer&nbsp;&middot; Mix &amp; Master&nbsp;&middot; Music Producer&nbsp;&middot; Podcast Editing &amp; Live Studio Operation</span>
       <span class="site-footer__copy">&copy; 2026</span>
     </div>
   </footer>

@@ -1892,4 +1892,36 @@ parada de scroll extra que había tenido que agregarle (punto 156) ya no
 hace falta y desaparece sola. El scroll volvió a ser las cinco paradas
 limpias de siempre: reel, Selected Works arriba, Selected Works abajo,
 About y Contact.
+**165. Ahora el selector también traduce el resto del sitio, no solo los
+párrafos largos.** El subtítulo de abajo de tu nombre, los links de
+arriba, "Selected Works", los subtítulos violetas de cada proyecto, los
+botones Back/Next, el cartel de "Upcoming release", el formulario de
+contacto entero (incluidos los mensajes de "Enviando…" y "Mensaje
+enviado") y el pie de página. Son 52 textos.
+
+Cada uno lleva su versión en castellano en un atributo `data-es`, **al
+lado del texto en inglés, en la misma línea del HTML**. Lo hice así a
+propósito: el día que cambies el subtítulo de un proyecto, tenés los dos
+idiomas juntos a la vista en vez de tener que buscar una tabla aparte. El
+inglés no se guarda en ningún atributo — es el que está escrito en la
+página — así que si el JavaScript no cargara, el sitio se ve en inglés
+como siempre, que además es lo que lee Google.
+
+Dos cosas que aparecieron al medirlo:
+
+**El pie de página se partía en dos renglones en castellano** (el
+subtítulo en español mide 702px contra 623 del inglés) y eso lo subía de
+66px a 91. Esos 25px de más hacían que el formulario de contacto y el pie
+ya no entraran juntos en una pantalla. Ensanché el pie para que el texto
+en castellano también entre en un renglón, sin tocar tu redacción.
+
+**Y el alto del pie no se volvía a medir al cambiar de idioma.** Ese alto
+está guardado en una variable que usa la sección de contacto para
+descontárselo; se medía al cargar la página y al cambiar el tamaño de la
+ventana, pero no al cambiar de idioma. Ahora sí. Medido en 768, 900 y
+1080 de alto: el formulario y el pie entran exacto en los dos idiomas.
+
+Lo que **no** se traduce todavía son las descripciones invisibles para
+lectores de pantalla (los "aria-label": "Turn on site sound", "Back to
+top", etc.). No se ven, pero si querés las paso también.
 
