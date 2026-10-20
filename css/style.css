@@ -555,6 +555,17 @@ p { text-wrap: pretty; }
   /* Sin esto el volumen arrancaria un gutter mas adentro: el margen
      propio de .nav__inner, que aca no hace falta. */
   .nav__inner { padding-inline: 0; }
+
+  /* En castellano los cuatro links miden 43px mas que en ingles
+     ("Proyectos", "Sobre mi", "Contacto" son mas largos), y arriba de
+     todo del home eso los metia ENCIMA del nombre grande, que esta
+     centrado en la pantalla y no se corre: medido, 12px de superposicion
+     a 1366 y 6px a 1440 y a 1920. Se recupera el lugar achicando el
+     respiro lateral de cada link de 12 a 8px -- 32px en total, de sobra
+     --, y solo en castellano: el ingles entra holgado y se queda como
+     estaba. El idioma lo marca el atributo lang del <html>, que lo pone
+     el JavaScript al cambiar (ver punto 10 en js/main.js). */
+  html[lang="es"] .nav__right .nav__link { padding-inline: var(--sp-2); }
   /* Los links se corren su propio padding hacia afuera: lo que se ve
      alineado con el borde del video es la LETRA de "Contact", no la caja
      que la rodea. Del lado del volumen no hace falta -- ahi el borde de
@@ -574,14 +585,16 @@ p { text-wrap: pretty; }
    vive afuera, a la izquierda, al lado del nombre chico. */
 @media (max-width: 1359px) {
   .nav__right,
-  .audio-control--nav {
+  .audio-control--nav,
+  .lang-switch--nav {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
     transition: opacity 450ms ease-in-out, visibility 0s linear 450ms;
   }
   .nav.is-stuck .nav__right,
-  .nav.is-stuck .audio-control--nav {
+  .nav.is-stuck .audio-control--nav,
+  .nav.is-stuck .lang-switch--nav {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -618,6 +631,12 @@ p { text-wrap: pretty; }
   text-transform: uppercase;
   color: var(--c-text-muted);
   text-decoration: none;
+  /* En una sola linea siempre. "Sobre mi" (About en castellano) tiene un
+     espacio en el medio y se partia en dos renglones -- "Sobre" arriba y
+     "mi" abajo -- mientras los otros tres seguian en uno. No se notaba en
+     el alto de la fila porque el link ya mide 44px de alto por el area
+     tactil, asi que los dos renglones entraban adentro igual. */
+  white-space: nowrap;
   transition: color var(--dur) var(--ease);
 }
 .nav__link::after {
@@ -1746,7 +1765,15 @@ p { text-wrap: pretty; }
 }
 
 /* Bloque de idioma: la etiqueta ESP/ENG arriba y el parrafo debajo */
+/* El aire entre los dos textos existe solo cuando se ven LOS DOS, que es
+   lo que pasa si el JavaScript no corre. Con el selector puesto se ve uno
+   solo, y este margen igual se lo seguia aplicando al bloque en ingles
+   por ser el segundo de los dos (el selector "+" mira el orden en el
+   HTML, no si el de al lado se esta viendo). Resultado: el texto en
+   ingles arrancaba 32px mas abajo que el mismo texto en castellano --
+   medido, 32 exactos en 1280, 1366, 1440 y 1920. */
 .lang + .lang { margin-top: var(--sp-6); }
+.has-lang-switch .lang + .lang { margin-top: 0; }
 /* En celular se muestra un texto solo, asi que la separacion entre los dos
    no va: si no, al pasar a ESP el texto se corria 20px y el cambio de
    idioma parecia un salto. Tiene que ir DESPUES de la linea de arriba --

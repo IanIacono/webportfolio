@@ -1967,4 +1967,32 @@ que si no se cambia también ahí, apenas carga la página vuelve a decir
 
 En las páginas de proyecto la pestaña sigue diciendo el nombre del
 proyecto, que es lo útil cuando tenés varias pestañas abiertas.
+**168. Tres arreglos del selector de idioma, y tres subtítulos.**
+
+**El texto en inglés arrancaba 32px más abajo que el mismo texto en
+castellano.** Era una regla que separa los dos idiomas cuando se ven los
+dos (que es lo que pasa si el JavaScript no carga). El problema: esa
+regla mira el ORDEN en el HTML, no si el de al lado se está mostrando —
+así que el bloque inglés, por ser el segundo, seguía recibiendo esa
+separación aunque el castellano estuviera escondido. Medido: 32px
+exactos en 1280, 1366, 1440 y 1920. Ahora los dos arrancan pegados al
+borde de arriba de su caja.
+
+**"Sobre mí" se partía en dos renglones** en la barra de arriba
+("Sobre" arriba, "mí" abajo). No se notaba en el alto de la barra porque
+el link ya mide 44px de alto por el área táctil, así que los dos
+renglones entraban adentro igual. Ya va en una línea.
+
+Eso trajo un tercer problema: en castellano los cuatro links miden 43px
+más que en inglés, y arriba de todo del home se **montaban encima de tu
+nombre** — 12px a 1366 y 6px a 1440 y 1920. Lo resolví achicando el
+respiro lateral de cada link de 12 a 8px, y **solo en castellano**: el
+inglés entra holgado y queda como estaba. Ahora sobran 20px en el peor
+caso. De paso arreglé que a 1280, arriba del home, el selector de idioma
+quedaba flotando solo mientras el volumen y los links estaban ocultos.
+
+Y los subtítulos: **The Carbon Case** en castellano dice "Diseño sonoro,
+mezcla y masterización"; **Detrás del Puesto** pasa a "Sound & Video
+Editing" en vez de "Editing" (y su versión en castellano); y **Rèport**
+aclara que fue para las dos **sedes**, Buenos Aires y Colombia.
 
