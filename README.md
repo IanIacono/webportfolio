@@ -1936,17 +1936,20 @@ no coincidía con tu About. Ahora dice lo que me pasaste:
 
 La primera versión tenía 238 caracteres y Google corta en ~155, así que
 se perdía justo la parte de documentales, publicidad y podcasts. La que
-quedó mide **155 clavados** y entra entera:
+quedó mide **154** y entra entera:
 
 > Sound Designer · Mix & Master · Music Producer · Audio Editing & Live
-> Studio Operation // 5+ years in documentary, advertising and podcast
-> post-production.
+> Studio Operation // audio for documentary, motion graphics, advertising
+> and podcast.
 
-Para que entrara hubo que elegir entre los "5+ years" y la lista de
-contenidos. Se salvan los dos moviendo "post-production" al final: así
-los años se enganchan con algo ("5+ years in ... post-production") en vez
-de quedar colgados, que era lo que no cerraba. Lo único que quedó afuera
-es "motion graphics", por espacio.
+Llegar ahí llevó un par de vueltas. Con "5+ years in sound
+post-production for..." no entraba la lista completa, y acortándola los
+años quedaban colgados ("5+ years in documentary" no se sostiene). La
+solución fue de Ian: cambiar toda esa construcción por **"audio for"**.
+Son 17 caracteres menos, y con eso entra el subtítulo entero MÁS los
+cuatro tipos de contenido, motion graphics incluido. Lo único que no
+menciona son los años de experiencia, que igual están escritos en el
+About.
 
 Y el "ESP." con el que arrancaba la descripción vieja en Google ya no va
 a pasar más: venía de que la página mostraba los dos idiomas con sus
