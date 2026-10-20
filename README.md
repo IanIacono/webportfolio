@@ -1943,4 +1943,20 @@ entera; si la querés, es cambiar una línea.
 Y el "ESP." con el que arrancaba la descripción vieja en Google ya no va
 a pasar más: venía de que la página mostraba los dos idiomas con sus
 etiquetas, y desde el punto 164/165 se muestra uno solo y sin etiqueta.
+**167. El sitio se llama "Ian Iacono — Sound Design & Audio Post
+Production".** Antes decía "Ian Iacono — Portfolio". Ese nombre es el que
+aparece como título del resultado en Google, en la pestaña del navegador
+y en las previews de links. Son 49 caracteres: entra entero en Google,
+que corta alrededor de los 60.
+
+Hay que cambiarlo en **cuatro** lugares y es fácil equivocarse: además de
+la etiqueta `<title>` de arriba de todo y de las dos de las previews
+(`og:title` y `twitter:title`), está el `data-title` de la sección de
+inicio. Eso último es porque el sitio reescribe el título de la pestaña
+cada vez que navegás ("Ian Iacono — Lumia" cuando entrás a Lumia), así
+que si no se cambia también ahí, apenas carga la página vuelve a decir
+"Portfolio" y pisa la etiqueta de arriba.
+
+En las páginas de proyecto la pestaña sigue diciendo el nombre del
+proyecto, que es lo útil cuando tenés varias pestañas abiertas.
 
