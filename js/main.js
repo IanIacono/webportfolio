@@ -1030,24 +1030,34 @@
 
 
   /* ======================================================================
-     10. SELECTOR DE IDIOMA (SOLO CELULAR)
-     En escritorio los textos ESP y ENG se ven los dos, uno al lado del
-     otro. En una pantalla angosta eso son dos bloques largos uno abajo
-     del otro, y hay que scrollear el doble para leer lo mismo. Ahi se
-     muestra uno solo -- arranca en ingles -- con un selector chico en el
-     lugar donde estaba la etiqueta del idioma: arriba del texto y
-     alineado a la izquierda, igual que antes.
+     10. SELECTOR DE IDIOMA
+     Todos los textos del sitio estan escritos dos veces, en castellano y
+     en ingles (About y los diez proyectos). Se muestra UNO SOLO a la vez
+     y un selector cambia cual.
 
-     El selector se arma desde JavaScript y no a mano en el HTML porque
-     son once bloques iguales (About y los diez proyectos): escrito una
-     vez, vale para todos, y si manana se agrega otro proyecto aparece
-     solo.
+     HAY UN SOLO IDIOMA PARA TODO EL SITIO, no uno por seccion. Antes cada
+     bloque tenia su propio selector y su propio estado: ponias espanol en
+     un proyecto, pasabas al siguiente y estaba otra vez en ingles. Ahora
+     el estado vive aca arriba (siteLang) y todos los selectores -- el del
+     header y el de cada bloque -- muestran y cambian el mismo.
 
-     El cambio de idioma es un fundido y no un corte: primero se apaga el
-     texto que estaba, y recien cuando termino de desaparecer se cambia
-     cual es el visible y se enciende el otro. Hacer las dos cosas a la
-     vez obligaria a superponerlos, y como no miden lo mismo, la seccion
-     daria un salto de alto en el medio de la animacion.
+     DONDE ESTA EL SELECTOR, segun el ancho:
+       - Escritorio: uno solo, en la barra de arriba, entre el volumen y
+         el nombre. Los de cada bloque se esconden (ver .lang-switch en
+         css/style.css).
+       - Celular: el de cada bloque, en el lugar donde estaba la etiqueta
+         del idioma -- arriba del texto y alineado a la izquierda. El de
+         la barra no se ve: esa barra es angosta y ya tiene los links.
+
+     Los selectores se arman desde JavaScript y no a mano en el HTML
+     porque son once bloques iguales: escrito una vez vale para todos, y
+     si manana se agrega otro proyecto aparece solo.
+
+     El cambio de idioma es un deslizamiento y no un corte: primero se
+     corre y se apaga el texto que estaba, y recien cuando termino se
+     muestra el otro. Hacer las dos cosas a la vez obligaria a
+     superponerlos, y como no miden lo mismo, la seccion daria un salto
+     de alto en el medio de la animacion.
      ====================================================================== */
 
   /* Los dos numeros de abajo tienen que coincidir con .lang y con
@@ -1055,50 +1065,70 @@
   var SLIDE_MS = 300;
   var SLIDE_PX = 24;
 
+  var siteLang = "en";
+  var langSwitches = [];
+  var langGroups = [];
+
+  /* Arma una pastilla ESP/ENG. La pastilla ENTERA es el control, no cada
+     palabra por su cuenta: un toque en cualquier parte cambia al otro
+     idioma. Antes habia que acertarle a "ENG" o a "ESP", y son dos
+     palabras de once pixeles con cuatro de aire alrededor -- errarle era
+     lo normal. Es un interruptor de dos posiciones: no hace falta elegir
+     a cual se va, solo hay una.
+     El click va en el contenedor y no en cada boton porque asi el toque
+     cuenta igual en el borde, en el hueco del medio o en cualquiera de
+     las dos palabras (desde los botones el click burbujea hasta aca, asi
+     que el teclado sigue andando igual). */
+  function buildLangSwitch(extraClass) {
+    var swap = document.createElement("div");
+    swap.className = "lang-switch" + (extraClass ? " " + extraClass : "");
+    swap.setAttribute("role", "group");
+    swap.setAttribute("aria-label", "Language");
+
+    var buttons = {};
+    ["en", "es"].forEach(function (code) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "lang-switch__btn";
+      btn.dataset.lang = code;
+      btn.textContent = code === "en" ? "ENG" : "ESP";
+      buttons[code] = btn;
+      swap.appendChild(btn);
+    });
+
+    swap.addEventListener("click", function () {
+      setSiteLang(siteLang === "en" ? "es" : "en");
+    });
+
+    var entry = {
+      el: swap,
+      paint: function () {
+        ["en", "es"].forEach(function (code) {
+          buttons[code].setAttribute("aria-pressed", String(code === siteLang));
+        });
+      }
+    };
+    langSwitches.push(entry);
+    return entry;
+  }
+
+  function setSiteLang(code) {
+    if (code === siteLang) return;
+    var from = siteLang;
+    siteLang = code;
+    langSwitches.forEach(function (s) { s.paint(); });
+    langGroups.forEach(function (g) { g.show(from, code); });
+  }
+
   Array.prototype.slice.call(document.querySelectorAll(".project__text, .about__cols"))
     .forEach(function (group) {
       var blocks = Array.prototype.slice.call(group.querySelectorAll(".lang[data-lang]"));
       if (blocks.length < 2) return;
 
-      var swap = document.createElement("div");
-      swap.className = "lang-switch";
+      group.insertBefore(buildLangSwitch().el, group.firstChild);
 
-      var buttons = {};
-      ["en", "es"].forEach(function (code) {
-        var btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "lang-switch__btn";
-        btn.dataset.lang = code;
-        btn.textContent = code === "en" ? "ENG" : "ESP";
-        buttons[code] = btn;
-        swap.appendChild(btn);
-      });
-
-      /* La pastilla ENTERA es el control, no cada palabra por su cuenta:
-         un toque en cualquier parte de ella cambia al otro idioma. Antes
-         habia que acertarle a "ENG" o a "ESP", y son dos palabras de
-         once pixeles con cuatro de aire alrededor -- errarle era lo
-         normal. Es un interruptor de dos posiciones: no hace falta
-         elegir a cual se va, solo hay una.
-         El click va en el contenedor y no en cada boton porque asi el
-         toque cuenta igual en el borde, en el hueco del medio o en
-         cualquiera de las dos palabras (desde los botones el click
-         burbujea hasta aca, asi que el teclado sigue andando igual). */
-      swap.addEventListener("click", function () {
-        setLang(current === "en" ? "es" : "en");
-      });
-
-      group.insertBefore(swap, group.firstChild);
-
-      var current = "en";
       var animating = false;
       var settleTimer = null;
-
-      function paint() {
-        ["en", "es"].forEach(function (code) {
-          buttons[code].setAttribute("aria-pressed", String(code === current));
-        });
-      }
 
       function byLang(code) {
         return blocks.filter(function (b) { return b.dataset.lang === code; })[0];
@@ -1124,38 +1154,39 @@
           b.style.width = "";
           b.style.removeProperty("--lang-slide");
         });
-        showOnly(current);
+        showOnly(siteLang);
         animating = false;
       }
 
-      /* El cambio de idioma es un deslizamiento y no un corte. Los dos
-         textos se mueven para el MISMO lado -- de ingles a espanol, los
-         dos hacia la izquierda; de espanol a ingles, los dos hacia la
-         derecha -- asi se lee como un solo movimiento y no como dos
-         cosas sueltas pasando a la vez.
+      /* El cambio es un deslizamiento. Los dos textos se mueven para el
+         MISMO lado -- de ingles a espanol, los dos hacia la izquierda; de
+         espanol a ingles, los dos hacia la derecha -- asi se lee como un
+         solo movimiento y no como dos cosas sueltas pasando a la vez.
 
          Para que puedan cruzarse, el que se va sale del flujo clavado
          donde estaba y el que entra ocupa su lugar. Eso deja al bloque
          midiendo el alto NUEVO, que casi nunca es el mismo (el mismo
-         texto en dos idiomas no ocupa lo mismo): por eso el alto se
-         anima tambien, y asi los videos y embeds de mas abajo acompanan
-         el cambio en vez de aparecer de golpe mas arriba o mas abajo. */
-      function setLang(code) {
-        if (code === current) return;
+         texto en dos idiomas no ocupa lo mismo): por eso el alto se anima
+         tambien, y asi los videos y embeds de mas abajo acompanan el
+         cambio en vez de aparecer de golpe mas arriba o mas abajo. */
+      function show(from, code) {
         if (animating) settle();
 
-        var leaving = byLang(current);
+        /* Solo se anima lo que se esta viendo. Los otros diez bloques
+           viven en paginas escondidas (display:none), y lo escondido mide
+           cero: animarlo seria calcular posiciones y altos sobre ceros y
+           dejar el bloque con estilos puestos a mano que no corresponden.
+           Esos cambian de una, y como no se ven, nadie se entera. */
+        var onScreen = group.offsetParent !== null;
+        var leaving = byLang(from);
         var entering = byLang(code);
-        var dir = code === "es" ? -1 : 1;
 
-        current = code;
-        paint();
-
-        if (!narrow.matches || reduceMotion.matches || !leaving || !entering) {
+        if (!onScreen || reduceMotion.matches || !leaving || !entering) {
           showOnly(code);
           return;
         }
 
+        var dir = code === "es" ? -1 : 1;
         animating = true;
 
         var gRect = group.getBoundingClientRect();
@@ -1193,24 +1224,42 @@
         settleTimer = window.setTimeout(settle, SLIDE_MS + 60);
       }
 
-      /* En escritorio se muestran los dos, asi que hay que deshacer el
-         [hidden] al pasar de un ancho al otro (rotar el telefono, o
-         agrandar la ventana). El CSS se encarga de esconder el selector
-         y de volver a mostrar las etiquetas. */
-      var narrow = window.matchMedia("(max-width: 900px)");
-      var syncToWidth = function () {
-        settle();
-        if (narrow.matches) showOnly(current);
-        else blocks.forEach(function (b) { b.hidden = false; });
-      };
+      langGroups.push({ show: show, settle: settle });
 
-      /* Estado inicial. El [hidden] lo pone el JS y no el HTML a proposito:
-         si el JavaScript no llegara a correr, se ven los dos textos --
-         que es lo que pasaba antes y se lee perfecto. */
-      syncToWidth();
-      paint();
-      narrow.addEventListener("change", syncToWidth);
+      /* Estado inicial. El [hidden] lo pone el JS y no el HTML a
+         proposito: si el JavaScript no llegara a correr se ven los dos
+         textos, cada uno con su etiqueta, que es como se veia antes y se
+         lee perfecto. */
+      showOnly(siteLang);
     });
+
+  /* El selector del header. Va pegado al control de volumen, que es el
+     que ya esta a la izquierda del nombre -- y asi los dos controles del
+     sitio quedan juntos en vez de uno en cada punta. En celular no se ve
+     (ver .lang-switch--nav en css/style.css): ahi manda el de cada
+     bloque. */
+  var navInner = document.querySelector(".nav__inner");
+  var navAudio = navInner && navInner.querySelector(".audio-control--nav");
+  if (navInner) {
+    var navSwitch = buildLangSwitch("lang-switch--nav").el;
+    if (navAudio && navAudio.nextSibling) navInner.insertBefore(navSwitch, navAudio.nextSibling);
+    else navInner.appendChild(navSwitch);
+  }
+
+  if (langSwitches.length) {
+    /* Con el selector puesto, la etiqueta suelta de cada bloque ("ESP",
+       "ENG") sobra: lo que dice ya lo dice el selector. La clase la pone
+       el JavaScript para que, si no llegara a correr, las etiquetas
+       sigan ahi identificando cada uno de los dos textos. */
+    document.documentElement.classList.add("has-lang-switch");
+    langSwitches.forEach(function (s) { s.paint(); });
+  }
+
+  /* Cambiar de ancho a mitad de una animacion dejaria estilos puestos a
+     mano (alto fijo, posiciones) calculados para el ancho anterior. */
+  window.addEventListener("resize", function () {
+    langGroups.forEach(function (g) { g.settle(); });
+  });
 
 
   /* ======================================================================

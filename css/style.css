@@ -1600,11 +1600,52 @@ p { text-wrap: pretty; }
 
 .project__text { margin-top: var(--sp-8); }
 
-/* --- Selector de idioma (solo celular, ver punto 10 en js/main.js) ---
-   En escritorio no se ve: ahi estan los dos textos, cada uno con su
-   etiqueta. En celular pasa al reves -- se ve el selector y se esconden
-   las etiquetas, porque el selector ya dice de que idioma es el texto. */
+/* --- Selector de idioma (ver punto 10 en js/main.js) ---
+   Hay un selector por bloque de texto y uno en la barra de arriba, y los
+   dos cambian lo mismo (el idioma es uno solo para todo el sitio). Se ve
+   uno u otro segun el ancho:
+     - Escritorio: el de la barra. Los de cada bloque se esconden, si no
+       habria once pastillas diciendo todas lo mismo.
+     - Celular: el de cada bloque, donde estaba la etiqueta del idioma. El
+       de la barra no se ve: esa barra es angosta y ya tiene los links.
+   La etiqueta suelta de cada bloque ("ESP", "ENG") se esconde cuando hay
+   selector, porque lo que dice ya lo dice el selector. La clase
+   .has-lang-switch la pone el JavaScript: si no llegara a correr, se ven
+   los dos textos y las etiquetas siguen ahi para distinguirlos. */
 .lang-switch { display: none; }
+.has-lang-switch .lang__label { display: none; }
+
+/* El de la barra de arriba: la misma pastilla, mas chica. No usa --tap de
+   alto (44px) porque ahi al lado el control de volumen mide 36 y la barra
+   quedaria mas alta por un solo elemento. */
+@media (min-width: 901px) {
+  .lang-switch--nav {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-1);
+    padding: 3px;
+    background: var(--c-bg-raised);
+    border: 1px solid var(--c-line);
+    border-radius: var(--r-full);
+    cursor: pointer;
+  }
+  .lang-switch--nav .lang-switch__btn {
+    min-height: 1.75rem;
+    padding-inline: var(--sp-3);
+  }
+  /* El hueco que separa este grupo del nombre centrado lo daba el
+     "margin-right: auto" del control de volumen, que era el ultimo de la
+     fila. Ahora el ultimo es el selector, asi que el hueco pasa a el y el
+     volumen queda pegado al selector. Va con .has-lang-switch para que,
+     si el JavaScript no corre y no hay selector, el volumen conserve su
+     margen automatico y no se vaya a la derecha. */
+  .has-lang-switch .audio-control--nav { margin-right: var(--sp-5); }
+  .lang-switch--nav { margin-right: auto; }
+}
+
+/* En celular manda el de cada bloque: el de la barra no se enciende (ver
+   el :not(.lang-switch--nav) de la regla de abajo) y sigue con el
+   display:none de la base. */
 
 @media (max-width: 900px) {
   /* Mismo boton que el selector de proyectos (.portfolio-tabs): una
@@ -1613,7 +1654,7 @@ p { text-wrap: pretty; }
      los dos idiomas como lo hacia la etiqueta. Por eso el blanco lo lleva
      puesto cada boton en vez de ser una bolita que se desliza como alla:
      deslizandose tendria que pasar por arriba de la rayita. */
-  .lang-switch {
+  .lang-switch:not(.lang-switch--nav) {
     display: inline-flex;
     align-items: center;
     /* La pastilla mide lo que su contenido y nada mas: adentro de una
@@ -1636,40 +1677,46 @@ p { text-wrap: pretty; }
        .about__cols en "14. RESPONSIVE"). */
     margin-bottom: var(--sp-4);
   }
-  /* La etiqueta suelta sobra: lo que dice ya lo dice el selector. */
-  .lang-switch + .lang .lang__label,
-  .lang-switch ~ .lang .lang__label { display: none; }
-
+  /* En celular el boton tiene que ser agarrable con el dedo. */
   .lang-switch__btn {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
     min-height: var(--tap);
     padding-inline: clamp(var(--sp-3), 2vw, var(--sp-5));
-    border-radius: var(--r-full);
-    font-family: var(--font-tabs);
-    font-size: var(--fs-2xs);
-    font-weight: 400;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--c-text-faint);
-    white-space: nowrap;
-    transition: color var(--dur) var(--ease), background var(--dur) var(--ease),
-                box-shadow var(--dur) var(--ease);
   }
-  .lang-switch__btn[aria-pressed="true"] {
-    background: var(--c-text);
-    color: #0a0910;
-    font-weight: 500;
-    box-shadow: 0 0 14px -2px rgba(255, 255, 255, .55),
-                0 0 3px rgba(255, 255, 255, .4);
-  }
-  @media (hover: hover) {
-    .lang-switch__btn:hover:not([aria-pressed="true"]) {
-      color: var(--c-text);
-      background: var(--c-bg-hover);
-    }
+}
+
+/* Como se ve cada palabra del selector, en cualquier ancho. Lo unico que
+   cambia entre la barra de arriba y el de cada bloque es el tamano (ver
+   arriba y abajo); el aspecto es el mismo en los dos. Estas reglas
+   estaban adentro del bloque de celular, que era donde vivia el unico
+   selector que habia: ahi afuera, el idioma elegido no se encendia y las
+   dos palabras se veian iguales. */
+.lang-switch__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--r-full);
+  font-family: var(--font-tabs);
+  font-size: var(--fs-2xs);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--c-text-faint);
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease);
+}
+.lang-switch__btn[aria-pressed="true"] {
+  background: var(--c-text);
+  color: #0a0910;
+  font-weight: 500;
+  box-shadow: 0 0 14px -2px rgba(255, 255, 255, .55),
+              0 0 3px rgba(255, 255, 255, .4);
+}
+@media (hover: hover) {
+  .lang-switch__btn:hover:not([aria-pressed="true"]) {
+    color: var(--c-text);
+    background: var(--c-bg-hover);
   }
 }
 
@@ -1787,6 +1834,14 @@ p { text-wrap: pretty; }
   grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
   gap: var(--sp-7) var(--sp-8);
 }
+/* Ahora se muestra un idioma por vez, asi que donde habia dos columnas
+   queda una sola. Sin este tope esa columna se estira a todo el ancho
+   disponible (976px a 1440) y quedan renglones larguisimos, incomodos de
+   leer. 40rem es practicamente lo que median las dos columnas de antes
+   (456px cada una mas el aire), asi que el texto se sigue leyendo igual
+   que siempre -- lo unico que cambia es que no esta el otro idioma al
+   lado. */
+.about__cols .lang { max-width: 40rem; }
 .about__cols .lang + .lang { margin-top: 0; }
 .about__cols .prose + .prose { margin-top: var(--sp-5); }
 

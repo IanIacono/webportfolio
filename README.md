@@ -1860,4 +1860,36 @@ ahí (que es la otra razón típica por la que Google muestra algo
 desactualizado): la dirección vieja de GitHub redirige bien a
 ianiacono.com, la página declara correctamente cuál es su dirección
 oficial, y de Vercel no quedó nada publicado.
+**164. El selector de idioma ahora está también en computadora, en la
+barra de arriba, y el sitio muestra un idioma por vez.** Antes en
+computadora se veían los dos textos, uno al lado del otro, y el selector
+existía solo en celular. Ahora hay una pastilla ENG/ESP en la barra,
+entre el slider de volumen y tu nombre, y lo que elijas se aplica a
+**todo el sitio**: About y los diez proyectos.
+
+Tres cosas que cambiaron de paso y conviene que sepas:
+
+**El idioma es uno solo para todo el sitio.** Antes cada bloque de texto
+tenía su propio selector Y su propio estado: ponías español en un
+proyecto, pasabas al siguiente con las flechas y estaba otra vez en
+inglés. Ahora el estado es único, así que también en celular la elección
+te sigue de un proyecto a otro. En celular el selector sigue estando
+donde estaba (arriba de cada texto); el de la barra no aparece ahí
+porque esa barra es angosta y ya tiene los links.
+
+**Las etiquetas sueltas "ESP" y "ENG" que había arriba de cada texto se
+fueron.** Con un solo idioma a la vista y el selector diciendo cuál es,
+repetirlo arriba de cada párrafo sobraba. (Si el JavaScript no llegara a
+cargar, se ven los dos textos con sus etiquetas, como antes.)
+
+**About pasó de dos columnas a una**, con un ancho de lectura de 640px
+—prácticamente lo que medían las dos juntas— en vez de estirarse a los
+976px de la caja, que daría renglones incómodos de leer.
+
+Y un efecto secundario bueno: al mostrar un idioma en vez de dos, About
+ahora entra entero en una pantalla **en cualquier tamaño de ventana**. La
+parada de scroll extra que había tenido que agregarle (punto 156) ya no
+hace falta y desaparece sola. El scroll volvió a ser las cinco paradas
+limpias de siempre: reel, Selected Works arriba, Selected Works abajo,
+About y Contact.
 
