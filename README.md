@@ -1934,11 +1934,19 @@ no coincidía con tu About. Ahora dice lo que me pasaste:
 > diverse audiovisual content, including documentaries, motion graphics,
 > advertising, and podcasts
 
-**Ojo con el largo**: son 238 caracteres y Google corta en ~155. Lo que
-se ve es hasta "...for diverse audio…" y se pierde justo la parte de
-documentales, motion graphics, publicidad y podcasts. En el chat te dejé
-una versión recortada de 156 caracteres que mantiene tu redacción y entra
-entera; si la querés, es cambiar una línea.
+La primera versión tenía 238 caracteres y Google corta en ~155, así que
+se perdía justo la parte de documentales, publicidad y podcasts. La que
+quedó mide **155 clavados** y entra entera:
+
+> Sound Designer · Mix & Master · Music Producer · Audio Editing & Live
+> Studio Operation // 5+ years in documentary, advertising and podcast
+> post-production.
+
+Para que entrara hubo que elegir entre los "5+ years" y la lista de
+contenidos. Se salvan los dos moviendo "post-production" al final: así
+los años se enganchan con algo ("5+ years in ... post-production") en vez
+de quedar colgados, que era lo que no cerraba. Lo único que quedó afuera
+es "motion graphics", por espacio.
 
 Y el "ESP." con el que arrancaba la descripción vieja en Google ya no va
 a pasar más: venía de que la página mostraba los dos idiomas con sus
