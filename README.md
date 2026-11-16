@@ -1998,4 +1998,25 @@ Y los subtítulos: **The Carbon Case** en castellano dice "Diseño sonoro,
 mezcla y masterización"; **Detrás del Puesto** pasa a "Sound & Video
 Editing" en vez de "Editing" (y su versión en castellano); y **Rèport**
 aclara que fue para las dos **sedes**, Buenos Aires y Colombia.
+**169. Las miniaturas se bajaban a la mitad de la resolución que
+necesitaban en pantallas medianas, y se veían borrosas.** Cada miniatura
+existe en tres tamaños (480, 960 y 1920 de ancho) y el navegador elige
+cuál bajar según un dato que le da la página: cuánto espacio va a ocupar
+la imagen. Ese dato decía "45% del ancho de la pantalla" para el tramo
+entre 641 y 900px, pero ahí la grilla pasa a **una sola columna** y la
+tarjeta ocupa el 92%. O sea que el navegador bajaba la imagen de 480 y la
+estiraba hasta 826px — casi el doble.
+
+Medido, antes y después:
+
+| ancho de ventana | caja real | bajaba | ahora baja |
+|---|---|---|---|
+| 700 | 642px | 480 ✗ | 960 ✓ |
+| 768 (iPad vertical) | 705px | 480 ✗ | 960 ✓ |
+| 900 | 826px | 480 ✗ | 960 ✓ |
+
+Donde más se notaba era justo en **Pólvora**, porque su miniatura es
+texto fino en serif sobre un color plano: una foto estirada se ve
+blanda, pero una letra estirada se ve rota. Afectaba a las diez
+tarjetas por igual.
 
